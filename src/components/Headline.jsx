@@ -2,7 +2,7 @@ import React from "react";
 
 const Headline = () => {
     return (
-        <div className="w-screen flex flex-col items-center font-sserif p-16 relative overflow-x-hidden">
+        <div className="w-screen flex flex-col items-center font-sserif p-16 relative">
             <p className="text-6xl text-black font-bold z-10">Easy-to-use</p>
             <p className="text-6xl text-[#FF903D] font-bold z-10">Annotations App</p>
             <p className="text-sm text-[#5A5959] mt-4 z-10">Format your annotations effortlessly</p>
