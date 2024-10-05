@@ -9,6 +9,7 @@ export const content = [
       fontFamily: {
         title: ['Fredoka'],
         sserif: ['Inter', 'sans-serif'],
+        dmsans: ['DM Sans'],
       },
       backgroundImage: {
         'teal-gradient': 'linear-gradient(to left, #AAD9D1, #017373)',
