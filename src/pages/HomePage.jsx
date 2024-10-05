@@ -4,7 +4,7 @@ import '../index.css'
 import Header from "../components/Header";
 import Headline from "../components/Headline";
 // import Features from "../components/Features";
-// import Pricing from "../components/Pricing";
+import Pricing from "../components/Pricing";
 import Footline from "../components/Footline";
 import Footer from "../components/Footer";
 
@@ -14,7 +14,7 @@ const HomePage = () => {
             <Header />
             <Headline />
             {/* <Features /> */}
-            {/* <Pricing /> */}
+            <Pricing />
             <Footline />
             <Footer />
         </div>
