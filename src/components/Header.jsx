@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
     return (
-        <div className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
+        <header className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
             <div className="flex">
                 <img src="src/assets/images/logo.svg" alt="Swiftext Logo" className="h-12 w-auto" />
                 <div className="font-title text-3xl gradient-text font-bold py-2 px-1 cursor-pointer">Swiftext</div>
@@ -23,7 +23,7 @@ const Header = () => {
                 </button>
             </div>
 
-        </div>
+        </header>
     )
 }
 
