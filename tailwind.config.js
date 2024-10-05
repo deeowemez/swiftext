@@ -26,7 +26,7 @@ export const content = [
     function ({ addUtilities }) {
       addUtilities({
         '.gradient-text': {
-          'background-image': 'linear-gradient(to left, #AAD9D1, #017373)',
+          'background-image': 'linear-gradient(to left, #FFBF8F, #FF6D00)',
           '-webkit-background-clip': 'text',
           'background-clip': 'text',
           'color': 'transparent',
