@@ -25,22 +25,22 @@ const Features = () => {
                     </div>
                 </div>
 
-                {/* Custom Color Coding Feature
-                <div className="flex flex-col lg:flex-row items-center justify-end">
-                    <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
+                {/* Custom Color Coding Feature */}
+                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-end">
+                    <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl order-2 xl:order-1 ">
                         <div className="flex mb-3">
                             <img src="src/assets/images/pallet.svg" alt="pallet image" className="h-6 mr-3" />
                             <p className="font-sserif text-xl text-black font-medium">Custom Color Coding</p>
                         </div>
                         <p className="font-dmsans text-sm text-[#737373]">Highlight information in your documents by assigning different colors for different purposes with a customizable color palette </p>
                     </div>
-                    <div className="relative">
-                        <img src="src/assets/images/blob/features/ft-blob-2.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
-                        <img src="src/assets/images/gif/custom-gif.gif" alt="" className="absolute top-60 right-[150px] w-[650px] rounded-[180px]" />
+                    <div className="relative w-4/5 lg:w-full xl:w-2/3 order-1 xl:order-2" >
+                        <img src="src/assets/images/blob/features/ft-blob-2.svg" alt="Features Blob Design" className="my-12 md:-20 lg:m-20 xl:m-24 w-full lg:w-5/6 xl:w-5/6 max-w-[800px]" />
+                        <img src="src/assets/images/gif/custom-gif.gif" alt="" className="absolute top-[110px] left-12 md:top-[140px] md:left-[80px] lg:top-48 lg:left-[150px] xl:top-52 xl:left-[180px] w-4/5 lg:w-2/3 xl:w-2/3 max-w-[650px] rounded-[180px] " />
                     </div>
                 </div>
 
-                Real Time Preview Feature
+                {/* Real Time Preview Feature
                 <div className="flex flex-col lg:flex-row items-center justify-start">
                     <div className="relative">
                         <img src="src/assets/images/blob/features/ft-blob-3.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
@@ -68,7 +68,7 @@ const Features = () => {
                         <img src="src/assets/images/blob/features/ft-blob-4.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
                         <img src="src/assets/images/gif/tag-gif.gif" alt="" className="absolute top-72 right-[220px] w-[580px] rounded-[180px]" />
                     </div>
-                </div> */}
+                </div>  */}
 
             </div>
         </div>
