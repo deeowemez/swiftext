@@ -1,12 +1,12 @@
 import React from "react";
 import '../index.css'
 
-import Header from "../components/Header";
-import Headline from "../components/Headline";
-import Features from "../components/Features";
-import Pricing from "../components/Pricing";
-import Footline from "../components/Footline";
-import Footer from "../components/Footer";
+import Header from "../components/Homepage/Header";
+import Headline from "../components/Homepage/Headline";
+import Features from "../components/Homepage/Features";
+import Pricing from "../components/Homepage/Pricing";
+import Footline from "../components/Homepage/Footline";
+import Footer from "../components/Homepage/Footer";
 
 const HomePage = () => {
     return (
