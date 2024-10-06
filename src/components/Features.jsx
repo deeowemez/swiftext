@@ -3,7 +3,7 @@ import Footer from "./Footer";
 
 const Features = () => {
     return (
-        <div className="flex justify-center py-24">
+        <div className="flex justify-center py-24 w-screen">
             <div className="w-4/5 py-20 bg-[#FFF9F5] rounded-3xl">
                 <div className="font-sserif text-center">
                     <p className="text-4xl text-black font-medium">Swift Document Summarizer</p>
@@ -11,10 +11,10 @@ const Features = () => {
                 </div>
 
                 {/* Upload Feature */}
-                <div className="flex items-center justify-start">
-                    <div className="relative">
-                        <img src="src/assets/images/blob/features/ft-blob-1.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
-                        <img src="src/assets/images/gif/upload-gif.gif" alt="" className="absolute top-40 left-[196px] w-[500px] rounded-[180px]" />
+                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-start">
+                    <div className="relative w-4/5 lg:w-full xl:w-2/3">
+                        <img src="src/assets/images/blob/features/ft-blob-1.svg" alt="Features Blob Design" className="my-12 md:-20 lg:m-20 xl:m-24 w-full lg:w-5/6 xl:w-5/6 max-w-[800px] " />
+                        <img src="src/assets/images/gif/upload.gif" alt="" className="absolute top-24 left-14 md:top-[110px] md:left-[90px] lg:top-48 lg:left-[210px] xl:top-40 xl:left-[196px] w-3/5 lg:w-1/2 xl:w-1/2 max-w-[500px] " />
                     </div>
                     <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
                         <div className="flex mb-3">
@@ -25,8 +25,8 @@ const Features = () => {
                     </div>
                 </div>
 
-                {/* Custom Color Coding Feature */}
-                <div className="flex items-center justify-end">
+                {/* Custom Color Coding Feature
+                <div className="flex flex-col lg:flex-row items-center justify-end">
                     <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
                         <div className="flex mb-3">
                             <img src="src/assets/images/pallet.svg" alt="pallet image" className="h-6 mr-3" />
@@ -40,8 +40,8 @@ const Features = () => {
                     </div>
                 </div>
 
-                {/* Real Time Preview Feature */}
-                <div className="flex items-center justify-start">
+                Real Time Preview Feature
+                <div className="flex flex-col lg:flex-row items-center justify-start">
                     <div className="relative">
                         <img src="src/assets/images/blob/features/ft-blob-3.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
                         <img src="src/assets/images/gif/real-time-gif.gif" alt="" className="absolute top-72 left-[200px] w-[500px] rounded-[180px]" />
@@ -55,8 +55,8 @@ const Features = () => {
                     </div>
                 </div>
 
-                {/* Tagging Feature */}
-                <div className="flex items-center justify-end">
+                Tagging Feature
+                <div className="flex flex-col lg:flex-row items-center justify-end">
                     <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
                         <div className="flex mb-3">
                             <img src="src/assets/images/tag.svg" alt="tag image" className="h-6 mr-3" />
@@ -68,7 +68,7 @@ const Features = () => {
                         <img src="src/assets/images/blob/features/ft-blob-4.svg" alt="Features Blob Design" className="m-24 w-[800px]" />
                         <img src="src/assets/images/gif/tag-gif.gif" alt="" className="absolute top-72 right-[220px] w-[580px] rounded-[180px]" />
                     </div>
-                </div>
+                </div> */}
 
             </div>
         </div>
