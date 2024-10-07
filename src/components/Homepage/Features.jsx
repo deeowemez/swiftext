@@ -4,7 +4,7 @@ import Footer from "./Footer";
 const Features = () => {
     return (
         <div className="flex justify-center py-24 w-screen">
-            <div className="w-4/5 py-20 bg-[#FFF9F5] rounded-3xl">
+            <div className="w-4/5b max-w-screen-xl py-20 bg-[#FFF9F5] rounded-[50px]">
                 <div className="font-sserif text-center">
                     <p className="text-4xl text-black font-medium">Swift Document Summarizer</p>
                     <p className="text-md text-[#5A5959]"> Highlight text and customize styles</p>
