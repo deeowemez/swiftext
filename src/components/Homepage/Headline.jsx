@@ -7,7 +7,9 @@ const Headline = () => {
             <p className="text-6xl text-[#FF903D] font-bold z-10">Annotations App</p>
             <p className="text-sm text-[#5A5959] mt-4 z-10">Format your annotations effortlessly</p>
             <p className="text-sm text-[#5A5959] mb-4 z-10">within Swiftext’s streamlined interface</p>
-                <button className="bg-[#FF903D] rounded-lg text-white px-5 py-3 flex gap-3 z-10">
+                <button className="bg-[#FF903D] rounded-lg text-white px-5 py-3 flex gap-3 z-10"
+                     onClick={() => window.location.href = "/upload"}
+                >
                     <p>Try Swiftext for free</p>
                     <img src="src/assets/images/arrow-right.svg" alt="Arrow pointing right" />
                 </button>
