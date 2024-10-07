@@ -8,6 +8,7 @@ const EditPage = () => {
 
   const addHighlight = (highlight) => {
     setHighlights((prev) => [...prev, { ...highlight, id: String(Math.random()).slice(2) }]);
+    console.log(highlights);
   };
 
   const handleSelection = (selection) => {
