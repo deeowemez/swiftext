@@ -43,11 +43,11 @@ const UploadPage = () => {
     };
 
     return (
-        <div className="w-screen p-0 m-0 overflow-x-hidden relative">
+        <div className="flex flex-col w-screen p-0 m-0 overflow-x-hidden relative min-h-screen">
             <Header />
             
             {isGifVisible && (
-                <div className="fixed top-0 left-0 flex w-full h-full justify-center items-center bg-white  z-50">
+                <div className="fixed top-0 left-0 flex flex-col w-full h-full justify-center items-center bg-white z-50 opacity-90">
                     <img 
                         src="src/assets/images/gif/upload-gif.gif" 
                         alt="uploadin effect" 
@@ -59,7 +59,7 @@ const UploadPage = () => {
             )}
 
             <div 
-                className="flex justify-center items-center border-[1px] h-fit"
+                className="flex flex-grow justify-center items-center border-[1px]"
                 onDrop={handleDrop} 
                 onDragOver={handleDragOver}
             >
