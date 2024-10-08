@@ -9,11 +9,11 @@ const EditPage = () => {
 
   const addHighlight = (highlight) => {
     setHighlights((prev) => [...prev, { ...highlight, id: String(Math.random()).slice(2) }]);
-    console.log(highlights);
+    console.log('highlights: ', highlights);
   };
 
   const handleSelection = (selection) => {
-    if (!selection.isEmpty()) {
+    if (selection && selection.content && selection.content.text) {
       const ghostHighlight = selection.makeGhostHighlight();
       addHighlight(ghostHighlight);
     }
