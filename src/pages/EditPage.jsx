@@ -1,11 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { PdfLoader, PdfHighlighter } from 'react-pdf-highlighter-extended';
+import Toolbar from '../components/EditPage/Toolbar';
+import ExpandableTip from '../components/EditPage/ExpandableTip';
 
 const EditPage = () => {
   const [pdfFile, setPdfFile] = useState(null); // Store the uploaded file
   const [url, setUrl] = useState(null); // Store the PDF file URL
   const [highlights, setHighlights] = useState([]);
   const highlighterUtilsRef = useRef();
+  const [pdfScaleValue, setPdfScaleValue] = useState(undefined);
+  const [highlightPen, setHighlightPen] = useState(false);
 
   // Function to add highlight to the state
   const addHighlight = (highlight) => {
@@ -14,11 +18,23 @@ const EditPage = () => {
     console.log('highlights: ', highlights);
   };
 
+  const editHighlight = (idToUpdate, edit) => {
+    console.log(`Editing highlight ${idToUpdate} with `, edit);
+    setHighlights(
+      highlights.map((highlight) =>
+        highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight
+      )
+    );
+  };
+
+
   // Handle selection event
   const handleSelection = (selection) => {
-    if (selection && selection.content && selection.content.text) {
+    // if (selection && selection.content && selection.content.text) {
+    if (selection && selection.content) {
       const ghostHighlight = selection.makeGhostHighlight();
       addHighlight(ghostHighlight);
+      // (selection) => addHighlight(selection.makeGhostHighlight(), "")
     }
   };
 
@@ -50,26 +66,41 @@ const EditPage = () => {
       </div>
 
       {/* PDF Viewer Section */}
-      <div style={{ 
+      <div style={{
         width: 'calc(100% - 700px)', // Crop gray part of PDF
-        overflow: 'hidden', 
+        overflow: 'hidden',
         position: 'relative',
       }}>
+        
         {url ? (
           <PdfLoader document={url}>
             {(pdfDocument) => (
-              <PdfHighlighter
-                pdfDocument={pdfDocument}
-                onSelection={handleSelection} // Handle the selection
-                highlights={highlights} // List of highlights
-                utilsRef={(utils) => { highlighterUtilsRef.current = utils; }}
-                enableAreaSelection={(event) => event.altKey} // Enable area selection with Alt key
-              />
+              <>
+                <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(prev => !prev)} />
+                <PdfHighlighter
+                  pdfDocument={pdfDocument}
+                  onSelection={handleSelection} // Handle the selection
+                  highlights={highlights} // List of highlights
+                  selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
+                  textSelectionColor={highlightPen ? "rgba(125, 11, 45, 1)" : undefined}
+                  utilsRef={(utils) => { highlighterUtilsRef.current = utils; }}
+                  enableAreaSelection={(event) => event.altKey} // Enable area selection with Alt key
+                  style={{
+                    height: "calc(100% - 41px)",
+                  }}
+                />
+                {/* <HighlightContainer
+                  editHighlight={editHighlight}
+                  onContextMenu={handleContextMenu}
+                /> */}
+              </>
             )}
           </PdfLoader>
         ) : (
           <p>Please upload a PDF file to highlight</p>
         )}
+
+
       </div>
 
       {/* Preview Section */}
