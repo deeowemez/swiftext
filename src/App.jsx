@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
-import EditPage from './pages/EditPage';
+import EditPage from './components/EditPage/EditPage';
 import UploadPage from './pages/UploadPage';
 
 function App() {

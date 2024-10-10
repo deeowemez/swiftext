@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { PdfLoader, PdfHighlighter } from 'react-pdf-highlighter-extended';
+import { GhostHighlight ,PdfLoader, PdfHighlighter } from 'react-pdf-highlighter-extended';
 import Toolbar from '../components/EditPage/Toolbar';
-import ExpandableTip from '../components/EditPage/ExpandableTip';
+import ExpandableTip from '../components/EditPage/ExpandableTipdraft';
 
 const EditPage = () => {
   const [pdfFile, setPdfFile] = useState(null); // Store the uploaded file

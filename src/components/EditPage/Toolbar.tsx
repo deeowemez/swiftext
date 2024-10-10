@@ -1,12 +1,18 @@
 import React, { useState } from "react";
-import "../../styles/Toolbar.css";
 
-const Toolbar = ({ setPdfScaleValue, toggleHighlightPen }) => {
-  const [zoom, setZoom] = useState(null);
-  const [isHighlightPen, setIsHighlightPen] = useState(false);
+import "../../style/Toolbar.css";
+
+interface ToolbarProps {
+  setPdfScaleValue: (value: number) => void;
+  toggleHighlightPen: () => void;
+}
+
+const Toolbar = ({ setPdfScaleValue, toggleHighlightPen }: ToolbarProps) => {
+  const [zoom, setZoom] = useState<number | null>(null);
+  const [isHighlightPen, setIsHighlightPen] = useState<boolean>(false);
 
   const zoomIn = () => {
-    if (zoom !== null) {
+    if (zoom) {
       if (zoom < 4) {
         setPdfScaleValue(zoom + 0.1);
         setZoom(zoom + 0.1);
@@ -18,7 +24,7 @@ const Toolbar = ({ setPdfScaleValue, toggleHighlightPen }) => {
   };
 
   const zoomOut = () => {
-    if (zoom !== null) {
+    if (zoom) {
       if (zoom > 0.2) {
         setPdfScaleValue(zoom - 0.1);
         setZoom(zoom - 0.1);
@@ -34,18 +40,12 @@ const Toolbar = ({ setPdfScaleValue, toggleHighlightPen }) => {
       <div className="ZoomControls">
         <button title="Zoom in" onClick={zoomIn}>+</button>
         <button title="Zoom out" onClick={zoomOut}>-</button>
-        {zoom !== null ? `${(zoom * 100).toFixed(0)}%` : "Auto"}
+        {zoom ? `${(zoom * 100).toFixed(0)}%` : "Auto"}
       </div>
-      <button
-        title="Highlight"
-        className={`HighlightButton ${isHighlightPen ? 'active' : ''}`}
-        onClick={() => {
-          toggleHighlightPen();
-          setIsHighlightPen(!isHighlightPen);
-        }}
-      >
-        Toggle Highlights
-      </button>
+      <button title="Highlight" className={`HighlightButton ${isHighlightPen ? 'active' : ''}`} onClick={() => {
+        toggleHighlightPen();
+        setIsHighlightPen(!isHighlightPen);
+      }}>Toggle Highlights</button>
     </div>
   );
 };
