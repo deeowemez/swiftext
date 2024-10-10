@@ -14,15 +14,15 @@ const FilesPage = () => {
                 <div className="flex flex-wrap gap-10 max-w-4/5 px-3 py-4">
                     <button className="bg-[#F8968E] text-white px-3 py-1 rounded-2xl">#urgent</button>
                 </div>
-                <div className="flex gap-5 px-4 py-2">
+                <div className="flex gap-5 px-7 py-2">
                     <img src="src/assets/images/mark-dropdown.svg" alt="reload svg" className="w-6" />
                     <img src="src/assets/images/reload.svg" alt="reload svg" className="w-3.5" />
                 </div>
                 <div className="flex gap-8 py-6">
-                    <div className="flex flex-col items-center justify-center bg-[#F4F4F4] rounded-2xl h-56 min-w-48 gap-3">
+                    <div className="flex flex-col items-center justify-center bg-[#F4F4F4] rounded-2xl h-56 min-w-48 max-w-48 gap-3">
                         <div className="bg-[#333333] w-3/4 h-3/5 text-white text-center">thumbnail prev</div>
                         <div className="flex flex-col w-3/4">
-                            <p className="text-left text-md">Name</p>
+                            <p className="text-left text-md overflow-clip">NameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameNameName</p>
                             <div className="flex justify-between">
                                 <p className="text-right text-xs italic">last modified</p>
                                 <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div>
