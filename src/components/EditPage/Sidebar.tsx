@@ -7,6 +7,7 @@ import { CommentedHighlight } from "./types";
 interface SidebarProps {
   highlights: Array<CommentedHighlight>;
   resetHighlights: () => void;
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   // toggleDocument: () => void;
 }
 
@@ -18,22 +19,28 @@ const Sidebar = ({
   highlights,
   // toggleDocument,
   resetHighlights,
+  handleFileChange,
 }: SidebarProps) => {
   return (
     <div className="sidebar" style={{ width: "25vw", maxWidth: "500px" }}>
       {/* Description section */}
       <div className="description" style={{ padding: "1rem" }}>
 
-        <p style={{ fontSize: "0.7rem" }}>
+      <div>
+        <h3>Upload PDF</h3>
+        <input type="file" accept="application/pdf" onChange={handleFileChange} />
+        <h3>Highlights</h3>
+      </div> 
+
+        {/* <p style={{ fontSize: "0.7rem" }}>
           <a href="https://github.com/DanielArnould/react-pdf-highlighter-extended">
             Open in GitHub
           </a>
-        </p>
+        </p> */}
 
         <p>
           <small>
-            To create an area highlight hold ⌥ Option key (Alt), then click and
-            drag.
+            To create an area highlight hold, press Alt key then click and drag.
           </small>
         </p>
       </div>

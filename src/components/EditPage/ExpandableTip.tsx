@@ -35,11 +35,20 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
             setCompact(false);
             selectionRef.current = getCurrentSelection();
             selectionRef.current!.makeGhostHighlight();
+            addHighlight(
+              {
+                content: selectionRef.current!.content,
+                type: selectionRef.current!.type,
+                position: selectionRef.current!.position,
+              }, ""
+            )
+            removeGhostHighlight();
+            setTip(null);
           }}
         >
           Add highlight
         </button>
-      ) : (
+      ): (
         <CommentForm
           placeHolder="Your comment..."
           onSubmit={(input) => {

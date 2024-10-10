@@ -18,9 +18,9 @@ import "../../style/App.css";
 import { testHighlights as _testHighlights } from "./test-highlights";
 import { CommentedHighlight } from "./types";
 
-const TEST_HIGHLIGHTS = _testHighlights;
-const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
-const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
+// const TEST_HIGHLIGHTS = _testHighlights;
+// const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
+// const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -35,9 +35,7 @@ const resetHash = () => {
 const EditPage = () => {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
-  const [highlights, setHighlights] = useState<Array<CommentedHighlight>>(
-    TEST_HIGHLIGHTS[PRIMARY_PDF_URL] ?? [],
-  );
+  const [highlights, setHighlights] = useState<Array<CommentedHighlight>>([]);
   const currentPdfIndexRef = useRef(0);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
@@ -173,13 +171,8 @@ const EditPage = () => {
       <Sidebar
         highlights={highlights}
         resetHighlights={resetHighlights}
-      // toggleDocument={toggleDocument}
+        handleFileChange={handleFileChange}
       />
-      <div>
-        <h3>Upload PDF</h3>
-        <input type="file" accept="application/pdf" onChange={handleFileChange} />
-        <h3>Highlights</h3>
-      </div>
       <div
         style={{
           height: "100vh",
