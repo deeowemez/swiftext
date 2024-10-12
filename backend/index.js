@@ -3,9 +3,19 @@ const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { Pool } = require('pg'); 
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
+
+const pool = new Pool({
+    user: process.env.DB_USER,
+    host: process.env.DB_HOST,
+    database: process.env.DB_NAME,
+    password: process.env.DB_PASSWORD,
+    port: process.env.DB_PORT,
+});
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -31,12 +41,29 @@ const storage = multer.diskStorage({
 // Initialize multer with the storage configuration
 const upload = multer({ storage: storage });
 
+
+
 // Endpoint to handle file uploads
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
-    res.status(200).send({ fileName: req.file.filename, message: 'File uploaded successfully.' });
+
+    try {
+        // Insert file metadata into the database
+        const result = await pool.query(
+            'INSERT INTO uploads (filename, filepath) VALUES ($1, $2) RETURNING id',
+            [req.file.filename, req.file.path]
+        );
+        res.status(200).send({
+            fileName: req.file.filename,
+            message: 'File uploaded successfully.',
+            id: result.rows[0].id, // return the ID of the new record
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error saving file metadata to the database.');
+    }
 });
 
 // Add a root route for testing
