@@ -41,7 +41,14 @@ const storage = multer.diskStorage({
 // Initialize multer with the storage configuration
 const upload = multer({ storage: storage });
 
-
+app.get('/api/uploads', async (req, res) => {
+    try {
+        const result = await pool.query('SELECT * FROM uploads');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Database query failed' });
+    }
+});
 
 // Endpoint to handle file uploads
 app.post('/upload', upload.single('file'), async (req, res) => {
