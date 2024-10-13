@@ -18,10 +18,6 @@ import "../../style/App.css";
 import { testHighlights as _testHighlights } from "./test-highlights";
 import { CommentedHighlight } from "./types";
 
-// const TEST_HIGHLIGHTS = _testHighlights;
-// const PRIMARY_PDF_URL = "https://arxiv.org/pdf/2203.11115";
-// const SECONDARY_PDF_URL = "https://arxiv.org/pdf/1604.02480";
-
 const getNextId = () => String(Math.random()).slice(2);
 
 const parseIdFromHash = () => {
@@ -32,40 +28,30 @@ const resetHash = () => {
   document.location.hash = "";
 };
 
-const EditPage = () => {
+const EditPage = ({ selectedFile, setSelectedFile }) => {
+  // const [selectedFile, setSelectedFile] = useState(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [highlights, setHighlights] = useState<Array<CommentedHighlight>>([]);
   const currentPdfIndexRef = useRef(0);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
-  const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(
-    undefined,
-  );
+  const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
   const [highlightPen, setHighlightPen] = useState<boolean>(false);
-
-  // Refs for PdfHighlighter utilities
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setPdfFile(file); // Store the uploaded file
+  useEffect(() => {
+    console.log('Selected File from Edit Page: ', selectedFile);
+    if (selectedFile) {
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         if (e.target?.result) {
-          setUrl(e.target.result as string); // Safely assign the result to the URL (cast to string)
+          setUrl(e.target.result as string);
         }
       };
-      reader.readAsDataURL(file); // Read the file as Data URL
+      reader.readAsDataURL(selectedFile);
+      setPdfFile(selectedFile);
     }
-  };
-
-  // const toggleDocument = () => {
-  //   const urls = [PRIMARY_PDF_URL, SECONDARY_PDF_URL];
-  //   currentPdfIndexRef.current = (currentPdfIndexRef.current + 1) % urls.length;
-  //   setUrl(urls[currentPdfIndexRef.current]);
-  //   setHighlights(TEST_HIGHLIGHTS[urls[currentPdfIndexRef.current]] ?? []);
-  // };
+  }, [selectedFile]);
 
   // Click listeners for context menu
   useEffect(() => {
@@ -171,7 +157,7 @@ const EditPage = () => {
       <Sidebar
         highlights={highlights}
         resetHighlights={resetHighlights}
-        handleFileChange={handleFileChange}
+        // handleFileChange={handleFileChange}
       />
       <div
         style={{
@@ -183,7 +169,6 @@ const EditPage = () => {
         }}
       >
         {url ? (
-
           <PdfLoader document={url}>
             {(pdfDocument) => (
               <>

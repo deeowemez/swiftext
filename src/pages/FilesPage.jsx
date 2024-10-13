@@ -2,11 +2,14 @@ import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
 import Header from "../components/Homepage/Header";
 import Footer from "../components/Homepage/Footer";
+import { useNavigate } from 'react-router-dom';
 
 
-const FilesPage = () => {
+const FilesPage = ({ selectedFile, setSelectedFile }) => {
     const fileInputRef = useRef(null);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const navigate = useNavigate();
+    const [selectedUploadFile, setSelectedUploadFile] = useState(null);
+    // const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [files, setFiles] = useState([]); // State to store uploaded files    
 
@@ -20,14 +23,13 @@ const FilesPage = () => {
                 console.error('Error fetching files:', error);
             }
         };
-
         fetchFiles();
     }, []);
 
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
-        setSelectedFile(file);
+        setSelectedUploadFile(file);
         if (file) {
             handleFileUpload(file);
         }
@@ -49,9 +51,9 @@ const FilesPage = () => {
                 },
             });
 
-
             // Fetch updated files list after successful upload
             const updatedFiles = await axios.get('http://localhost:5000/api/uploads');
+            console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
 
         } catch (error) {
@@ -63,7 +65,7 @@ const FilesPage = () => {
         event.preventDefault();
         const file = event.dataTransfer?.files[0];
         if (file) {
-            setSelectedFile(file);
+            setSelectedUploadFile(file);
             handleFileUpload(file);
         }
     };
@@ -75,6 +77,30 @@ const FilesPage = () => {
     const handleImageClick = () => {
         fileInputRef.current.click();
     };
+
+    const selectEditFile = async (file) => {
+        console.log('Selected file for Edit Page: ', file.filename);
+        try {
+            const response = await fetch(file.filepath);
+            const modResponse = 'backend' + response;
+            console.log('response: ', response);
+            console.log('modresponse: ', modResponse);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const blob = await response.blob();
+
+            const selectedFile = new File([blob], file.filename, { type: blob.type });
+            setSelectedFile(selectedFile);
+            navigate('/edit');
+        } catch (error) {
+            console.error('Error fetching the file:', error);
+        }
+    };
+
+
 
     return (
         <div className="flex flex-col w-screen min-h-screen font-sserif">
@@ -105,7 +131,11 @@ const FilesPage = () => {
                 <div className="file-cards flex flex-col gap-2 py-6 w-full">
                     {/* Dynamically create file cards */}
                     {files.map((file, index) => (
-                        <div key={index} className="flex items-center justify-start bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer">
+                        <div
+                            key={index}
+                            className="flex items-center justify-start bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
+                            onClick={() => selectEditFile(file)}
+                        >
                             <div className="bg-[#333333] w-1/12 text-white text-center ">thumbnail prev</div>
                             <div className="flex flex-col w-11/12">
                                 <p className="text-left text-md overflow-clip">{file.filename}</p>
