@@ -61,6 +61,20 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
         }
     };
 
+    const handleDeleteFile = async (file) => {
+        try {
+            console.log('file info: ', file);
+            const response = await axios.delete(`http://localhost:5000/files/${file.id}`);
+            console.log('File deleted successfully:', response.data);
+            
+            const updatedFiles = await axios.get('http://localhost:5000/api/uploads');
+            console.log('updatedFiles.data: ', updatedFiles.data)
+            setFiles(updatedFiles.data);  // Update files state to trigger re-render
+        } catch (error) {
+            console.error('Error deleting file:', error);
+        }
+    }
+
     const handleDrop = (event) => {
         event.preventDefault();
         const file = event.dataTransfer?.files[0];
@@ -81,10 +95,7 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
     const selectEditFile = async (file) => {
         console.log('Selected file for Edit Page: ', file.filename);
         try {
-            const response = await fetch(file.filepath);
-            const modResponse = 'backend' + response;
-            console.log('response: ', response);
-            console.log('modresponse: ', modResponse);
+            const response = await fetch(file.mod_filepath);
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -99,8 +110,6 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
             console.error('Error fetching the file:', error);
         }
     };
-
-
 
     return (
         <div className="flex flex-col w-screen min-h-screen font-sserif">
@@ -143,7 +152,12 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
                                     <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
                                     <div className="flex gap-4 items-center">
                                         <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div>
-                                        <img src="src/assets/images/more-alt.svg" alt="more svg" />
+                                        <img src="src/assets/images/more-alt.svg" alt="more svg" 
+                                            onClick={(event) => {
+                                                event.stopPropagation();
+                                                handleDeleteFile(file);
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             </div>
