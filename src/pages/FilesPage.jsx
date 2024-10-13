@@ -22,7 +22,8 @@ const FilesPage = () => {
         };
 
         fetchFiles();
-    });
+    }, []);
+
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -48,9 +49,11 @@ const FilesPage = () => {
                 },
             });
 
-            // Update uploaded files array with the new file
-            setFiles((prevFiles) => [...prevFiles, { name: file.name, lastModified: file.lastModified }]);
-            setUploadStatus(`Upload successful: ${response.data.fileName}`);
+
+            // Fetch updated files list after successful upload
+            const updatedFiles = await axios.get('http://localhost:5000/api/uploads');
+            setFiles(updatedFiles.data);  // Update files state to trigger re-render
+
         } catch (error) {
             setUploadStatus('Upload failed. Please try again.');
         }

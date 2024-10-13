@@ -60,10 +60,10 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         // Insert file metadata into the database
         const result = await pool.query(
             'INSERT INTO uploads (filename, filepath) VALUES ($1, $2) RETURNING id',
-            [req.file.filename, req.file.path]
+            [req.file.originalname, req.file.path]
         );
         res.status(200).send({
-            fileName: req.file.filename,
+            fileName: req.file.originalname,
             message: 'File uploaded successfully.',
             id: result.rows[0].id, // return the ID of the new record
         });
