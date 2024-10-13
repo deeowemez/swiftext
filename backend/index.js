@@ -58,9 +58,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
     try {
         // Insert file metadata into the database
+        const modFilePath = 'backend/' + req.file.path;
+        // console.log('req.file.paht: ', req.file.path);
         const result = await pool.query(
             'INSERT INTO uploads (filename, filepath) VALUES ($1, $2) RETURNING id',
-            [req.file.originalname, req.file.path]
+            [req.file.originalname, modFilePath]
         );
         res.status(200).send({
             fileName: req.file.originalname,
