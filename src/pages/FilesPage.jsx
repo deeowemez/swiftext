@@ -123,7 +123,7 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
                     <div className="flex gap-5 text-[#5A5959] text-sm items-center">
                         <div className="px-8">
                             <input type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
-                            <img src="src/assets/images/circle-plus.svg" alt="upload svg" className="w-[20px] cursor-pointer hover:bg-slate-200 rounded-full" onClick={handleImageClick} />
+                            <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] cursor-pointer hover:bg-slate-200 rounded-full" onClick={handleImageClick} />
                         </div>
                         <p>File</p>
                         <img src="src/assets/images/line.svg" alt="" />
