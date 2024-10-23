@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export const content = [
-    './src/**/*.{html,js,jsx}',
+    './src/**/*.{html,js,jsx,tsx,ts}',
     './index.html,'
   ];
   
