@@ -93,7 +93,7 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
     };
 
     const selectEditFile = async (file) => {
-        console.log('Selected file for Edit Page: ', file.filename);
+        console.log('Selected file for Edit Page: ', file);
         try {
             const response = await fetch(file.mod_filepath);
 
@@ -105,7 +105,7 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
 
             const selectedFile = new File([blob], file.filename, { type: blob.type });
             setSelectedFile(selectedFile);
-            navigate('/edit');
+            navigate(`/edit/${file.filepath}`);
         } catch (error) {
             console.error('Error fetching the file:', error);
         }

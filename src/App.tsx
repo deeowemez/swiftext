@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState } from "react";
 
 import HomePage from './pages/HomePage';
-import EditPage from './components/EditPage/App';
+import EditPage from './components/EditPage/EditPage';
 import UploadPage from './pages/UploadPage';
 import FilesPage from './pages/FilesPage';
 
@@ -15,7 +15,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route 
-          path="/edit" 
+          path="/edit/*" 
           element={<EditPage selectedFile={selectedFile} setSelectedFile={setSelectedFile} />} 
         />
         <Route

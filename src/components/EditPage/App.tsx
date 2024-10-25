@@ -164,6 +164,45 @@ const EditPage = ({ selectedFile, setSelectedFile }) => {
   return (
     <div className="flex w-screen min-h-screen">
       <ControlBar />
+      <div
+        style={{
+          height: "100vh",
+          width: "75vw",
+          overflow: "hidden",
+          position: "relative",
+          flexGrow: 1,
+        }}
+      >
+        {url ? (
+          <PdfLoader document={url}>
+            {(pdfDocument) => (
+              <>
+                {/* <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} /> */}
+                <PdfHighlighter
+                  enableAreaSelection={(event) => event.altKey}
+                  pdfDocument={pdfDocument}
+                  onScrollAway={resetHash}
+                  utilsRef={(_pdfHighlighterUtils) => {
+                    highlighterUtilsRef.current = _pdfHighlighterUtils;
+                  }}
+                  pdfScaleValue={pdfScaleValue}
+                  textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
+                  onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
+                  selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
+                  highlights={highlights}
+                >
+                  <HighlightContainer
+                    editHighlight={editHighlight}
+                    onContextMenu={handleContextMenu}
+                  />
+                </PdfHighlighter>
+              </>
+            )}
+          </PdfLoader>
+        ) : (
+          <p>Please upload a PDF file to highlight</p>
+        )}
+      </div>
     </div>
 
     // <div className="App" style={{ display: "flex", height: "100vh" }}>
@@ -172,48 +211,48 @@ const EditPage = ({ selectedFile, setSelectedFile }) => {
     //     resetHighlights={resetHighlights}
     //   // handleFileChange={handleFileChange}
     //   />
-    //   <div
-    //     style={{
-    //       height: "100vh",
-    //       width: "75vw",
-    //       overflow: "hidden",
-    //       position: "relative",
-    //       flexGrow: 1,
-    //     }}
-    //   >
-    //     {url ? (
-    //       <PdfLoader document={url}>
-    //         {(pdfDocument) => (
-    //           <>
-    //             <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} />
-    //             <PdfHighlighter
-    //               enableAreaSelection={(event) => event.altKey}
-    //               pdfDocument={pdfDocument}
-    //               onScrollAway={resetHash}
-    //               utilsRef={(_pdfHighlighterUtils) => {
-    //                 highlighterUtilsRef.current = _pdfHighlighterUtils;
-    //               }}
-    //               pdfScaleValue={pdfScaleValue}
-    //               textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
-    //               onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
-    //               selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
-    //               highlights={highlights}
-    //               style={{
-    //                 height: "calc(100% - 41px)",
-    //               }}
-    //             >
-    //               <HighlightContainer
-    //                 editHighlight={editHighlight}
-    //                 onContextMenu={handleContextMenu}
-    //               />
-    //             </PdfHighlighter>
-    //           </>
-    //         )}
-    //       </PdfLoader>
-    //     ) : (
-    //       <p>Please upload a PDF file to highlight</p>
-    //     )}
-    //   </div>
+      // <div
+      //   style={{
+      //     height: "100vh",
+      //     width: "75vw",
+      //     overflow: "hidden",
+      //     position: "relative",
+      //     flexGrow: 1,
+      //   }}
+      // >
+      //   {url ? (
+      //     <PdfLoader document={url}>
+      //       {(pdfDocument) => (
+      //         <>
+      //           <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} />
+      //           <PdfHighlighter
+      //             enableAreaSelection={(event) => event.altKey}
+      //             pdfDocument={pdfDocument}
+      //             onScrollAway={resetHash}
+      //             utilsRef={(_pdfHighlighterUtils) => {
+      //               highlighterUtilsRef.current = _pdfHighlighterUtils;
+      //             }}
+      //             pdfScaleValue={pdfScaleValue}
+      //             textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
+      //             onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
+      //             selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
+      //             highlights={highlights}
+      //             style={{
+      //               height: "calc(100% - 41px)",
+      //             }}
+      //           >
+      //             <HighlightContainer
+      //               editHighlight={editHighlight}
+      //               onContextMenu={handleContextMenu}
+      //             />
+      //           </PdfHighlighter>
+      //         </>
+      //       )}
+      //     </PdfLoader>
+      //   ) : (
+      //     <p>Please upload a PDF file to highlight</p>
+      //   )}
+      // </div>
 
     //   {contextMenu && <ContextMenu {...contextMenu} />}
     // </div >
