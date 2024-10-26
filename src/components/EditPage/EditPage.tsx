@@ -20,6 +20,7 @@ import { CommentedHighlight } from "./types";
 import Quill from "quill";
 import ControlBar from "./ControlBar";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -31,9 +32,8 @@ const resetHash = () => {
   document.location.hash = "";
 };
 
-const EditPage = ({ selectedFile, setSelectedFile }) => {
+const EditPage = () => {
   const { '*': filePath } = useParams();
-  // const [selectedFile, setSelectedFile] = useState(null);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [highlights, setHighlights] = useState<Array<CommentedHighlight>>([]);
@@ -47,40 +47,36 @@ const EditPage = ({ selectedFile, setSelectedFile }) => {
     console.log('filepath: ', filePath);
     const loadFileByPath = async () => {
       if (filePath) {
-        
-      //   const file = await fetchFileByPath(filePath); // Fetch file by its path
-      //   if (file) {
-      //     setPdfFile(file);
-      //     const reader = new FileReader();
-      //     reader.onload = (e) => {
-      //       setUrl(e.target.result); // Load file into the PdfLoader
-      //     };
-      //     reader.readAsDataURL(file);
-      //   }
+        try {
+          const response = await axios.get(`http://localhost:5000/edit?filePath=${encodeURIComponent(filePath)}`, {
+            responseType: 'blob', // Ensures we get the file as a Blob
+          });
+
+          // Create a File object from the response Blob
+          const blob = response.data;
+          const file = new File([blob], filePath.split('/').pop() || "file", { type: blob.type });
+
+          // Use the file object in your component
+          setPdfFile(file);
+
+          // Convert File to Data URL for preview or further usage
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const result = e.target?.result;
+            if (result) {
+              setUrl(result as string);
+            }
+          };
+          reader.readAsDataURL(file);
+
+        } catch (error) {
+          console.error("Error fetching file:", error);
+        }
       }
     };
-  
+
     loadFileByPath();
   }, [filePath]);
-
-  
-  // // Read selectedfile
-  // useEffect(() => {
-  //   console.log('Selected File from Edit Page: ', selectedFile);
-  //   if (selectedFile) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e: ProgressEvent<FileReader>) => {
-  //       if (e.target?.result) {
-  //         setUrl(e.target.result as string);
-  //       }
-  //     };
-  //     reader.readAsDataURL(selectedFile);
-  //     setPdfFile(selectedFile);
-      
-  //     const filePath = selectedFile.filepath;  // Or any unique identifier for the file
-  //     // navigate(`/edit/${filePath}`); 
-  //   }
-  // }, [selectedFile, navigate]);
 
   // Click listeners for context menu
   useEffect(() => {

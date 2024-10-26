@@ -75,34 +75,24 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// Fetch a specific file by its path or ID
-app.get('/api/uploads/:filePath', async (req, res) => {
-    const filePath = req.params.filePath;
+// Fetch a specific file by its path
+app.get('/edit', async (req, res) => {
+    const filePath = req.query.filePath;
+    console.log('fileP: ', filePath);
 
-    try {
-        // Assuming you're storing the file path in the database
-        const query = 'SELECT filepath FROM uploads WHERE filepath = $1';
-        const result = await pool.query(query, [filePath]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).send('File not found');
+    // Ensure the file path is valid and exists on the server
+    const fullFilePath = path.join(__dirname, filePath);
+    
+    // Send the file or an error response
+    res.sendFile(fullFilePath, (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            res.status(404).send('File not found');
         }
-
-        const fullFilePath = path.join(__dirname, result.rows[0].filepath);
-
-        // Check if the file exists
-        if (!fs.existsSync(fullFilePath)) {
-            return res.status(404).send('File not found on the server');
-        }
-
-        // Send the file to the client
-        res.sendFile(fullFilePath);
-    } catch (error) {
-        console.error('Error fetching file:', error);
-        res.status(500).send('Error fetching file');
-    }
+    });
 });
 
+// remove file metadata from db and delete file from system
 app.delete('/files/:id', async (req, res) => {
     const fileId = req.params.id;
     console.log('fileid ', fileId);

@@ -5,14 +5,14 @@ import Footer from "../components/Homepage/Footer";
 import { useNavigate } from 'react-router-dom';
 
 
-const FilesPage = ({ selectedFile, setSelectedFile }) => {
+const FilesPage = () => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
-    // const [selectedFile, setSelectedFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [files, setFiles] = useState([]); // State to store uploaded files    
 
+    // initial loading of files every time files page viewed
     useEffect(() => {
         const fetchFiles = async () => {
             try {
@@ -25,7 +25,6 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
         };
         fetchFiles();
     }, []);
-
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -93,18 +92,7 @@ const FilesPage = ({ selectedFile, setSelectedFile }) => {
     };
 
     const selectEditFile = async (file) => {
-        console.log('Selected file for Edit Page: ', file);
         try {
-            const response = await fetch(file.mod_filepath);
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const blob = await response.blob();
-
-            const selectedFile = new File([blob], file.filename, { type: blob.type });
-            setSelectedFile(selectedFile);
             navigate(`/edit/${file.filepath}`);
         } catch (error) {
             console.error('Error fetching the file:', error);

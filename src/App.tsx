@@ -7,8 +7,6 @@ import UploadPage from './pages/UploadPage';
 import FilesPage from './pages/FilesPage';
 
 function App() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
   return (
     <Router>
       <Routes>
@@ -16,11 +14,11 @@ function App() {
         <Route path="/upload" element={<UploadPage />} />
         <Route 
           path="/edit/*" 
-          element={<EditPage selectedFile={selectedFile} setSelectedFile={setSelectedFile} />} 
+          element={<EditPage />} 
         />
         <Route
           path="/files"
-          element={<FilesPage selectedFile={selectedFile} setSelectedFile={setSelectedFile} />}
+          element={<FilesPage />}
         />
       </Routes>
     </Router>
