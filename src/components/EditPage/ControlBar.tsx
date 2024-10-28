@@ -1,16 +1,21 @@
 import React from "react";
+import cottageIcon from "../../assets/images/cottage.svg";
+import searchIcon from "../../assets/images/search-gr.svg";
+import palletIcon from "../../assets/images/pallet-gr.svg";
+import zoomInIcon from "../../assets/images/zoom-in.svg";
+import zoomOutIcon from "../../assets/images/zoom-out.svg";
 
 const ControlBar = () => {
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-10 p-[16px] ">
         <a href="/files">
-          <img src="src/assets/images/cottage.svg" alt="home-icon" className="cursor-pointer w-7" />
+          <img src={cottageIcon} alt="home-icon" className="cursor-pointer w-7" />
         </a>
-        <img src="src/assets/images/search-gr.svg" alt="search icon" className="cursor-pointer w-7" />
-        <img src="src/assets/images/pallet-gr.svg" alt="color-pallete icon" className="cursor-pointer w-7" />
-        <img src="src/assets/images/zoom-in.svg" alt="zoom-in-icon" className="cursor-pointer w-7" />
-        <img src="src/assets/images/zoom-out.svg" alt="zoom-out-icon" className="cursor-pointer w-7" />
+        <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
+        <img src={palletIcon} alt="color-pallete icon" className="cursor-pointer w-7" />
+        <img src={zoomInIcon} alt="zoom-in-icon" className="cursor-pointer w-7" />
+        <img src={zoomOutIcon} alt="zoom-out-icon" className="cursor-pointer w-7" />
       </div>
       <div className="flex flex-col px-2 text-center pt-5">
         <div className="bg-white rounded-md">1</div>

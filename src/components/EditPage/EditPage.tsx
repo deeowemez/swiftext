@@ -19,6 +19,7 @@ import { testHighlights as _testHighlights } from "./test-highlights";
 import { CommentedHighlight } from "./types";
 import Quill from "quill";
 import ControlBar from "./ControlBar";
+import ConfigBar from "./ConfigBar";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -186,7 +187,7 @@ const EditPage = () => {
   return (
     <div className="flex w-screen min-h-screen">
       <ControlBar />
-      <div className="min-h-screen w-3/4 overflow-hidden relative flex flex-1">
+      <div className="min-h-screen overflow-hidden relative flex flex-1">
         {url ? (
           <PdfLoader document={url}>
             {(pdfDocument) => (
@@ -214,8 +215,16 @@ const EditPage = () => {
             )}
           </PdfLoader>
         ) : (
-          <p>Please upload a PDF file to highlight</p>
+          <div className="flex justify-center items-center">
+            <p>Please upload a PDF file to highlight</p>
+          </div>
         )}
+        <div className="absolute bottom-5 left-1/3">
+          <Toolbar />
+        </div>
+      </div>
+      <div className="w-1/5">
+        <ConfigBar />
       </div>
       {contextMenu && <ContextMenu {...contextMenu} />}
     </div>

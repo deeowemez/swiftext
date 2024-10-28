@@ -4,7 +4,7 @@ import ContextMenu, { ContextMenuProps } from "./ContextMenu";
 import ExpandableTip from "./ExpandableTip";
 import HighlightContainer from "./HighlightContainer";
 import Sidebar from "./Sidebar";
-import Toolbar from "./Toolbar";
+import Toolbar from "./Toolbar1";
 import {
   GhostHighlight,
   Highlight,
