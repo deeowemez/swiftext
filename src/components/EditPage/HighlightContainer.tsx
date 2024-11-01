@@ -20,11 +20,13 @@ interface HighlightContainerProps {
     event: MouseEvent<HTMLDivElement>,
     highlight: ViewportHighlight<CommentedHighlight>,
   ) => void;
+  highlightColor: string;
 }
 
 const HighlightContainer = ({
   editHighlight,
   onContextMenu,
+  highlightColor,
 }: HighlightContainerProps) => {
   const {
     highlight,
@@ -43,6 +45,7 @@ const HighlightContainer = ({
       onContextMenu={(event) =>
         onContextMenu && onContextMenu(event, highlight)
       }
+      highlightColor={highlightColor}
     />
   ) : (
     <AreaHighlight

@@ -34,6 +34,7 @@ const resetHash = () => {
 };
 
 const EditPage = () => {
+  const [highlightColor, setHighlightColor] = useState("#FF145A");
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -41,7 +42,7 @@ const EditPage = () => {
   const currentPdfIndexRef = useRef(0);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
-  const [highlightPen, setHighlightPen] = useState<boolean>(false);
+  const [highlightPen, setHighlightPen] = useState<boolean>(true);
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
   useEffect(() => {
@@ -93,6 +94,11 @@ const EditPage = () => {
       document.removeEventListener("click", handleClick);
     };
   }, [contextMenu]);
+
+  const changeHighlightColor = (hiColor: string) => {
+    setHighlightColor(hiColor);
+    document.documentElement.style.setProperty('--highlight-color', hiColor); // Update the CSS variable
+  };
 
   const handleContextMenu = (
     event: MouseEvent<HTMLDivElement>,
@@ -187,6 +193,12 @@ const EditPage = () => {
   return (
     <div className="flex w-screen min-h-screen">
       <ControlBar />
+      <div className="color-picker flex flex-col">
+        <button onClick={() => changeHighlightColor('#FF145A')}>Red</button>
+        <button onClick={() => changeHighlightColor('#00FF00')}>Green</button>
+        <button onClick={() => changeHighlightColor('#0000FF')}>Blue</button>
+        <button onClick={() => changeHighlightColor('#FFFF00')}>Yellow</button>
+      </div>
       <div className="min-h-screen overflow-hidden relative flex flex-1">
         {url ? (
           <PdfLoader document={url}>
@@ -201,7 +213,7 @@ const EditPage = () => {
                     highlighterUtilsRef.current = _pdfHighlighterUtils;
                   }}
                   pdfScaleValue={pdfScaleValue}
-                  textSelectionColor={highlightPen ? "rgba(255, 226, 143, 1)" : undefined}
+                  textSelectionColor={highlightPen ? highlightColor : undefined}
                   onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
                   selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
                   highlights={highlights}
@@ -209,6 +221,7 @@ const EditPage = () => {
                   <HighlightContainer
                     editHighlight={editHighlight}
                     onContextMenu={handleContextMenu}
+                    highlightColor={highlightColor}
                   />
                 </PdfHighlighter>
               </>
