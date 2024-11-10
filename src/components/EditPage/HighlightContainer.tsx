@@ -45,6 +45,7 @@ const HighlightContainer = ({
       onContextMenu={(event) =>
         onContextMenu && onContextMenu(event, highlight)
       }
+      style={{ backgroundColor: highlightColor, borderRadius: '5px' }}
       highlightColor={highlightColor}
     />
   ) : (

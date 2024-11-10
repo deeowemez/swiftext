@@ -34,7 +34,7 @@ const resetHash = () => {
 };
 
 const EditPage = () => {
-  const [highlightColor, setHighlightColor] = useState("#FF145A");
+  const [highlightColor, setHighlightColor] = useState("#5ac2a1");
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -96,8 +96,9 @@ const EditPage = () => {
   }, [contextMenu]);
 
   const changeHighlightColor = (hiColor: string) => {
+    console.log('hicolor: ', hiColor);
     setHighlightColor(hiColor);
-    document.documentElement.style.setProperty('--highlight-color', hiColor); // Update the CSS variable
+    // document.documentElement.style.setProperty('--highlight-color', hiColor); // Update the CSS variable
   };
 
   const handleContextMenu = (
@@ -113,7 +114,6 @@ const EditPage = () => {
       editComment: () => editComment(highlight),
     });
   };
-
 
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
