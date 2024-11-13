@@ -34,7 +34,7 @@ const resetHash = () => {
 };
 
 const EditPage = () => {
-  const [highlightColor, setHighlightColor] = useState("#5ac2a1");
+  const [highlightColor, setHighlightColor] = useState("#32a852");
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);

@@ -45,7 +45,13 @@ const HighlightContainer = ({
       onContextMenu={(event) =>
         onContextMenu && onContextMenu(event, highlight)
       }
-      style={{ backgroundColor: highlightColor, borderRadius: '5px' }}
+      style={{ 
+        backgroundColor: highlightColor, 
+        borderRadius: '5px',
+        cursor: 'pointer',
+        position: 'absolute',
+        transition: 'background-color 0.3s ease', 
+      }}
       highlightColor={highlightColor}
     />
   ) : (
