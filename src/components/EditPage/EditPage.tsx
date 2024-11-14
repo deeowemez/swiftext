@@ -117,7 +117,7 @@ const EditPage = () => {
 
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
-    setHighlights([{ ...highlight, comment, id: getNextId() }, ...highlights]);
+    setHighlights([{ ...highlight, comment, id: getNextId(), color: highlightColor }, ...highlights]);
   };
 
   // useEffect to log highlights whenever it changes
@@ -218,11 +218,20 @@ const EditPage = () => {
                   selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
                   highlights={highlights}
                 >
-                  <HighlightContainer
+                  {highlights.map((highlight) => (
+                    <HighlightContainer
+                      key={highlight.id} // Unique key for each highlight
+                      highlight={highlight}
+                      editHighlight={editHighlight}
+                      onContextMenu={handleContextMenu}
+                      highlightColor={highlight.color} // Pass specific color for each highlight
+                    />
+                  ))}
+                  {/* <HighlightContainer
                     editHighlight={editHighlight}
                     onContextMenu={handleContextMenu}
                     highlightColor={highlightColor}
-                  />
+                  /> */}
                 </PdfHighlighter>
               </>
             )}

@@ -12,6 +12,7 @@ import {
 import { CommentedHighlight } from "./types";
 
 interface HighlightContainerProps {
+  highlight: CommentedHighlight;
   editHighlight: (
     idToUpdate: string,
     edit: Partial<CommentedHighlight>,
@@ -24,6 +25,7 @@ interface HighlightContainerProps {
 }
 
 const HighlightContainer = ({
+  // highlight,
   editHighlight,
   onContextMenu,
   highlightColor,
@@ -46,7 +48,7 @@ const HighlightContainer = ({
         onContextMenu && onContextMenu(event, highlight)
       }
       style={{ 
-        backgroundColor: highlightColor, 
+        backgroundColor: highlight.color, 
         borderRadius: '5px',
         cursor: 'pointer',
         position: 'absolute',
