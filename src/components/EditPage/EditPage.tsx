@@ -35,6 +35,7 @@ const resetHash = () => {
 
 const EditPage = () => {
   const [highlightColor, setHighlightColor] = useState("#32a852");
+  const [highlightColorProfile, setHighlightColorProfile] = useState("");
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -96,9 +97,27 @@ const EditPage = () => {
   }, [contextMenu]);
 
   const changeHighlightColor = (hiColor: string) => {
-    console.log('hicolor: ', hiColor);
+    // console.log('hicolor: ', hiColor);
     setHighlightColor(hiColor);
-    // document.documentElement.style.setProperty('--highlight-color', hiColor); // Update the CSS variable
+  };
+
+  const handleViewportContextMenu = (
+    event: MouseEvent<HTMLDivElement>,
+    highlightColorProfile: Array<CommentedHighlight>
+  ) => {
+    event.preventDefault();
+    const target = event.target as HTMLElement;
+
+    // Check if the right-click is not within a highlight container
+    if (!target.closest('.TextHighlight__part')) {
+      // Show the custom viewport menu
+      setContextMenu({
+        xPos: event.clientX,
+        yPos: event.clientY,
+        menuType: "viewport-menu",
+        highlightColorProfile: () => {console.log("Custom action triggered!")},
+      });
+    }
   };
 
   const handleContextMenu = (
@@ -110,6 +129,7 @@ const EditPage = () => {
     setContextMenu({
       xPos: event.clientX,
       yPos: event.clientY,
+      menuType: "context-menu",
       deleteHighlight: () => deleteHighlight(highlight),
       editComment: () => editComment(highlight),
     });
@@ -195,11 +215,8 @@ const EditPage = () => {
       <ControlBar />
       <div className="color-picker flex flex-col">
         <button onClick={() => changeHighlightColor('#FF145A')}>Red</button>
-        <button onClick={() => changeHighlightColor('#00FF00')}>Green</button>
-        <button onClick={() => changeHighlightColor('#0000FF')}>Blue</button>
-        <button onClick={() => changeHighlightColor('#FFFF00')}>Yellow</button>
       </div>
-      <div className="min-h-screen overflow-hidden relative flex flex-1">
+      <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={(event) => handleViewportContextMenu(event, highlights)}>
         {url ? (
           <PdfLoader document={url}>
             {(pdfDocument) => (

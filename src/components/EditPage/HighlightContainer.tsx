@@ -28,7 +28,6 @@ const HighlightContainer = ({
   // highlight,
   editHighlight,
   onContextMenu,
-  highlightColor,
 }: HighlightContainerProps) => {
   const {
     highlight,
@@ -54,7 +53,6 @@ const HighlightContainer = ({
         position: 'absolute',
         transition: 'background-color 0.3s ease', 
       }}
-      highlightColor={highlightColor}
     />
   ) : (
     <AreaHighlight
