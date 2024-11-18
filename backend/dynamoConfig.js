@@ -52,6 +52,7 @@ const insertItems = async (userID, configID, profile, configColor, type, indent,
       TableName: "highlightConfig",
       Item: colorItem
     });
+    console.log(command);
     await dynamoDB.send(command);
     console.log("Successfully inserted item:", colorItem);
   } catch (error) {
@@ -84,8 +85,8 @@ const listItemsByProfile = async (profile) => {
 
 
 const main = async () => {
-  // await createTable();
-  // await insertItems('#123', 'p1_001', 'fugly_pants', '#ffffff', 'Heading 1', '.5', 'Regular', '12px');
+  await createTable();
+  await insertItems('#123', 'p1_001', 'fugly_pants', '#ffffff', 'Heading 1', '.5', 'Regular', '12px');
   // await insertItems('#321', 'p1_002', 'fugly_pants', '#aaaaaa', 'Heading 1', '.5', 'Regular', '13px');
   // await insertItems('#321', 'p2_001', 'swiss_miss', '#aaaaaa', 'Heading 1', '.5', 'Regular', '13px');
   await listItemsByProfile('fugly_pants');
