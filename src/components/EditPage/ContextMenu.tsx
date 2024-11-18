@@ -7,7 +7,7 @@ export interface ContextMenuProps {
   menuType: "context-menu" | "viewport-menu";
   editComment?: () => void;
   deleteHighlight?: () => void;
-  colorProfile?: () => void;
+  highlightColorProfile?: () => void;
 }
 
 const ContextMenu = ({
@@ -16,7 +16,7 @@ const ContextMenu = ({
   menuType,
   editComment,
   deleteHighlight,
-  colorProfile,
+  highlightColorProfile,
 }: ContextMenuProps) => {
   if (menuType === "context-menu") {
     return (
@@ -28,7 +28,7 @@ const ContextMenu = ({
   } else if (menuType === "viewport-menu") {
     return (
       <div className="viewport-menu font-sserif" style={{ top: yPos + 2, left: xPos + 2 }}>
-        <button onClick={customAction}>Custom Action</button>
+        <button onClick={highlightColorProfile}>Custom Action</button>
       </div>
     );
   }
