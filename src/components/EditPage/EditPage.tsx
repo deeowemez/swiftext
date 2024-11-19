@@ -101,24 +101,46 @@ const EditPage = () => {
     setHighlightColor(hiColor);
   };
 
-  const handleViewportContextMenu = (
+  const fetchHighlightProfiles = async () => {
+    try {
+      const response = await axios.get("/profile/1"); // Replace '1' with dynamic ID if needed
+      const { data } = response;
+      console.log(response);
+      if (data.success) {
+        return data.data; // The list of highlight color profiles
+      } else {
+        console.error("Error fetching profiles:", data.error);
+        return [];
+      }
+    } catch (error) {
+      console.error("Axios error:", error);
+      return [];
+    }
+  };
+
+  const handleViewportContextMenu = async (
     event: MouseEvent<HTMLDivElement>,
-    highlightColorProfile: Array<CommentedHighlight>
+    // highlightColorProfile: Array<CommentedHighlight>
   ) => {
     event.preventDefault();
     const target = event.target as HTMLElement;
 
     // Check if the right-click is not within a highlight container
     if (!target.closest('.TextHighlight__part')) {
+      const profiles = await fetchHighlightProfiles();
       // Show the custom viewport menu
       setContextMenu({
         xPos: event.clientX,
         yPos: event.clientY,
         menuType: "viewport-menu",
-        highlightColorProfile: () => {console.log("Custom action triggered!")},
+        listHighlightColorProfile: () => {
+          console.log("Fetched Highlight Profiles:", profiles)
+        }
       });
     }
   };
+
+  
 
   const handleContextMenu = (
     event: MouseEvent<HTMLDivElement>,
@@ -216,7 +238,7 @@ const EditPage = () => {
       <div className="color-picker flex flex-col">
         <button onClick={() => changeHighlightColor('#FF145A')}>Red</button>
       </div>
-      <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={(event) => handleViewportContextMenu(event, highlights)}>
+      <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (
           <PdfLoader document={url}>
             {(pdfDocument) => (

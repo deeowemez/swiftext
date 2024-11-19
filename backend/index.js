@@ -3,8 +3,9 @@ const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
-const { Pool } = require('pg'); 
+const { Pool } = require('pg');
 require('dotenv').config();
+const { getHighlightProfile } = require('./dynamoConfig');
 
 const app = express();
 app.use(cors());
@@ -82,7 +83,7 @@ app.get('/edit', async (req, res) => {
 
     // Ensure the file path is valid and exists on the server
     const fullFilePath = path.join(__dirname, filePath);
-    
+
     // Send the file or an error response
     res.sendFile(fullFilePath, (err) => {
         if (err) {
@@ -107,7 +108,7 @@ app.delete('/files/:id', async (req, res) => {
         }
 
         const filePath = result.rows[0].filepath;
-        
+
         // Delete file from the database
         const deleteQuery = 'DELETE FROM uploads WHERE id = $1';
         await pool.query(deleteQuery, [fileId]);
@@ -127,6 +128,25 @@ app.delete('/files/:id', async (req, res) => {
         res.status(500).send('Error deleting file');
     }
 });
+
+app.get('/profile/:id', async (req, res) => {
+    const profileID = req.params.id;
+    console.log('profileID ', profileID);
+
+    try {
+        const response = await getHighlightProfile(profileID);
+        res.status(200).json({
+            success: true,
+            data: response,
+        });
+    } catch (err) {
+        console.error('Error getting highlight profile:', err);
+        res.status(500).json({
+            success: false,
+            error: 'Error getting highlight profile',
+        });
+    }
+})
 
 // Add a root route for testing
 app.get('/', (req, res) => {
