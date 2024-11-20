@@ -170,8 +170,8 @@ const getHighlightProfile = async (profile) => {
 
 
 const main = async () => {
-  await createTable();
-  await insertItems();
+  // await createTable();
+  // await insertItems();
   const response = await getHighlightProfile("1");
   console.log(response);
 };

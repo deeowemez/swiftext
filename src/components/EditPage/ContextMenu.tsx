@@ -42,11 +42,17 @@ const ContextMenu = ({
     return (
       <div className="viewport-menu font-sserif cursor-pointer" style={{ top: yPos + 2, left: xPos + 2 }}>
         {listHighlightColorProfile && listHighlightColorProfile.length > 0 ? (
-          <div className="flex gap-2">
+          <div className="flex gap-2 p-1 w-40 max-w-xs overflow-x-scroll 
+           [&::-webkit-scrollbar]:h-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  ">
             {listHighlightColorProfile.map((profile, index) => (
               <div
                 key={index}
-                className="w-5 h-5 rounded-full"
+                className="w-5 h-5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: profile.configColor.S }}
                 onClick={() => changeHighlightColor && changeHighlightColor(profile.configColor.S)}
               />

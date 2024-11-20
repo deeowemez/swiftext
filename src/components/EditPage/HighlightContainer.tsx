@@ -51,7 +51,7 @@ const HighlightContainer = ({
         backgroundColor: highlight.color, 
         
       }}
-      highlightColor={highlightColor}
+      // highlightColor={highlightColor}
     />
   ) : (
     <AreaHighlight
