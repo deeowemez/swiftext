@@ -170,12 +170,12 @@ const getHighlightProfile = async (profile) => {
 
 
 const main = async () => {
-  // await createTable();
-  // await insertItems();
-  // const response = await getHighlightProfile("1");
-  // console.log(response);
+  await createTable();
+  await insertItems();
+  const response = await getHighlightProfile("1");
+  console.log(response);
 };
 
-main();
+// main();
 
 module.exports = {getHighlightProfile};

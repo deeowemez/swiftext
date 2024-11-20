@@ -62,6 +62,8 @@ const EditPage = () => {
           // Use the file object in your component
           setPdfFile(file);
 
+          fetchAndSetProfile();
+
           // Convert File to Data URL for preview or further usage
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -70,6 +72,7 @@ const EditPage = () => {
               setUrl(result as string);
             }
           };
+          
           reader.readAsDataURL(file);
 
         } catch (error) {
@@ -119,22 +122,25 @@ const EditPage = () => {
     }
   };
 
+  const fetchAndSetProfile = async () => {
+    const profile = await fetchHighlightProfiles('1');
+    setHighlightColorProfile(profile);
+  };
+  
+
   const handleViewportContextMenu = async (
     event: MouseEvent<HTMLDivElement>,
-    // highlightColorProfile: Array<CommentedHighlight>
   ) => {
     event.preventDefault();
     const target = event.target as HTMLElement;
 
     // Check if the right-click is not within a highlight container
     if (!target.closest('.TextHighlight__part')) {
-      const profile = await fetchHighlightProfiles('1');
-      setHighlightColorProfile(profile);
       setContextMenu({
         xPos: event.clientX,
         yPos: event.clientY,
         menuType: "viewport-menu",
-        listHighlightColorProfile: profile,
+        listHighlightColorProfile: highlightColorProfile,
         changeHighlightColor: changeHighlightColor
       });
     }
@@ -233,9 +239,6 @@ const EditPage = () => {
   return (
     <div className="flex w-screen min-h-screen">
       <ControlBar />
-      <div className="color-picker flex flex-col">
-        <button onClick={() => changeHighlightColor('#FF145A')}>Red</button>
-      </div>
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (
           <PdfLoader document={url}>
@@ -246,9 +249,7 @@ const EditPage = () => {
                   enableAreaSelection={(event) => event.altKey}
                   pdfDocument={pdfDocument}
                   onScrollAway={resetHash}
-                  utilsRef={(_pdfHighlighterUtils) => {
-                    highlighterUtilsRef.current = _pdfHighlighterUtils;
-                  }}
+                  utilsRef={(_pdfHighlighterUtils) => { highlighterUtilsRef.current = _pdfHighlighterUtils }}
                   pdfScaleValue={pdfScaleValue}
                   textSelectionColor={highlightPen ? highlightColor : undefined}
                   onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
