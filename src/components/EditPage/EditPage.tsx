@@ -1,6 +1,6 @@
 import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import CommentForm from "./CommentForm";
-import ContextMenu, { ContextMenuProps } from "./ContextMenu";
+import ContextMenu, { ContextMenuProps, HighlightColorProfileProps } from "./ContextMenu";
 import ExpandableTip from "./ExpandableTip";
 import HighlightContainer from "./HighlightContainer";
 import Sidebar from "./Sidebar";
@@ -35,7 +35,7 @@ const resetHash = () => {
 
 const EditPage = () => {
   const [highlightColor, setHighlightColor] = useState("#32a852");
-  const [highlightColorProfile, setHighlightColorProfile] = useState("");
+  const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -101,12 +101,13 @@ const EditPage = () => {
     setHighlightColor(hiColor);
   };
 
-  const fetchHighlightProfiles = async () => {
+  const fetchHighlightProfiles = async (profileID: string) => {
     try {
-      const response = await axios.get("/profile/1"); // Replace '1' with dynamic ID if needed
+      console.log('alskdfja');
+      const response = await axios.get(`http://localhost:5000/profile/${profileID}`);
       const { data } = response;
-      console.log(response);
       if (data.success) {
+        // console.log(data.data);
         return data.data; // The list of highlight color profiles
       } else {
         console.error("Error fetching profiles:", data.error);
@@ -127,20 +128,17 @@ const EditPage = () => {
 
     // Check if the right-click is not within a highlight container
     if (!target.closest('.TextHighlight__part')) {
-      const profiles = await fetchHighlightProfiles();
-      // Show the custom viewport menu
+      const profile = await fetchHighlightProfiles('1');
+      setHighlightColorProfile(profile);
       setContextMenu({
         xPos: event.clientX,
         yPos: event.clientY,
         menuType: "viewport-menu",
-        listHighlightColorProfile: () => {
-          console.log("Fetched Highlight Profiles:", profiles)
-        }
+        listHighlightColorProfile: profile,
+        changeHighlightColor: changeHighlightColor
       });
     }
   };
-
-  
 
   const handleContextMenu = (
     event: MouseEvent<HTMLDivElement>,

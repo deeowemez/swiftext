@@ -1,13 +1,25 @@
 import React from "react";
 import "../../style/ContextMenu.css";
 
+export interface HighlightColorProfileProps {
+  size: { S: string };
+  indent: { S: string };
+  configID: { S: string };
+  highlightColorProfile: { S: string };
+  style: { S: string };
+  type: { S: string };
+  userID: { S: string };
+  configColor: { S: string };
+}
+
 export interface ContextMenuProps {
   xPos: any;
   yPos: any;
   menuType: "context-menu" | "viewport-menu";
   editComment?: () => void;
   deleteHighlight?: () => void;
-  listHighlightColorProfile?: () => void;
+  listHighlightColorProfile?: HighlightColorProfileProps[];
+  changeHighlightColor?: (hiColor: string) => void;
 }
 
 const ContextMenu = ({
@@ -17,6 +29,7 @@ const ContextMenu = ({
   editComment,
   deleteHighlight,
   listHighlightColorProfile,
+  changeHighlightColor,
 }: ContextMenuProps) => {
   if (menuType === "context-menu") {
     return (
@@ -27,8 +40,21 @@ const ContextMenu = ({
     );
   } else if (menuType === "viewport-menu") {
     return (
-      <div className="viewport-menu font-sserif" style={{ top: yPos + 2, left: xPos + 2 }}>
-        <button onClick={listHighlightColorProfile}>Custom Action</button>
+      <div className="viewport-menu font-sserif cursor-pointer" style={{ top: yPos + 2, left: xPos + 2 }}>
+        {listHighlightColorProfile && listHighlightColorProfile.length > 0 ? (
+          <div className="flex gap-2">
+            {listHighlightColorProfile.map((profile, index) => (
+              <div
+                key={index}
+                className="w-5 h-5 rounded-full"
+                style={{ backgroundColor: profile.configColor.S }}
+                onClick={() => changeHighlightColor && changeHighlightColor(profile.configColor.S)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>No profile selected</p>
+        )}
       </div>
     );
   }

@@ -135,6 +135,7 @@ app.get('/profile/:id', async (req, res) => {
 
     try {
         const response = await getHighlightProfile(profileID);
+        // console.log('response index.js: ', response);
         res.status(200).json({
             success: true,
             data: response,

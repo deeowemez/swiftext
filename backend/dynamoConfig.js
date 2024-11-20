@@ -172,16 +172,10 @@ const getHighlightProfile = async (profile) => {
 const main = async () => {
   // await createTable();
   // await insertItems();
-  // await insertItems('#123', 'p1_001', 'fugly_pants', '#ffffff', 'Heading 1', '.5', 'Regular', '12px');
-  // await insertItems('#321', 'p1_002', 'fugly_pants', '#aaaaaa', 'Heading 1', '.5', 'Regular', '13px');
-  // await insertItems('#321', 'p2_001', 'swiss_miss', '#aaaaaa', 'Heading 1', '.5', 'Regular', '13px');
-  const response = await getHighlightProfile("1");
-  // console.log("Items in highlightConfig table:", response);
-  // await listItemsByProfile();
+  // const response = await getHighlightProfile("1");
+  // console.log(response);
 };
 
-
-// Run the main function to execute the complete process
 main();
 
 module.exports = {getHighlightProfile};
