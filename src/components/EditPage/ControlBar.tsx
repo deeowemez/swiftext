@@ -8,14 +8,23 @@ import zoomOutIcon from "../../assets/images/zoom-out.svg";
 const ControlBar = () => {
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
-      <div className="flex flex-col gap-10 p-[16px] ">
-        <a href="/files">
+      <div className="flex flex-col gap-5 p-[10px] ">
+
+        <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
           <img src={cottageIcon} alt="home-icon" className="cursor-pointer w-7" />
         </a>
-        <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
-        <img src={palletIcon} alt="color-pallete icon" className="cursor-pointer w-7" />
-        <img src={zoomInIcon} alt="zoom-in-icon" className="cursor-pointer w-7" />
-        <img src={zoomOutIcon} alt="zoom-out-icon" className="cursor-pointer w-7" />
+        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+          <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
+        </a>
+        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+          <img src={palletIcon} alt="color-pallete icon" className="cursor-pointer w-7" />
+        </a>
+        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+          <img src={zoomInIcon} alt="zoom-in-icon" className="cursor-pointer w-7" />
+        </a>
+        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+          <img src={zoomOutIcon} alt="zoom-out-icon" className="cursor-pointer w-7" />
+        </a>
       </div>
       <div className="flex flex-col px-2 text-center pt-5">
         <div className="bg-white rounded-md">1</div>

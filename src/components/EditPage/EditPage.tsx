@@ -36,6 +36,7 @@ const resetHash = () => {
 const EditPage = () => {
   const [highlightColor, setHighlightColor] = useState("#32a852");
   const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
+  const [highlightColorProfileID, setHighlightColorProfileID] = useState("");
   const { '*': filePath } = useParams();
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -62,7 +63,7 @@ const EditPage = () => {
           // Use the file object in your component
           setPdfFile(file);
 
-          fetchAndSetProfile();
+          fetchAndSetProfile('1');
 
           // Convert File to Data URL for preview or further usage
           const reader = new FileReader();
@@ -106,11 +107,9 @@ const EditPage = () => {
 
   const fetchHighlightProfiles = async (profileID: string) => {
     try {
-      console.log('alskdfja');
       const response = await axios.get(`http://localhost:5000/profile/${profileID}`);
       const { data } = response;
       if (data.success) {
-        // console.log(data.data);
         return data.data; // The list of highlight color profiles
       } else {
         console.error("Error fetching profiles:", data.error);
@@ -122,8 +121,9 @@ const EditPage = () => {
     }
   };
 
-  const fetchAndSetProfile = async () => {
-    const profile = await fetchHighlightProfiles('1');
+  const fetchAndSetProfile = async (profileID: string) => {
+    const profile = await fetchHighlightProfiles(profileID);
+    setHighlightColorProfileID(profileID);
     setHighlightColorProfile(profile);
   };
   
@@ -163,13 +163,14 @@ const EditPage = () => {
 
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
-    setHighlights([{ ...highlight, comment, id: getNextId(), color: highlightColor }, ...highlights]);
+    setHighlights([{ ...highlight, comment, id: getNextId(), color: highlightColor, profileID: highlightColorProfileID, }, ...highlights]);
   };
 
   // useEffect to log highlights whenever it changes
   useEffect(() => {
     console.log("Current highlights:", highlights);
-  }, [highlights]); // This effect runs every time 'highlights' changes
+    // console.log("Current profile: ", highlightColorProfile[0].highlightColorProfile.S);
+  }, [highlights, highlightColorProfile]); // This effect runs every time 'highlights' changes
 
   const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
     console.log("Deleting highlight", highlight);
@@ -258,18 +259,13 @@ const EditPage = () => {
                 >
                   {highlights.map((highlight) => (
                     <HighlightContainer
-                      key={highlight.id} // Unique key for each highlight
+                      key={highlight.id}
                       highlight={highlight}
                       editHighlight={editHighlight}
                       onContextMenu={handleContextMenu}
-                      highlightColor={highlight.color} // Pass specific color for each highlight
+                      highlightColor={highlight.color}
                     />
                   ))}
-                  {/* <HighlightContainer
-                    editHighlight={editHighlight}
-                    onContextMenu={handleContextMenu}
-                    highlightColor={highlightColor}
-                  /> */}
                 </PdfHighlighter>
               </>
             )}
@@ -279,7 +275,7 @@ const EditPage = () => {
             <p>Please upload a PDF file to highlight</p>
           </div>
         )}
-        <div className="absolute bottom-5 left-1/3">
+        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-10">
           <Toolbar />
         </div>
       </div>

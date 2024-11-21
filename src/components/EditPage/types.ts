@@ -4,4 +4,5 @@ export interface CommentedHighlight extends Highlight {
   content: Content;
   comment?: string;
   color: string;
+  profileID: string;
 }
