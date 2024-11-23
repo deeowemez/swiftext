@@ -13,7 +13,7 @@ const ControlBar = () => {
         <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
           <img src={cottageIcon} alt="home-icon" className="cursor-pointer w-7" />
         </a>
-        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+        <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4]">
           <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
         </a>
         <a className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">

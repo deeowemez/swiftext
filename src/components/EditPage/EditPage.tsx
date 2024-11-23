@@ -45,6 +45,7 @@ const EditPage = () => {
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
   const [highlightPen, setHighlightPen] = useState<boolean>(true);
+  const [activeTool, setActiveTool] = useState<string>('highlightPen');
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const EditPage = () => {
               setUrl(result as string);
             }
           };
-          
+
           reader.readAsDataURL(file);
 
         } catch (error) {
@@ -126,23 +127,26 @@ const EditPage = () => {
     setHighlightColorProfileID(profileID);
     setHighlightColorProfile(profile);
   };
-  
+
 
   const handleViewportContextMenu = async (
     event: MouseEvent<HTMLDivElement>,
   ) => {
-    event.preventDefault();
     const target = event.target as HTMLElement;
 
     // Check if the right-click is not within a highlight container
     if (!target.closest('.TextHighlight__part')) {
-      setContextMenu({
-        xPos: event.clientX,
-        yPos: event.clientY,
-        menuType: "viewport-menu",
-        listHighlightColorProfile: highlightColorProfile,
-        changeHighlightColor: changeHighlightColor
-      });
+      if (activeTool == 'highlightPen'){
+        event.preventDefault();
+        setContextMenu({
+          xPos: event.clientX,
+          yPos: event.clientY,
+          menuType: "viewport-menu",
+          listHighlightColorProfile: highlightColorProfile,
+          changeHighlightColor: changeHighlightColor
+
+        })
+      };
     }
   };
 
@@ -228,6 +232,10 @@ const EditPage = () => {
     }
   };
 
+  const toggleHighlightPen = () => {
+    setHighlightPen(!highlightPen);
+  };
+
   // Hash listeners for autoscrolling to highlights
   useEffect(() => {
     window.addEventListener("hashchange", scrollToHighlightFromHash);
@@ -245,7 +253,7 @@ const EditPage = () => {
           <PdfLoader document={url}>
             {(pdfDocument) => (
               <>
-                {/* <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)} toggleHighlightPen={() => setHighlightPen(!highlightPen)} /> */}
+                {/* <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)}  /> */}
                 <PdfHighlighter
                   enableAreaSelection={(event) => event.altKey}
                   pdfDocument={pdfDocument}
@@ -276,7 +284,9 @@ const EditPage = () => {
           </div>
         )}
         <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-10">
-          <Toolbar />
+          <Toolbar
+            toggleHighlightPen={toggleHighlightPen}
+          />
         </div>
       </div>
       <div className="w-1/5">
