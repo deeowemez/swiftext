@@ -256,13 +256,15 @@ const EditPage = () => {
 
   return (
     <div className="flex w-screen min-h-screen">
-      <ControlBar />
+      <ControlBar
+        setPdfScaleValue={(value) => setPdfScaleValue(value)}
+      />
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (
           <PdfLoader document={url}>
             {(pdfDocument) => (
               <>
-                {/* <Toolbar setPdfScaleValue={(value) => setPdfScaleValue(value)}  /> */}
+                {/* <Toolbar   /> */}
                 <PdfHighlighter
                   enableAreaSelection={(event) => event.altKey}
                   pdfDocument={pdfDocument}
