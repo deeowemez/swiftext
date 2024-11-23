@@ -34,7 +34,7 @@ const resetHash = () => {
 };
 
 const EditPage = () => {
-  const [highlightColor, setHighlightColor] = useState("#32a852");
+  const [highlightColor, setHighlightColor] = useState("#71a3c1");
   const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
   const [highlightColorProfileID, setHighlightColorProfileID] = useState("");
   const { '*': filePath } = useParams();
@@ -136,7 +136,7 @@ const EditPage = () => {
 
     // Check if the right-click is not within a highlight container
     if (!target.closest('.TextHighlight__part')) {
-      if (activeTool == 'highlightPen'){
+      if (activeTool == 'highlightPen') {
         event.preventDefault();
         setContextMenu({
           xPos: event.clientX,
@@ -232,8 +232,17 @@ const EditPage = () => {
     }
   };
 
-  const toggleHighlightPen = () => {
-    setHighlightPen(!highlightPen);
+  const toggleActiveTool = (activeTool: string) => {
+    setActiveTool(activeTool);
+    console.log('Active Tool: ', activeTool);
+    console.log('highlightPen bef: ', highlightPen);
+    if (activeTool == 'eraser') {
+      setHighlightPen(false);
+    }
+    if (highlightPen == false && activeTool == 'highlightPen') {
+      setHighlightPen(true);
+    }
+    console.log('highlightPen aft: ', highlightPen);
   };
 
   // Hash listeners for autoscrolling to highlights
@@ -262,7 +271,8 @@ const EditPage = () => {
                   pdfScaleValue={pdfScaleValue}
                   textSelectionColor={highlightPen ? highlightColor : undefined}
                   onSelection={highlightPen ? (selection) => addHighlight(selection.makeGhostHighlight(), "") : undefined}
-                  selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
+                  // selectionTip={highlightPen ? undefined : <ExpandableTip addHighlight={addHighlight} />}
+                  selectionTip={undefined}
                   highlights={highlights}
                 >
                   {highlights.map((highlight) => (
@@ -285,7 +295,8 @@ const EditPage = () => {
         )}
         <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-10">
           <Toolbar
-            toggleHighlightPen={toggleHighlightPen}
+            toggleActiveTool={toggleActiveTool}
+            activeTool={activeTool}
           />
         </div>
       </div>
