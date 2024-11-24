@@ -18,6 +18,7 @@
     "react-dom": "^18.3.1",
     "react-pdf": "^9.1.1",
     "react-pdf-highlighter-extended": "^8.1.0",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^6.27.0",
     "tesseract.js": "^5.1.1",
     "typescript": "^5.6.3"

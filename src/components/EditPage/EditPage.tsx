@@ -294,7 +294,6 @@ const EditPage = () => {
           <PdfLoader document={url}>
             {(pdfDocument) => (
               <>
-                {/* <Toolbar   /> */}
                 <PdfHighlighter
                   enableAreaSelection={(event) => event.altKey}
                   pdfDocument={pdfDocument}
