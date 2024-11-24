@@ -41,6 +41,8 @@ const EditPage = () => {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [url, setUrl] = useState<string | null>(null);
   const [highlights, setHighlights] = useState<Array<CommentedHighlight>>([]);
+  const undoStack = useRef<Array<Array<CommentedHighlight>>>([]);
+  const redoStack = useRef<Array<Array<CommentedHighlight>>>([]);
   const currentPdfIndexRef = useRef(0);
   const [contextMenu, setContextMenu] = useState<ContextMenuProps | null>(null);
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
@@ -100,6 +102,31 @@ const EditPage = () => {
       document.removeEventListener("click", handleClick);
     };
   }, [contextMenu]);
+
+  const saveToUndoStack = () => {
+    undoStack.current.push([...highlights]);
+    redoStack.current = [];
+  };
+
+  const handleUndo = () => {
+    if (undoStack.current.length > 0) {
+      const lastState = undoStack.current.pop();
+      redoStack.current.push([...highlights]);
+      if (lastState) {
+        setHighlights(lastState);
+      }
+    }
+  };
+
+  const handleRedo = () => {
+    if (redoStack.current.length > 0) {
+      const nextState = redoStack.current.pop();
+      undoStack.current.push([...highlights]);
+      if (nextState) {
+        setHighlights(nextState);
+      }
+    }
+  };
 
   const changeHighlightColor = (hiColor: string) => {
     // console.log('hicolor: ', hiColor);
@@ -167,6 +194,7 @@ const EditPage = () => {
 
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
+    saveToUndoStack();
     setHighlights([{ ...highlight, comment, id: getNextId(), color: highlightColor, profileID: highlightColorProfileID, }, ...highlights]);
   };
 
@@ -178,6 +206,7 @@ const EditPage = () => {
 
   const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
     console.log("Deleting highlight", highlight);
+    saveToUndoStack();
     setHighlights(highlights.filter((h) => h.id != highlight.id));
   };
 
@@ -186,6 +215,7 @@ const EditPage = () => {
     edit: Partial<CommentedHighlight>,
   ) => {
     console.log(`Editing highlight ${idToUpdate} with `, edit);
+    saveToUndoStack();
     setHighlights(
       highlights.map((highlight) =>
         highlight.id === idToUpdate ? { ...highlight, ...edit } : highlight,
@@ -299,6 +329,9 @@ const EditPage = () => {
           <Toolbar
             toggleActiveTool={toggleActiveTool}
             activeTool={activeTool}
+            handleRedo={handleRedo}
+            handleUndo={handleUndo}
+            highlights={highlights}
           />
         </div>
       </div>
