@@ -334,7 +334,7 @@ const EditPage = () => {
           />
         </div>
       </div>
-      <div className="w-1/5">
+      <div className="w-2/5">
         <ConfigBar />
       </div>
       {contextMenu && <ContextMenu {...contextMenu} />}

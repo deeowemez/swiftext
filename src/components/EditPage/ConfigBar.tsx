@@ -1,10 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import arrowIcon from "../../assets/images/expand-arrow.svg";
 
 const ConfigBar = () => {
     const [editorHtml, setEditorHtml] = useState('');
+
+    const quillRef = useRef<ReactQuill | null>(null);
+
+    useEffect(() => {
+        // Define the pre-filled content and its custom formatting
+        const content = [
+          {
+            insert: "This is a Heading 1 example\n",
+            attributes: { header: 1 },
+          },
+          {
+            insert: "This is a styled paragraph.\n",
+            attributes: { bold: true, color: "#ff5733" },
+          },
+          {
+            insert: "This text is highlighted in yellow.\n",
+            attributes: { background: "#ffff00" },
+          },
+          {
+            insert: "Another indented bullet list item.\n",
+            attributes: { list: "", indent: 6 },
+          },
+        ];
+    
+        // Access Quill editor instance
+        if (quillRef.current) {
+          const editor = quillRef.current.getEditor();
+          editor.setContents(content); // Set the custom content with formats
+        }
+      }, []);
 
     const handleChange = (value: string) => {
         setEditorHtml(value); // This will capture the content of the editor
@@ -17,21 +47,12 @@ const ConfigBar = () => {
                 <div className="bg-white flex-grow rounded-ss-lg">Highlighter color config</div>
                 <div className="bg-white flex-grow rounded-ss-lg">
                     <ReactQuill
-                        value='gay adee'
+                        value={editorHtml}
                         onChange={handleChange}
-                        theme="snow" // You can also use 'bubble' theme
-                        modules={{
-                            toolbar: [
-                                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                                ['bold', 'italic', 'underline'],
-                                [{ 'align': [] }],
-                                ['link'],
-                                [{ 'color': [] }, { 'background': [] }],
-                                ['blockquote', 'code-block'],
-                                ['image'],
-                            ],
-                        }}
+                        ref={quillRef}
+                        readOnly={true} // Make editor read-only to hide toolbar and editing
+                        theme="snow"
+                        modules={{ toolbar: false }} // Disable toolbar
                     />
                     <h3>Editor Output:</h3>
                     <div></div>
