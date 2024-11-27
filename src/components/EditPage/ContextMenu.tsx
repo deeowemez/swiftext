@@ -2,14 +2,20 @@ import React from "react";
 import "../../style/ContextMenu.css";
 
 export interface HighlightColorProfileProps {
-  size: { S: string };
-  indent: { S: string };
-  configID: { S: string };
-  highlightColorProfile: { S: string };
-  style: { S: string };
-  type: { S: string };
-  userID: { S: string };
-  configColor: { S: string };
+  userID: { S: string },
+  highlightColorProfile: { S: string },
+  configColor: { S: string },
+  configID: { S: string },
+  bold: { BOOL: boolean },
+  italic: { BOOL: boolean },
+  underline: { BOOL: boolean },
+  strike: { BOOL: boolean },
+  header: { N: number },
+  list: { S: string },
+  script: { S: string },
+  indent: { N: number },
+  align: { S: string },
+  size: { S: string },
 }
 
 export interface ContextMenuProps {

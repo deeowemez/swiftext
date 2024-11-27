@@ -29,41 +29,28 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           profile.configColor.S === highlight.color
       );
 
-      return [
-        {
-          insert: 'adsf',
-          attributes: {
-            color: '#a89932',
-            size: 'medium',
-            codeblock: 'true',
+      if (matchingProfile) {
+        console.log('mp: ', matchingProfile);
+        return [
+          {
+            insert: highlight.content.text + '\n',
+            attributes: {
+              bold: matchingProfile.bold.BOOL,
+              italic: matchingProfile.italic.BOOL,
+              underline: matchingProfile.underline.BOOL,
+              strike: matchingProfile.strike.BOOL,
+              header: matchingProfile.header.N,
+              list: matchingProfile.list.S,
+              script: matchingProfile.script.S,
+              indent: matchingProfile.indent.N,
+              align: matchingProfile.align.S,
+              size: matchingProfile.size.S,
+            },
           },
-        },
-        {
-          insert: "This is bold and italic text.\n",
-          attributes: { bold: true, indent: 2, size: 'huge' },
-        },
-        {
-          insert: "This is a code block.\n",
-          attributes: { font: "monospace" },
-        },
-      ]
+        ];
+      }
 
-      // if (matchingProfile) {
-      //   console.log('mp: ', matchingProfile);
-      //   return [
-      // {
-      //   insert: highlight.content.text,
-      //   attributes: {
-      //     indent: matchingProfile.indent,
-      //     color: matchingProfile.configColor.S,
-      //     size: matchingProfile.indent.S,
-      //   },
-      // },
-      // { insert: '\n' },
-      // ];
-      // }
-
-      // return []; // Skip highlights without a matching profile
+      return [];
     });
 
 
