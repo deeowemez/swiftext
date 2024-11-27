@@ -335,7 +335,10 @@ const EditPage = () => {
         </div>
       </div>
       <div className="w-2/5">
-        <ConfigBar />
+        <ConfigBar 
+          highlights={highlights}
+          highlightColorProfile={highlightColorProfile}
+        />
       </div>
       {contextMenu && <ContextMenu {...contextMenu} />}
     </div>
