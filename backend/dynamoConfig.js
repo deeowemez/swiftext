@@ -49,8 +49,8 @@ const insertItems = async () => {
       header: 1,
       list: '',
       script: '',
-      indent: 1,
-      align: 'center',
+      indent: 0,
+      align: 'left',
       size: 'huge',
     },
     {
@@ -65,7 +65,7 @@ const insertItems = async () => {
       header: 2,
       list: 'check',
       script: '',
-      indent: 2,
+      indent: 1,
       align: 'left',
       size: 'large',
     },
@@ -81,7 +81,7 @@ const insertItems = async () => {
       header: 3,
       list: '',
       script: 'super',
-      indent: 3,
+      indent: 2,
       align: 'right',
       size: 'small',
     },
@@ -175,10 +175,10 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
 const main = async () => {
   // await createTable();
-  // await insertItems();
+  await insertItems();
   // await deleteItemsByHighlightColorProfile('1');
-//   const response = await getHighlightProfile("1");
-//   console.log(response);
+  const response = await getHighlightProfile("1");
+  console.log(response);
 };
 
 // main();

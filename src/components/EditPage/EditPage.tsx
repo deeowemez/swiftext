@@ -195,7 +195,7 @@ const EditPage = () => {
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
     saveToUndoStack();
-    setHighlights([{ ...highlight, comment, id: getNextId(), color: highlightColor, profileID: highlightColorProfileID, }, ...highlights]);
+    setHighlights([...highlights, { ...highlight, comment, id: getNextId(), color: highlightColor, profileID: highlightColorProfileID, }]);
   };
 
   // useEffect to log highlights whenever it changes
@@ -334,7 +334,7 @@ const EditPage = () => {
           />
         </div>
       </div>
-      <div className="w-2/5">
+      <div className="w-1/5">
         <ConfigBar 
           highlights={highlights}
           highlightColorProfile={highlightColorProfile}

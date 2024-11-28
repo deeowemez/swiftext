@@ -86,16 +86,12 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     ['clean']                                         // remove formatting button
   ];
 
-  const toolbarsize = [
-    [{ 'size': ['14px', '16px', '18px'] }],
-  ];
-
   return (
-    <div className="flex min-h-screen w-full items-start font-sserif">
+    <div className="flex min-h-screen w-full items-start font-sserif relative">
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
-      <div className="flex flex-1 flex-col gap-6 bg-[#F4F4F4] p-8 min-h-screen text-center" >
-        <div className="bg-white flex-grow rounded-ss-lg">Highlighter color config</div>
-        <div className="bg-white flex-grow rounded-ss-lg">
+      <div className="flex flex-1 flex-col gap-6 bg-[#F4F4F4] p-8 h-screen text-center " >
+        <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div>
+        <div className="bg-white flex-[3] rounded-ss-lg overflow-y-auto">
           <ReactQuill
             value={editorHtml}
             onChange={handleChange}
@@ -104,7 +100,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             theme="snow"
             modules={{ toolbar: false }}
           />
-          <h3>Editor Output:</h3>
           <div></div>
         </div>
       </div>
