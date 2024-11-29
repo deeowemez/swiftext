@@ -324,7 +324,7 @@ const EditPage = () => {
             <p>Please upload a PDF file to highlight</p>
           </div>
         )}
-        <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 z-10">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10"> {/* transform */}
           <Toolbar
             toggleActiveTool={toggleActiveTool}
             activeTool={activeTool}
@@ -334,7 +334,7 @@ const EditPage = () => {
           />
         </div>
       </div>
-      <div className="w-1/5">
+      <div className="w-2/5">
         <ConfigBar 
           highlights={highlights}
           highlightColorProfile={highlightColorProfile}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import cottageIcon from "../../assets/images/cottage.svg";
 import searchIcon from "../../assets/images/search-gr.svg";
 import palletIcon from "../../assets/images/pallet-gr.svg";
@@ -9,8 +9,26 @@ interface ControlBarProps {
   setPdfScaleValue: (value: number) => void;
 }
 
+interface Field {
+  id: number;
+  highlightColor: string;
+  font: string;
+  textColor: string;
+  textBackgroundColor: string;
+  fontSize: string;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
+  strikethrough: boolean;
+  align: string;
+  indent: number;
+}
+
 const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
   const [zoom, setZoom] = useState<number | null>(null);
+  const [profileConfigPopup, setProfileConfigPopup] = useState(false);
+  const popupRef = useRef<HTMLDivElement | null>(null);
+  const [fields, setFields] = useState<Field[]>([]);
 
   const zoomIn = () => {
     if (zoom) {
@@ -36,6 +54,39 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
     }
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+      setProfileConfigPopup(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleAddField = () => {
+    setFields((prevFields) => [
+      ...prevFields,
+      {
+        id: prevFields.length,
+        highlightColor: "",
+        font: "",
+        textColor: "",
+        textBackgroundColor: "",
+        fontSize: "",
+        bold: false,
+        italic: false,
+        underline: false,
+        strikethrough: false,
+        align: "left",
+        indent: 0,
+      },
+    ]);
+  };
+
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
@@ -46,7 +97,9 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
         <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4]">
           <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
         </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
+        <div className={`p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] ${profileConfigPopup === true ? 'bg-[#FFE7D4]' : ''}`}
+          onClick={() => setProfileConfigPopup(!profileConfigPopup)}
+        >
           <img src={palletIcon} alt="color-pallete icon" className="cursor-pointer w-7" />
         </div>
         <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]" onClick={zoomIn}>
@@ -60,6 +113,145 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
         <div className="bg-white rounded-md">1</div>
         <p className="text-sm">of 57</p>
       </div>
+      {profileConfigPopup && (
+        <div
+          ref={popupRef}
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-3/5 h-3/4 bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-4 z-10 overflow-y-auto"
+        >
+          <p className="text-sm font-semibold">Customize Text Styles</p>
+
+          {/* Render all dynamically added fields */}
+          {fields.map((field, index) => (
+            <div
+              // key={field.id}
+              className="border border-gray-300 rounded-md p-4 my-2"
+            >
+              <p className="font-semibold text-gray-700 mb-2">
+                Configuration {index + 1}
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Highlight Color
+                  </label>
+                  <input
+                    type="color"
+                    name="highlightColor"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Font</label>
+                  <input
+                    type="text"
+                    name="font"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Text Color
+                  </label>
+                  <input
+                    type="color"
+                    name="textColor"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Text Background Color
+                  </label>
+                  <input
+                    type="color"
+                    name="textBackgroundColor"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Font Size
+                  </label>
+                  <input
+                    type="number"
+                    name="fontSize"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Bold</label>
+                  <input
+                    type="checkbox"
+                    name="bold"
+                    className="h-5 w-5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Italic
+                  </label>
+                  <input
+                    type="checkbox"
+                    name="italic"
+                    className="h-5 w-5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Underline
+                  </label>
+                  <input
+                    type="checkbox"
+                    name="underline"
+                    className="h-5 w-5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Strikethrough
+                  </label>
+                  <input
+                    type="checkbox"
+                    name="strikethrough"
+                    className="h-5 w-5"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    Text Align
+                  </label>
+                  <select
+                    name="align"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  >
+                    <option value="left">Left</option>
+                    <option value="center">Center</option>
+                    <option value="right">Right</option>
+                    <option value="justify">Justify</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Indent</label>
+                  <input
+                    type="number"
+                    name="indent"
+                    className="w-full border border-gray-300 rounded px-2 py-1"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Add button to dynamically create new fields */}
+          <button
+            type="button"
+            onClick={handleAddField}
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
+          >
+            Add Configuration
+          </button>
+        </div>
+      )}
     </div>
   )
 }
