@@ -288,6 +288,7 @@ const EditPage = () => {
     <div className="flex w-screen min-h-screen">
       <ControlBar
         setPdfScaleValue={(value) => setPdfScaleValue(value)}
+        highlightColorProfile={highlightColorProfile}
       />
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (

@@ -166,7 +166,7 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
   for (const item of items) {
     const userID = item.userID.S;
-    const configID = item.configID.S;
+    const configID = item.configID.N;
     await deleteItem(userID, configID); // Delete each item by its primary key
   }
 

@@ -4,9 +4,11 @@ import searchIcon from "../../assets/images/search-gr.svg";
 import palletIcon from "../../assets/images/pallet-gr.svg";
 import zoomInIcon from "../../assets/images/zoom-in.svg";
 import zoomOutIcon from "../../assets/images/zoom-out.svg";
+import { HighlightColorProfileProps } from "./ContextMenu";
 
 interface ControlBarProps {
   setPdfScaleValue: (value: number) => void;
+  highlightColorProfile: HighlightColorProfileProps[];
 }
 
 interface Field {
@@ -24,7 +26,10 @@ interface Field {
   indent: number;
 }
 
-const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
+const ControlBar = ({ 
+  setPdfScaleValue,
+  highlightColorProfile
+ }: ControlBarProps) => {
   const [zoom, setZoom] = useState<number | null>(null);
   const [profileConfigPopup, setProfileConfigPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
@@ -60,10 +65,10 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
     }
   };
 
-  const handleHighlightColorChange = (id: number, color: string) => {
+  const handleHighlightColorChange = (index: number, color: string) => {
     setFields((prevFields) =>
-      prevFields.map((field) =>
-        field.id === id ? { ...field, highlightColor: color } : field
+      prevFields.map((field, i) =>
+        i === index ? { ...field, highlightColor: color } : field
       )
     );
   };
@@ -127,26 +132,26 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-3/5 h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-4 z-10 overflow-y-auto"
         >
           {/* Render all dynamically added fields */}
-          {fields.map((field, index) => (
+          {highlightColorProfile.map((profile, index) => (
             <div
-              key={field.id}
+              key={profile.configID.S}
               className="w-2/5 border border-gray-300 rounded-md p-4 my-2 shadow-sm"
             >
               <div className="flex flex-col gap-2">
                 <div
                   className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 flex justify-center items-center cursor-pointer"
-                  style={{ backgroundColor: field.highlightColor }}
+                  style={{ backgroundColor: profile.configColor.S }}
                 >
                   <input
                     type="color"
                     name="highlightColor"
                     className="opacity-0 w-full h-full cursor-pointer"
-                    value={field.highlightColor}
-                    onChange={(e) => handleHighlightColorChange(field.id, e.target.value)}
+                    value={profile.configColor.S}
+                    onChange={(e) => handleHighlightColorChange(index, e.target.value)}
                   />
                 </div>
                 <label className="rounded-sm bg-[#E1E1E1]">
-                  {field.highlightColor}
+                  {profile.configColor.S}
                 </label>
               </div>
 

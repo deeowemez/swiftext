@@ -99,7 +99,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             value={editorHtml}
             onChange={handleChange}
             ref={quillRef}
-            // readOnly={true}
+            readOnly={true}
             theme="snow"
             modules={{ toolbar: false }}
           />
