@@ -60,6 +60,14 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
     }
   };
 
+  const handleHighlightColorChange = (id: number, color: string) => {
+    setFields((prevFields) =>
+      prevFields.map((field) =>
+        field.id === id ? { ...field, highlightColor: color } : field
+      )
+    );
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -116,21 +124,35 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
       {profileConfigPopup && (
         <div
           ref={popupRef}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-3/5 h-3/4 bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-4 z-10 overflow-y-auto"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-3/5 h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-4 z-10 overflow-y-auto"
         >
-          <p className="text-sm font-semibold">Customize Text Styles</p>
-
           {/* Render all dynamically added fields */}
           {fields.map((field, index) => (
             <div
-              // key={field.id}
-              className="border border-gray-300 rounded-md p-4 my-2"
+              key={field.id}
+              className="w-2/5 border border-gray-300 rounded-md p-4 my-2 shadow-sm"
             >
-              <p className="font-semibold text-gray-700 mb-2">
-                Configuration {index + 1}
-              </p>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
+              <div className="flex flex-col gap-2">
+                <div
+                  className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 flex justify-center items-center cursor-pointer"
+                  style={{ backgroundColor: field.highlightColor }}
+                >
+                  <input
+                    type="color"
+                    name="highlightColor"
+                    className="opacity-0 w-full h-full cursor-pointer"
+                    value={field.highlightColor}
+                    onChange={(e) => handleHighlightColorChange(field.id, e.target.value)}
+                  />
+                </div>
+                <label className="rounded-sm bg-[#E1E1E1]">
+                  {field.highlightColor}
+                </label>
+              </div>
+
+
+
+              {/* <div>
                   <label className="block text-sm font-medium mb-1">
                     Highlight Color
                   </label>
@@ -237,8 +259,7 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
                     name="indent"
                     className="w-full border border-gray-300 rounded px-2 py-1"
                   />
-                </div>
-              </div>
+                </div> */}
             </div>
           ))}
 
@@ -246,9 +267,9 @@ const ControlBar = ({ setPdfScaleValue }: ControlBarProps) => {
           <button
             type="button"
             onClick={handleAddField}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mt-4"
+            className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mt-4"
           >
-            Add Configuration
+            Add
           </button>
         </div>
       )}
