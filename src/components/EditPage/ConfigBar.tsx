@@ -63,7 +63,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     // Access Quill editor instance
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
-      // editor.setContents([{ insert: "This text is highlighted in yellow.\n", attributes: { font: "" } }]);
+      // editor.setContents([{ insert: "This text is highlighted in yellow. This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow.This text is highlighted in yellow. \n", attributes: { align: "justify" } }]);
       editor.setContents(content);
     }
   }, [highlights, highlightColorProfile]);

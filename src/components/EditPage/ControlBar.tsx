@@ -6,6 +6,15 @@ import zoomInIcon from "../../assets/images/zoom-in.svg";
 import zoomOutIcon from "../../assets/images/zoom-out.svg";
 import fontIcon from "../../assets/images/profile-config/font.svg";
 import arrrowDownIcon from "../../assets/images/profile-config/chevron-down.svg";
+import textColorIcon from "../../assets/images/profile-config/font-color.svg";
+import textBackgroundColorIcon from "../../assets/images/profile-config/highlight-alt.svg";
+import fontSizeIcon from "../../assets/images/profile-config/font-size.svg";
+import boldIcon from "../../assets/images/profile-config/bold.svg";
+import italicIcon from "../../assets/images/profile-config/italic.svg";
+import underlineIcon from "../../assets/images/profile-config/underline.svg";
+import strikethroughIcon from "../../assets/images/profile-config/strikethrough.svg";
+import alignIcon from "../../assets/images/profile-config/text-align-justify.svg";
+import leftIndentIcon from "../../assets/images/profile-config/indent-increase.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
 
 
@@ -96,6 +105,26 @@ const ControlBar = ({
     );
   };
 
+  const handleProfileChange = (
+    index: number,
+    key: keyof HighlightColorProfileProps,
+    value: string | boolean | number
+  ) => {
+    setLocalProfile((prevProfile) =>
+      prevProfile.map((item, i) => {
+        if (i === index) {
+          if (['indent', 'header'].includes(key)) {
+            return { ...item, [key]: { N: value as number } };
+          } else if (['bold', 'italic', 'underline', 'strike'].includes(key)) {
+            return { ...item, [key]: { BOOL: value as boolean } };
+          } else {
+            return { ...item, [key]: value };
+          }
+        }
+        return item;
+      })
+    );
+  };
 
   const handleSubmit = () => {
     // saveProfileToDatabase(localProfile);
@@ -148,6 +177,8 @@ const ControlBar = ({
             <div className="flex flex-wrap gap-2">
               {localProfile.map((profile, index) => (
                 <div key={profile.configID.S} className="w-[49%] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
+
+                  {/* Highlight Color */}
                   <div className="flex flex-col gap-2 items-center">
                     <div
                       className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center cursor-pointer"
@@ -158,10 +189,10 @@ const ControlBar = ({
                         name="highlightColor"
                         className="opacity-0 w-full h-full cursor-pointer"
                         value={profile.configColor.S}
-                        onChange={(e) => handleHighlightColorChange(index, e.target.value)}
+                        onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
                       />
                     </div>
-                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
+                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-1">
                       {profile.configColor.S}
                     </label>
                     <div className="rounded-sm bg-[#E1E1E1] text-center px-3">
@@ -169,26 +200,125 @@ const ControlBar = ({
                     </div>
                   </div>
 
+                  {/* Font */}
                   <div className="p-3 w-full">
-                    <div className="flex gap-2">
-                      <img src={fontIcon} alt="" className="w-3 h-6" />
+                    <div className="flex gap-2 mb-3">
+                      <img src={fontIcon} alt="" className="w-3" />
                       <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
-                        <img src={arrrowDownIcon} alt="" />
                         <select
                           className="bg-transparent w-full outline-none cursor-pointer"
-                          value={selectedFont}
-                          onChange={(e) => setSelectedFont(e.target.value)}
+                          value={profile.font.S}
+                          onChange={(e) => handleProfileChange(index, 'font', e.target.value)}
                         >
-                          <option value="" disabled hidden>
-                            Select Font
-                          </option>
-                          <option value="Arial">Arial</option>
-                          <option value="Verdana">Verdana</option>
-                          <option value="Times New Roman">Times New Roman</option>
-                          <option value="Courier New">Courier New</option>
+                          <option value="sans-serif">Sans Serif</option>
+                          <option value="serif">Serif</option>
+                          <option value="monospace">Monospace</option>
                         </select>
                       </div>
                     </div>
+
+                    <div className="flex justify-between mb-2">
+                      {/* Text Color */}
+                      <div className="flex gap-2">
+                        <img src={textColorIcon} alt="" className="w-3" />
+                        <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
+                          <div
+                            className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer rounded-sm"
+                            style={{ backgroundColor: profile.color.S }}
+                          >
+                            <input
+                              type="color"
+                              name="highlightColor"
+                              className="opacity-0 w-full cursor-pointer"
+                              value={profile.color.S}
+                              onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
+                            />
+                          </div>
+                          {/* <label className="text-center text-xs">
+                            {profile.color.S}
+                          </label> */}
+                        </div>
+                      </div>
+
+                      {/* Text Background Color */}
+                      <div className="flex gap-2 ">
+                        <img src={textBackgroundColorIcon} alt="" className="w-3" />
+                        <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
+                          <div
+                            className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
+                            style={{ backgroundColor: profile.backgroundColor.S }}
+                          >
+                            <input
+                              type="color"
+                              name="highlightColor"
+                              className="opacity-0 w-full h-full cursor-pointer"
+                              value={profile.backgroundColor.S}
+                              onChange={(e) => handleProfileChange(index, 'backgroundColor', e.target.value)}
+                            />
+                          </div>
+                          <label className="text-center text-xs">
+                            {profile.backgroundColor.S}
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Font Size */}
+                      <div className="flex gap-2">
+                        <img src={fontSizeIcon} alt="" className="w-3" />
+                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                          <select
+                            className="bg-transparent w-full outline-none cursor-pointer"
+                            value={profile.size.S}
+                            onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
+                          >
+                            <option value="small">Small</option>
+                            <option value="large">Medium</option>
+                            <option value="huge">Large</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      {/* Bold */}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].bold.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={(e) => handleProfileChange(index, 'bold', !localProfile[index].bold.BOOL)}
+                      >
+                        <img src={boldIcon} alt="" className="w-3" />
+                      </div>
+
+                      {/* Italic */}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].italic.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={(e) => handleProfileChange(index, 'italic', !localProfile[index].italic.BOOL)}
+                      >
+                        <img src={italicIcon} alt="" className="w-3" />
+                      </div>
+
+                      {/* Undeline */}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].underline.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={(e) => handleProfileChange(index, 'underline', !localProfile[index].underline.BOOL)}
+                      >
+                        <img src={underlineIcon} alt="" className="w-3" />
+                      </div>
+
+                      {/* Strikethrough */}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].strike.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={(e) => handleProfileChange(index, 'strike', !localProfile[index].strike.BOOL)}
+                      >
+                        <img src={strikethroughIcon} alt="" className="w-3" />
+                      </div>
+
+                      <div className="flex gap-[2px] w-9 h-6 hover:bg-[#FFE7D4] rounded-md cursor-pointer justify-center items-center">
+                        <img src={alignIcon} alt="" className="w-3"/>
+                        <img src={arrrowDownIcon} alt="" className="w-[9px]"/>
+                      </div>
+
+                    </div>
+
                   </div>
                 </div>
               ))}
