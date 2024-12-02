@@ -6,10 +6,13 @@ import zoomInIcon from "../../assets/images/zoom-in.svg";
 import zoomOutIcon from "../../assets/images/zoom-out.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
 
+
 interface ControlBarProps {
   setPdfScaleValue: (value: number) => void;
   highlightColorProfile: HighlightColorProfileProps[];
+  // saveProfileToDatabase: (updatedProfile: HighlightColorProfileProps[]) => void;
 }
+
 
 interface Field {
   id: number;
@@ -26,14 +29,18 @@ interface Field {
   indent: number;
 }
 
-const ControlBar = ({ 
+
+const ControlBar = ({
   setPdfScaleValue,
-  highlightColorProfile
- }: ControlBarProps) => {
+  highlightColorProfile,
+  // saveProfileToDatabase
+}: ControlBarProps) => {
   const [zoom, setZoom] = useState<number | null>(null);
   const [profileConfigPopup, setProfileConfigPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
+  const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
+
 
   const zoomIn = () => {
     if (zoom) {
@@ -47,6 +54,7 @@ const ControlBar = ({
     }
   };
 
+
   const zoomOut = () => {
     if (zoom) {
       if (zoom > 0.2) {
@@ -59,19 +67,38 @@ const ControlBar = ({
     }
   };
 
+
+  useEffect(() => {
+    setLocalProfile([...highlightColorProfile]);
+  }, [highlightColorProfile]);
+
+
+  useEffect(() => {
+    console.log("Local profile updated:", localProfile);
+  }, [localProfile]);  // Dependency array ensures this runs when localProfile changes
+
+
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setProfileConfigPopup(false);
     }
   };
 
+
   const handleHighlightColorChange = (index: number, color: string) => {
-    setFields((prevFields) =>
-      prevFields.map((field, i) =>
-        i === index ? { ...field, highlightColor: color } : field
+    setLocalProfile((prevProfile) =>
+      prevProfile.map((item, i) =>
+        i === index ? { ...item, configColor: { S: color } } : item
       )
     );
   };
+
+
+  const handleSubmit = () => {
+    // saveProfileToDatabase(localProfile);
+    setProfileConfigPopup(false); // Close popup after saving
+  };
+
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -80,29 +107,11 @@ const ControlBar = ({
     };
   }, []);
 
-  const handleAddField = () => {
-    setFields((prevFields) => [
-      ...prevFields,
-      {
-        id: prevFields.length,
-        highlightColor: "",
-        font: "",
-        textColor: "",
-        textBackgroundColor: "",
-        fontSize: "",
-        bold: false,
-        italic: false,
-        underline: false,
-        strikethrough: false,
-        align: "left",
-        indent: 0,
-      },
-    ]);
-  };
 
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
+
 
         <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
           <img src={cottageIcon} alt="home-icon" className="cursor-pointer w-7" />
@@ -129,10 +138,38 @@ const ControlBar = ({
       {profileConfigPopup && (
         <div
           ref={popupRef}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-3/5 h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-4 z-10 overflow-y-auto"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[65%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-10 z-10 overflow-y-auto"
         >
           {/* Render all dynamically added fields */}
-          {highlightColorProfile.map((profile, index) => (
+          <div className="flex flex-wrap gap-2">
+            {localProfile.map((profile, index) => (
+              <div key={profile.configID.S} className="w-[49%] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
+                <div className="flex flex-col gap-2">
+                  <div
+                    className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 flex justify-center items-center cursor-pointer"
+                    style={{ backgroundColor: profile.configColor.S }}
+                  >
+                    <input
+                      type="color"
+                      name="highlightColor"
+                      className="opacity-0 w-full h-full cursor-pointer"
+                      value={profile.configColor.S}
+                      onChange={(e) => handleHighlightColorChange(index, e.target.value)}
+                    />
+                  </div>
+                  <label className="rounded-sm bg-[#E1E1E1] text-center">
+                    {profile.configColor.S}
+                  </label>
+                  <div className="rounded-sm bg-[#E1E1E1] text-center">
+                    Remove
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+
+          {/* {highlightColorProfile.map((profile, index) => (
             <div
               key={profile.configID.S}
               className="w-2/5 border border-gray-300 rounded-md p-4 my-2 shadow-sm"
@@ -154,10 +191,11 @@ const ControlBar = ({
                   {profile.configColor.S}
                 </label>
               </div>
+            </div>
+          ))} */}
 
 
-
-              {/* <div>
+          {/* <div>
                   <label className="block text-sm font-medium mb-1">
                     Highlight Color
                   </label>
@@ -265,21 +303,28 @@ const ControlBar = ({
                     className="w-full border border-gray-300 rounded px-2 py-1"
                   />
                 </div> */}
-            </div>
-          ))}
 
-          {/* Add button to dynamically create new fields */}
-          <button
+
+          {/* <button
             type="button"
             onClick={handleAddField}
-            className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mt-4"
+            className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
           >
             Add
+          </button> */}
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
+          >
+            Save
           </button>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }
+
 
 export default ControlBar;
