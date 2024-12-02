@@ -42,6 +42,9 @@ const insertItems = async () => {
       highlightColorProfile: "1",
       configColor: "#FF5733",
       configID: "1-#FF5733",
+      backgroundColor: "",
+      color: "#000000",
+      font: "monospace",
       bold: false,
       italic: true,
       underline: false,
@@ -58,6 +61,9 @@ const insertItems = async () => {
       highlightColorProfile: "1",
       configColor: "#FF57DE",
       configID: "1-#FF57DE",
+      color: "#000000",
+      backgroundColor: "",
+      font: "monospace",
       bold: false,
       italic: false,
       underline: true,
@@ -74,6 +80,9 @@ const insertItems = async () => {
       highlightColorProfile: "1",
       configColor: "#FFC300",
       configID: "1-#FFC300",
+      color: "#000000",
+      backgroundColor: "",
+      font: "monospace",
       bold: true,
       italic: false,
       underline: false,
@@ -97,6 +106,9 @@ const insertItems = async () => {
           highlightColorProfile: { S: item.highlightColorProfile },
           configColor: { S: item.configColor },
           configID: { S: item.configID },
+          color: { S: item.color },
+          backgroundColor: { S: item.backgroundColor },
+          font: { S: item.font },
           bold: { BOOL: item.bold },
           italic: { BOOL: item.italic },
           underline: { BOOL: item.underline },
@@ -175,7 +187,7 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
 const main = async () => {
   // await createTable();
-  await insertItems();
+  // await insertItems();
   // await deleteItemsByHighlightColorProfile('1');
   const response = await getHighlightProfile("1");
   console.log(response);

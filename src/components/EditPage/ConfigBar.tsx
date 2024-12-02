@@ -6,6 +6,10 @@ import arrowIcon from "../../assets/images/expand-arrow.svg";
 import { CommentedHighlight } from "./types";
 import { HighlightColorProfileProps } from "./ContextMenu";
 
+const Font = Quill.import("formats/font") as any;
+Font.whitelist = ["arial", "courier", "georgia", "times-new-roman", "verdana"];
+Quill.register(Font, true);
+
 interface ConfigBarProps {
   highlights: Array<CommentedHighlight>;
   highlightColorProfile: HighlightColorProfileProps[];
@@ -35,9 +39,9 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           {
             insert: highlight.content.text + '\n',
             attributes: {
-              // color: matchingProfile.configColor.S,
-              // background: matchingProfile.configColor.S,
-              // font: matchingProfile.configColor.S,
+              color: matchingProfile.color.S,
+              backgroundColor: matchingProfile.backgroundColor.S,
+              font: matchingProfile.font.S,
               bold: matchingProfile.bold.BOOL,
               italic: matchingProfile.italic.BOOL,
               underline: matchingProfile.underline.BOOL,
@@ -56,11 +60,11 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       return [];
     });
 
-
     // Access Quill editor instance
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
-      editor.setContents(content); // Set the custom content with formats
+      // editor.setContents([{ insert: "This text is highlighted in yellow.\n", attributes: { font: "" } }]);
+      editor.setContents(content);
     }
   }, [highlights, highlightColorProfile]);
 

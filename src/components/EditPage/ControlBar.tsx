@@ -42,6 +42,7 @@ const ControlBar = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
+  const [selectedFont, setSelectedFont] = useState("");
 
 
   const zoomIn = () => {
@@ -115,22 +116,22 @@ const ControlBar = ({
       <div className="flex flex-col gap-5 p-[10px] ">
 
 
-        <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]">
-          <img src={cottageIcon} alt="home-icon" className="cursor-pointer w-7" />
+        <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
+          <img src={cottageIcon} alt="home-icon" className="w-7" />
         </a>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4]">
-          <img src={searchIcon} alt="search icon" className="cursor-pointer w-7" />
+        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4] cursor-pointer">
+          <img src={searchIcon} alt="search icon" className="w-7" />
         </div>
-        <div className={`p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] ${profileConfigPopup === true ? 'bg-[#FFE7D4]' : ''}`}
+        <div className={`p-1.5 flex items-center justify-center rounded-xl cursor-pointer hover:bg-[#FFE7D4] ${profileConfigPopup === true ? 'bg-[#FFE7D4]' : ''}`}
           onClick={() => setProfileConfigPopup(!profileConfigPopup)}
         >
-          <img src={palletIcon} alt="color-pallete icon" className="cursor-pointer w-7" />
+          <img src={palletIcon} alt="color-pallete icon" className="w-7" />
         </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]" onClick={zoomIn}>
-          <img src={zoomInIcon} alt="zoom-in-icon" className="cursor-pointer w-7" />
+        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer" onClick={zoomIn}>
+          <img src={zoomInIcon} alt="zoom-in-icon" className="w-7" />
         </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4]" onClick={zoomOut}>
-          <img src={zoomOutIcon} alt="zoom-out-icon" className="cursor-pointer w-7" />
+        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer" onClick={zoomOut}>
+          <img src={zoomOutIcon} alt="zoom-out-icon" className="w-7" />
         </div>
       </div>
       <div className="flex flex-col px-2 text-center pt-5">
@@ -167,16 +168,25 @@ const ControlBar = ({
                       Remove
                     </div>
                   </div>
+
                   <div className="p-3 w-full">
                     <div className="flex gap-2">
                       <img src={fontIcon} alt="" className="w-3 h-6" />
                       <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
                         <img src={arrrowDownIcon} alt="" />
-                        <input
-                          type="text"
-                          placeholder="Font"
+                        <select
                           className="bg-transparent w-full outline-none cursor-pointer"
-                        />
+                          value={selectedFont}
+                          onChange={(e) => setSelectedFont(e.target.value)}
+                        >
+                          <option value="" disabled hidden>
+                            Select Font
+                          </option>
+                          <option value="Arial">Arial</option>
+                          <option value="Verdana">Verdana</option>
+                          <option value="Times New Roman">Times New Roman</option>
+                          <option value="Courier New">Courier New</option>
+                        </select>
                       </div>
                     </div>
                   </div>
