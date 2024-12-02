@@ -4,6 +4,8 @@ import searchIcon from "../../assets/images/search-gr.svg";
 import palletIcon from "../../assets/images/pallet-gr.svg";
 import zoomInIcon from "../../assets/images/zoom-in.svg";
 import zoomOutIcon from "../../assets/images/zoom-out.svg";
+import fontIcon from "../../assets/images/profile-config/font.svg";
+import arrrowDownIcon from "../../assets/images/profile-config/chevron-down.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
 
 
@@ -140,71 +142,49 @@ const ControlBar = ({
           ref={popupRef}
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[65%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-10 z-10 overflow-y-auto"
         >
-          {/* Render all dynamically added fields */}
-          <div className="flex flex-wrap gap-2">
-            {localProfile.map((profile, index) => (
-              <div key={profile.configID.S} className="w-[49%] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
-                <div className="flex flex-col gap-2">
-                  <div
-                    className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 flex justify-center items-center cursor-pointer"
-                    style={{ backgroundColor: profile.configColor.S }}
-                  >
-                    <input
-                      type="color"
-                      name="highlightColor"
-                      className="opacity-0 w-full h-full cursor-pointer"
-                      value={profile.configColor.S}
-                      onChange={(e) => handleHighlightColorChange(index, e.target.value)}
-                    />
+          <form onSubmit={handleSubmit}>
+            {/* Render all dynamically added fields */}
+            <div className="flex flex-wrap gap-2">
+              {localProfile.map((profile, index) => (
+                <div key={profile.configID.S} className="w-[49%] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
+                  <div className="flex flex-col gap-2 items-center">
+                    <div
+                      className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center cursor-pointer"
+                      style={{ backgroundColor: profile.configColor.S }}
+                    >
+                      <input
+                        type="color"
+                        name="highlightColor"
+                        className="opacity-0 w-full h-full cursor-pointer"
+                        value={profile.configColor.S}
+                        onChange={(e) => handleHighlightColorChange(index, e.target.value)}
+                      />
+                    </div>
+                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
+                      {profile.configColor.S}
+                    </label>
+                    <div className="rounded-sm bg-[#E1E1E1] text-center px-3">
+                      Remove
+                    </div>
                   </div>
-                  <label className="rounded-sm bg-[#E1E1E1] text-center">
-                    {profile.configColor.S}
-                  </label>
-                  <div className="rounded-sm bg-[#E1E1E1] text-center">
-                    Remove
+                  <div className="p-3 w-full">
+                    <div className="flex gap-2">
+                      <img src={fontIcon} alt="" className="w-3 h-6" />
+                      <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
+                        <img src={arrrowDownIcon} alt="" />
+                        <input
+                          type="text"
+                          placeholder="Font"
+                          className="bg-transparent w-full outline-none cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-
-          {/* {highlightColorProfile.map((profile, index) => (
-            <div
-              key={profile.configID.S}
-              className="w-2/5 border border-gray-300 rounded-md p-4 my-2 shadow-sm"
-            >
-              <div className="flex flex-col gap-2">
-                <div
-                  className="w-8 h-8 rounded-full overflow-hidden border border-gray-300 flex justify-center items-center cursor-pointer"
-                  style={{ backgroundColor: profile.configColor.S }}
-                >
-                  <input
-                    type="color"
-                    name="highlightColor"
-                    className="opacity-0 w-full h-full cursor-pointer"
-                    value={profile.configColor.S}
-                    onChange={(e) => handleHighlightColorChange(index, e.target.value)}
-                  />
-                </div>
-                <label className="rounded-sm bg-[#E1E1E1]">
-                  {profile.configColor.S}
-                </label>
-              </div>
+              ))}
             </div>
-          ))} */}
 
-
-          {/* <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Highlight Color
-                  </label>
-                  <input
-                    type="color"
-                    name="highlightColor"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div>
+            {/* <div>
                 <div>
                   <label className="block text-sm font-medium mb-1">Font</label>
                   <input
@@ -305,20 +285,21 @@ const ControlBar = ({
                 </div> */}
 
 
-          {/* <button
+            {/* <button
             type="button"
             onClick={handleAddField}
             className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
           >
             Add
           </button> */}
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
-          >
-            Save
-          </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
+            >
+              Save
+            </button>
+          </form>
         </div>
       )
       }
