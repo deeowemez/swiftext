@@ -15,6 +15,8 @@ import underlineIcon from "../../assets/images/profile-config/underline.svg";
 import strikethroughIcon from "../../assets/images/profile-config/strikethrough.svg";
 import alignIcon from "../../assets/images/profile-config/text-align-justify.svg";
 import leftIndentIcon from "../../assets/images/profile-config/indent-increase.svg";
+import orderedListIcon from "../../assets/images/profile-config/ordered-list.svg";
+import unorderedListIcon from "../../assets/images/profile-config/unordered-list.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
 
 
@@ -118,7 +120,7 @@ const ControlBar = ({
           } else if (['bold', 'italic', 'underline', 'strike'].includes(key)) {
             return { ...item, [key]: { BOOL: value as boolean } };
           } else {
-            return { ...item, [key]: value };
+            return { ...item, [key]: { S: value as string } };
           }
         }
         return item;
@@ -170,16 +172,16 @@ const ControlBar = ({
       {profileConfigPopup && (
         <div
           ref={popupRef}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[65%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-10 z-10 overflow-y-auto"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-10 z-10 overflow-y-auto"
         >
           <form onSubmit={handleSubmit}>
             {/* Render all dynamically added fields */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-w-full">
               {localProfile.map((profile, index) => (
-                <div key={profile.configID.S} className="w-[49%] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
+                <div key={profile.configID.S} className="w-[49%] max-w-[415px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
 
                   {/* Highlight Color */}
-                  <div className="flex flex-col gap-2 items-center">
+                  <div className="flex flex-col gap-2.5 items-center">
                     <div
                       className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center cursor-pointer"
                       style={{ backgroundColor: profile.configColor.S }}
@@ -189,24 +191,24 @@ const ControlBar = ({
                         name="highlightColor"
                         className="opacity-0 w-full h-full cursor-pointer"
                         value={profile.configColor.S}
-                        onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
+                        onChange={(e) => handleProfileChange(index, 'configColor', e.target.value)}
                       />
                     </div>
-                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-1">
-                      {profile.configColor.S}
+                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-11">
+                      {profile.configColor.S.toUpperCase()}
                     </label>
-                    <div className="rounded-sm bg-[#E1E1E1] text-center px-3">
+                    {/* <div className="rounded-sm bg-[#E1E1E1] text-center px-3">
                       Remove
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Font */}
                   <div className="p-3 w-full">
-                    <div className="flex gap-2 mb-3">
+                    <div className="flex gap-2 mb-4">
                       <img src={fontIcon} alt="" className="w-3" />
                       <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
                         <select
-                          className="bg-transparent w-full outline-none cursor-pointer"
+                          className="bg-transparent w-full outline-none cursor-pointer text-sm appearance-none"
                           value={profile.font.S}
                           onChange={(e) => handleProfileChange(index, 'font', e.target.value)}
                         >
@@ -217,10 +219,10 @@ const ControlBar = ({
                       </div>
                     </div>
 
-                    <div className="flex justify-between mb-2">
+                    <div className="flex justify-between mb-4">
                       {/* Text Color */}
-                      <div className="flex gap-2">
-                        <img src={textColorIcon} alt="" className="w-3" />
+                      <div className="flex gap-1.5">
+                        <img src={textColorIcon} alt="" className="w-3.5" />
                         <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
                           <div
                             className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer rounded-sm"
@@ -234,15 +236,15 @@ const ControlBar = ({
                               onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
                             />
                           </div>
-                          {/* <label className="text-center text-xs">
-                            {profile.color.S}
-                          </label> */}
+                          <label className="text-center text-sm">
+                            {profile.color.S.toUpperCase()}
+                          </label>
                         </div>
                       </div>
 
                       {/* Text Background Color */}
-                      <div className="flex gap-2 ">
-                        <img src={textBackgroundColorIcon} alt="" className="w-3" />
+                      <div className="flex gap-1.5 ">
+                        <img src={textBackgroundColorIcon} alt="" className="w-3.5" />
                         <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
                           <div
                             className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
@@ -251,23 +253,25 @@ const ControlBar = ({
                             <input
                               type="color"
                               name="highlightColor"
-                              className="opacity-0 w-full h-full cursor-pointer"
+                              className="opacity-0 cursor-pointer"
                               value={profile.backgroundColor.S}
                               onChange={(e) => handleProfileChange(index, 'backgroundColor', e.target.value)}
                             />
                           </div>
-                          <label className="text-center text-xs">
-                            {profile.backgroundColor.S}
+                          <label className="text-center text-sm">
+                            {profile.backgroundColor.S === '' ? 'Transparent' : profile.backgroundColor.S.toUpperCase()}
                           </label>
                         </div>
                       </div>
+                    </div>
 
+                    <div className="flex justify-between mb-4">
                       {/* Font Size */}
-                      <div className="flex gap-2">
-                        <img src={fontSizeIcon} alt="" className="w-3" />
+                      <div className="flex gap-1.5">
+                        <img src={fontSizeIcon} alt="" className="w-3.5" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
-                            className="bg-transparent w-full outline-none cursor-pointer"
+                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
                             value={profile.size.S}
                             onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
                           >
@@ -277,9 +281,43 @@ const ControlBar = ({
                           </select>
                         </div>
                       </div>
+
+                      {/* Text Alignment*/}
+                      <div className="flex gap-1.5">
+                        <img src={alignIcon} alt="" className="w-3.5" />
+                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                          <select
+                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                            value={profile.align.S}
+                            onChange={(e) => handleProfileChange(index, 'align', e.target.value)}
+                          >
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                            <option value="justify">Justify</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Indentation */}
+                      <div className="flex gap-1.5">
+                        <img src={leftIndentIcon} alt="" className="w-3.5" />
+                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                          <select
+                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                            value={profile.indent.N}
+                            onChange={(e) => handleProfileChange(index, 'indent', Number(e.target.value))}
+                          >
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                            <option value={4}>4</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex pl-5 justify-between">
                       {/* Bold */}
                       <div
                         className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].bold.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
@@ -312,118 +350,39 @@ const ControlBar = ({
                         <img src={strikethroughIcon} alt="" className="w-3" />
                       </div>
 
-                      <div className="flex gap-[2px] w-9 h-6 hover:bg-[#FFE7D4] rounded-md cursor-pointer justify-center items-center">
-                        <img src={alignIcon} alt="" className="w-3"/>
-                        <img src={arrrowDownIcon} alt="" className="w-[9px]"/>
+                      {/* Unordered List */}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S  === 'bullet'? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={() =>
+                          handleProfileChange(
+                            index,
+                            'list',
+                            localProfile[index].list.S === 'ordered' ? 'bullet' : 'bullet'
+                          )
+                        }
+                      >
+                        <img src={unorderedListIcon} alt="" className="w-4" />
                       </div>
 
+                      {/* Ordered List*/}
+                      <div
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'ordered'? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        onClick={() =>
+                          handleProfileChange(
+                            index,
+                            'list',
+                            localProfile[index].list.S === 'bullet' ? 'ordered' : 'ordered'
+                          )
+                        }
+                      >
+                        <img src={orderedListIcon} alt="" className="w-4" />
+                      </div>
                     </div>
 
                   </div>
                 </div>
               ))}
             </div>
-
-            {/* <div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Font</label>
-                  <input
-                    type="text"
-                    name="font"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Text Color
-                  </label>
-                  <input
-                    type="color"
-                    name="textColor"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Text Background Color
-                  </label>
-                  <input
-                    type="color"
-                    name="textBackgroundColor"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Font Size
-                  </label>
-                  <input
-                    type="number"
-                    name="fontSize"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Bold</label>
-                  <input
-                    type="checkbox"
-                    name="bold"
-                    className="h-5 w-5"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Italic
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="italic"
-                    className="h-5 w-5"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Underline
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="underline"
-                    className="h-5 w-5"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Strikethrough
-                  </label>
-                  <input
-                    type="checkbox"
-                    name="strikethrough"
-                    className="h-5 w-5"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Text Align
-                  </label>
-                  <select
-                    name="align"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  >
-                    <option value="left">Left</option>
-                    <option value="center">Center</option>
-                    <option value="right">Right</option>
-                    <option value="justify">Justify</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-1">Indent</label>
-                  <input
-                    type="number"
-                    name="indent"
-                    className="w-full border border-gray-300 rounded px-2 py-1"
-                  />
-                </div> */}
-
 
             {/* <button
             type="button"
