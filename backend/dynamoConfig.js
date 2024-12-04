@@ -35,101 +35,102 @@ const createTable = async () => {
   }
 };
 
-const insertItems = async () => {
+const insertItems = async (items) => {
   const colorItems = [
-    {
-      userID: "user123",
-      highlightColorProfile: "1",
-      configColor: "#FF5733",
-      configID: "1-#FF5733",
-      backgroundColor: "",
-      color: "#000000",
-      font: "monospace",
-      bold: false,
-      italic: true,
-      underline: false,
-      strike: false,
-      header: 1,
-      list: '',
-      script: '',
-      indent: 0,
-      align: 'left',
-      size: 'huge',
-    },
-    {
-      userID: "user123",
-      highlightColorProfile: "1",
-      configColor: "#FF57DE",
-      configID: "1-#FF57DE",
-      color: "#000000",
-      backgroundColor: "",
-      font: "monospace",
-      bold: false,
-      italic: false,
-      underline: true,
-      strike: false,
-      header: 2,
-      list: 'check',
-      script: '',
-      indent: 1,
-      align: 'left',
-      size: 'large',
-    },
-    {
-      userID: "user123",
-      highlightColorProfile: "1",
-      configColor: "#FFC300",
-      configID: "1-#FFC300",
-      color: "#000000",
-      backgroundColor: "",
-      font: "monospace",
-      bold: true,
-      italic: false,
-      underline: false,
-      strike: false,
-      header: 3,
-      list: '',
-      script: 'super',
-      indent: 2,
-      align: 'right',
-      size: 'small',
-    },
-  ];
+      {
+        userID: { S: "user123" },
+        highlightColorProfile: { S: "default" },
+        configColor: { S: "#FF5733" },
+        configID: { S: "default-1" },
+        backgroundColor: { S: "" },
+        color: { S: "#000000" },
+        font: { S: "monospace" },
+        bold: { BOOL: false },
+        italic: { BOOL: true },
+        underline: { BOOL: false },
+        strike: { BOOL: false },
+        header: { N: 1 },
+        list: { S: "" },
+        script: { S: "" },
+        indent: { N: 0 },
+        align: { S: "left" },
+        size: { S: "huge" },
+      },
+      {
+        userID: { S: "user123" },
+        highlightColorProfile: { S: "default" },
+        configColor: { S: "#FF57DE" },
+        configID: { S: "default-2" },
+        backgroundColor: { S: "" },
+        color: { S: "#000000" },
+        font: { S: "monospace" },
+        bold: { BOOL: false },
+        italic: { BOOL: false },
+        underline: { BOOL: true },
+        strike: { BOOL: false },
+        header: { N: 2 },
+        list: { S: "check" },
+        script: { S: "" },
+        indent: { N: 1 },
+        align: { S: "left" },
+        size: { S: "large" },
+      },
+      {
+        userID: { S: "user123" },
+        highlightColorProfile: { S: "default" },
+        configColor: { S: "#FFC300" },
+        configID: { S: "default-3" },
+        backgroundColor: { S: "" },
+        color: { S: "#000000" },
+        font: { S: "monospace" },
+        bold: { BOOL: true },
+        italic: { BOOL: false },
+        underline: { BOOL: false },
+        strike: { BOOL: false },
+        header: { N: 3 },
+        list: { S: "" },
+        script: { S: "super" },
+        indent: { N: 2 },
+        align: { S: "right" },
+        size: { S: "small" },
+      },
+    ];
+    
 
-
+  // console.log('items in insertItems func: ', items);
+  const results = [];
   try {
-    for (const item of colorItems) {
+    for (const item of items) {
       const command = new PutItemCommand({
         TableName: "HighlightColorProfiles",
         Item: {
-          userID: { S: item.userID },
-          highlightColorProfile: { S: item.highlightColorProfile },
-          configColor: { S: item.configColor },
-          configID: { S: item.configID },
-          color: { S: item.color },
-          backgroundColor: { S: item.backgroundColor },
-          font: { S: item.font },
-          bold: { BOOL: item.bold },
-          italic: { BOOL: item.italic },
-          underline: { BOOL: item.underline },
-          strike: { BOOL: item.strike },
-          header: { N: item.header.toString() },
-          list: { S: item.list },
-          script: { S: item.script },
-          indent: { N: item.indent.toString() },
-          align: { S: item.align },
-          size: { S: item.size },
+          userID: { S: item.userID.S },
+          highlightColorProfile: { S: item.highlightColorProfile.S },
+          configColor: { S: item.configColor.S },
+          configID: { S: item.configID.S },
+          color: { S: item.color.S },
+          backgroundColor: { S: item.backgroundColor.S },
+          font: { S: item.font.S },
+          bold: { BOOL: item.bold.BOOL },
+          italic: { BOOL: item.italic.BOOL },
+          underline: { BOOL: item.underline.BOOL },
+          strike: { BOOL: item.strike.BOOL },
+          header: { N: item.header.N.toString() },
+          list: { S: item.list.S },
+          script: { S: item.script.S },
+          indent: { N: item.indent.N.toString() },
+          align: { S: item.align.S },
+          size: { S: item.size.S },
         }
       });
-      console.log(command)
+      // console.log(command)
       await dynamoDB.send(command);
-      
-      console.log("Successfully inserted item:", item);
+      // console.log("Successfully inserted item:", item);
     }
   } catch (error) {
     console.error("Error inserting item:", error);
   }
-
+  return results;
 };
 
 const getHighlightProfile = async (profile) => {
@@ -178,7 +179,7 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
   for (const item of items) {
     const userID = item.userID.S;
-    const configID = item.configID.N;
+    const configID = item.configID.S;
     await deleteItem(userID, configID); // Delete each item by its primary key
   }
 
@@ -187,12 +188,12 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
 const main = async () => {
   // await createTable();
-  // await insertItems();
-  // await deleteItemsByHighlightColorProfile('1');
-  const response = await getHighlightProfile("1");
+  await insertItems();
+  // await deleteItemsByHighlightColorProfile('default');
+  const response = await getHighlightProfile("default");
   console.log(response);
 };
 
 // main();
 
-module.exports = {getHighlightProfile};
+module.exports = { getHighlightProfile, insertItems };

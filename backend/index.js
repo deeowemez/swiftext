@@ -5,10 +5,11 @@ const path = require('path');
 const fs = require('fs');
 const { Pool } = require('pg');
 require('dotenv').config();
-const { getHighlightProfile } = require('./dynamoConfig');
+const { getHighlightProfile, insertItems } = require('./dynamoConfig');
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -148,6 +149,30 @@ app.get('/profile/:id', async (req, res) => {
         });
     }
 })
+
+app.post("/profile/save", async (req, res) => {
+    const items = req.body.items; // Expect an array of items in the request body
+    console.log(items);
+
+    if (!items || !Array.isArray(items)) {
+        return res.status(400).json({ error: 'Invalid items format' });
+      }
+
+    try {
+        const response = await insertItems(items);
+        res.status(200).json({
+            success: true,
+            message: "Items inserted successfully",
+            data: response, // Contains success details for each item
+        });
+    } catch (err) {
+        console.error("Error inserting items:", err);
+        res.status(500).json({
+            success: false,
+            error: "Failed to insert items",
+        });
+    }
+});
 
 // Add a root route for testing
 app.get('/', (req, res) => {

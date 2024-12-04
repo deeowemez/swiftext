@@ -35,6 +35,8 @@ const resetHash = () => {
 
 const EditPage = () => {
   const [highlightColor, setHighlightColor] = useState("#71a3c1");
+  const [configID, setConfigID] = useState("#71a3c1");
+  const [selectedProfileID, setSelectedProfileID] = useState<boolean>(false);
   const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
   const [highlightColorProfileID, setHighlightColorProfileID] = useState("");
   const { '*': filePath } = useParams();
@@ -66,7 +68,7 @@ const EditPage = () => {
           // Use the file object in your component
           setPdfFile(file);
 
-          fetchAndSetProfile('1');
+          fetchAndSetProfile('default');
 
           // Convert File to Data URL for preview or further usage
           const reader = new FileReader();
@@ -87,6 +89,11 @@ const EditPage = () => {
 
     loadFileByPath();
   }, [filePath]);
+
+  useEffect(() => {
+    console.log('selectedprofileid: ', selectedProfileID);
+    fetchAndSetProfile('default');
+  }, [selectedProfileID]); // Dependency array watches selectedProfileID
 
   // Click listeners for context menu
   useEffect(() => {
@@ -151,7 +158,7 @@ const EditPage = () => {
 
   const fetchAndSetProfile = async (profileID: string) => {
     const profile = await fetchHighlightProfiles(profileID);
-    setHighlightColorProfileID(profileID);
+    // setHighlightColorProfileID(profileID);
     setHighlightColorProfile(profile);
   };
 
@@ -170,8 +177,8 @@ const EditPage = () => {
           yPos: event.clientY,
           menuType: "viewport-menu",
           listHighlightColorProfile: highlightColorProfile,
-          changeHighlightColor: changeHighlightColor
-
+          changeHighlightColor: changeHighlightColor,
+          // setConfigID: setConfigID,
         })
       };
     }
@@ -195,7 +202,7 @@ const EditPage = () => {
   const addHighlight = (highlight: GhostHighlight, comment: string) => {
     console.log("Saving highlight", highlight);
     saveToUndoStack();
-    setHighlights([...highlights, { ...highlight, comment, id: getNextId(), color: highlightColor, profileID: highlightColorProfileID, }]);
+    setHighlights([...highlights, { ...highlight, comment, id: getNextId(), color: highlightColor, configID: configID, profileID: highlightColorProfileID, }]);
   };
 
   // useEffect to log highlights whenever it changes
@@ -289,6 +296,8 @@ const EditPage = () => {
       <ControlBar
         setPdfScaleValue={(value) => setPdfScaleValue(value)}
         highlightColorProfile={highlightColorProfile}
+        setSelectedProfileID={setSelectedProfileID}
+        selectedProfileID={selectedProfileID}
       />
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (
@@ -336,7 +345,7 @@ const EditPage = () => {
         </div>
       </div>
       <div className="w-2/5">
-        <ConfigBar 
+        <ConfigBar
           highlights={highlights}
           highlightColorProfile={highlightColorProfile}
         />

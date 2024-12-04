@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import axios, { AxiosError } from "axios";
 import cottageIcon from "../../assets/images/cottage.svg";
 import searchIcon from "../../assets/images/search-gr.svg";
 import palletIcon from "../../assets/images/pallet-gr.svg";
@@ -18,12 +19,15 @@ import leftIndentIcon from "../../assets/images/profile-config/indent-increase.s
 import orderedListIcon from "../../assets/images/profile-config/ordered-list.svg";
 import unorderedListIcon from "../../assets/images/profile-config/unordered-list.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
+import fetchAndSetProfile from './EditPage'
+import EditPage from "./EditPage";
 
 
 interface ControlBarProps {
+  selectedProfileID: boolean;  // Now using boolean to track the profile selection state
+  setSelectedProfileID: (value: boolean) => void;
   setPdfScaleValue: (value: number) => void;
   highlightColorProfile: HighlightColorProfileProps[];
-  // saveProfileToDatabase: (updatedProfile: HighlightColorProfileProps[]) => void;
 }
 
 
@@ -44,16 +48,16 @@ interface Field {
 
 
 const ControlBar = ({
+  selectedProfileID,
+  setSelectedProfileID,
   setPdfScaleValue,
   highlightColorProfile,
-  // saveProfileToDatabase
 }: ControlBarProps) => {
   const [zoom, setZoom] = useState<number | null>(null);
   const [profileConfigPopup, setProfileConfigPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [fields, setFields] = useState<Field[]>([]);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
-  const [selectedFont, setSelectedFont] = useState("");
 
 
   const zoomIn = () => {
@@ -87,24 +91,14 @@ const ControlBar = ({
   }, [highlightColorProfile]);
 
 
-  useEffect(() => {
-    console.log("Local profile updated:", localProfile);
-  }, [localProfile]);  // Dependency array ensures this runs when localProfile changes
-
+  // useEffect(() => {
+  //   console.log("Local profile updated:", localProfile);
+  // }, [localProfile]);  // Dependency array ensures this runs when localProfile changes
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
       setProfileConfigPopup(false);
     }
-  };
-
-
-  const handleHighlightColorChange = (index: number, color: string) => {
-    setLocalProfile((prevProfile) =>
-      prevProfile.map((item, i) =>
-        i === index ? { ...item, configColor: { S: color } } : item
-      )
-    );
   };
 
   const handleProfileChange = (
@@ -128,9 +122,26 @@ const ControlBar = ({
     );
   };
 
-  const handleSubmit = () => {
-    // saveProfileToDatabase(localProfile);
-    setProfileConfigPopup(false); // Close popup after saving
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
+      setSelectedProfileID(!selectedProfileID); 
+
+      if (response.status === 200 && response.data.success) {
+        console.log("Profile saved successfully:", response.data.data);
+      } else {
+        console.error("Failed to save profile:", response.data.error);
+      }
+
+      // Close popup after saving
+      setProfileConfigPopup(false);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        console.error("Error saving profile:", error.response?.data || error.message);
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
   };
 
 
@@ -352,7 +363,7 @@ const ControlBar = ({
 
                       {/* Unordered List */}
                       <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S  === 'bullet'? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'bullet' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={() =>
                           handleProfileChange(
                             index,
@@ -366,7 +377,7 @@ const ControlBar = ({
 
                       {/* Ordered List*/}
                       <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'ordered'? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'ordered' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={() =>
                           handleProfileChange(
                             index,
