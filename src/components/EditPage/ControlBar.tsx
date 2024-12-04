@@ -19,8 +19,7 @@ import leftIndentIcon from "../../assets/images/profile-config/indent-increase.s
 import orderedListIcon from "../../assets/images/profile-config/ordered-list.svg";
 import unorderedListIcon from "../../assets/images/profile-config/unordered-list.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
-import fetchAndSetProfile from './EditPage'
-import EditPage from "./EditPage";
+import { CommentedHighlight } from "./types";
 
 
 interface ControlBarProps {
@@ -28,8 +27,9 @@ interface ControlBarProps {
   setSelectedProfileID: (value: boolean) => void;
   setPdfScaleValue: (value: number) => void;
   highlightColorProfile: HighlightColorProfileProps[];
+  highlights: Array<CommentedHighlight>;
+  setHighlights: (highlights: Array<CommentedHighlight>) => void;
 }
-
 
 interface Field {
   id: number;
@@ -46,8 +46,9 @@ interface Field {
   indent: number;
 }
 
-
 const ControlBar = ({
+  highlights,
+  setHighlights,
   selectedProfileID,
   setSelectedProfileID,
   setPdfScaleValue,
@@ -72,7 +73,6 @@ const ControlBar = ({
     }
   };
 
-
   const zoomOut = () => {
     if (zoom) {
       if (zoom > 0.2) {
@@ -84,7 +84,6 @@ const ControlBar = ({
       setZoom(1);
     }
   };
-
 
   useEffect(() => {
     setLocalProfile([...highlightColorProfile]);
@@ -122,28 +121,62 @@ const ControlBar = ({
     );
   };
 
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
-      setSelectedProfileID(!selectedProfileID); 
+  const profileColorMap = (localProfile: HighlightColorProfileProps[]) => {
+    const colorMap: { [key: string]: string } = {};
 
-      if (response.status === 200 && response.data.success) {
-        console.log("Profile saved successfully:", response.data.data);
-      } else {
-        console.error("Failed to save profile:", response.data.error);
+    localProfile.forEach(item => {
+      if (item.configID?.S && item.configColor?.S) {
+        colorMap[item.configID.S] = item.configColor.S;
       }
-
-      // Close popup after saving
-      setProfileConfigPopup(false);
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        console.error("Error saving profile:", error.response?.data || error.message);
-      } else {
-        console.error("Unexpected error:", error);
-      }
-    }
+    });
+    return colorMap;
   };
 
+
+  const handleSubmit = async () => {
+    try {
+      const currentColorMap = profileColorMap(highlightColorProfile);
+
+      const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
+      if (response.data.success) {
+        setSelectedProfileID(!selectedProfileID);
+
+        // Check for changes in the color map
+        const updatedColorMap = profileColorMap(localProfile);
+        console.log('current colormap: ', currentColorMap);
+        console.log('updated colormap: ', updatedColorMap);
+
+        const changedColors: Record<string, string> = Object.keys(currentColorMap).reduce((acc, key) => {
+          console.log('current colormap key: ', currentColorMap[key]);
+          console.log('updated colormap key: ', updatedColorMap[key]);
+          if (currentColorMap[key] !== updatedColorMap[key]) {
+            // If color has changed, store the key and updated color
+            acc[key] = updatedColorMap[key];
+          }
+          console.log('acc', acc);
+          return acc;
+        }, {} as Record<string, string>);
+
+        console.log('changed colors: ', changedColors);
+        setProfileConfigPopup(false);
+
+        if (Object.keys(changedColors).length > 0) {
+          // Update the highlights with the new colors for each changed key
+          const updatedHighlights = highlights.map(highlight => {
+            const newColor = changedColors[highlight.configID];
+            console.log('newcolor: ', newColor);
+            return newColor ? { ...highlight, color: newColor } : highlight;
+          });
+
+          console.log('updated highglihts', updatedHighlights);
+
+          setHighlights(updatedHighlights);
+        }
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    }
+  };
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -152,11 +185,9 @@ const ControlBar = ({
     };
   }, []);
 
-
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
-
 
         <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
           <img src={cottageIcon} alt="home-icon" className="w-7" />

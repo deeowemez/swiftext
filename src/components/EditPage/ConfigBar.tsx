@@ -26,10 +26,13 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
   useEffect(() => {
     // Generate content based on highlights and their associated color profiles
+
     const content = highlights.flatMap((highlight) => {
+      console.log('highlights: ', highlight);
+      console.log('profile: ', highlightColorProfile);
       const matchingProfile = highlightColorProfile.find(
         (profile) =>
-          profile.highlightColorProfile.S === highlight.profileID &&
+          // profile.highlightColorProfile.S === highlight.profileID &&
           profile.configColor.S === highlight.color
       );
 

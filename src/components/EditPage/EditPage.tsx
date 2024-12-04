@@ -35,7 +35,7 @@ const resetHash = () => {
 
 const EditPage = () => {
   const [highlightColor, setHighlightColor] = useState("#71a3c1");
-  const [configID, setConfigID] = useState("#71a3c1");
+  const [configID, setConfigID] = useState("default-1");
   const [selectedProfileID, setSelectedProfileID] = useState<boolean>(false);
   const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
   const [highlightColorProfileID, setHighlightColorProfileID] = useState("");
@@ -94,6 +94,10 @@ const EditPage = () => {
     console.log('selectedprofileid: ', selectedProfileID);
     fetchAndSetProfile('default');
   }, [selectedProfileID]); // Dependency array watches selectedProfileID
+
+  useEffect(() => {
+    console.log('configID: ', configID);
+  }, [configID]); // Dependency array watches selectedProfileID
 
   // Click listeners for context menu
   useEffect(() => {
@@ -178,7 +182,7 @@ const EditPage = () => {
           menuType: "viewport-menu",
           listHighlightColorProfile: highlightColorProfile,
           changeHighlightColor: changeHighlightColor,
-          // setConfigID: setConfigID,
+          setConfigID: setConfigID,
         })
       };
     }
@@ -298,6 +302,8 @@ const EditPage = () => {
         highlightColorProfile={highlightColorProfile}
         setSelectedProfileID={setSelectedProfileID}
         selectedProfileID={selectedProfileID}
+        setHighlights={setHighlights}
+        highlights={highlights}
       />
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (

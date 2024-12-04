@@ -29,6 +29,7 @@ export interface ContextMenuProps {
   deleteHighlight?: () => void;
   listHighlightColorProfile?: HighlightColorProfileProps[];
   changeHighlightColor?: (hiColor: string) => void;
+  setConfigID?: (configID: string) => void;
 }
 
 const ContextMenu = ({
@@ -39,6 +40,7 @@ const ContextMenu = ({
   deleteHighlight,
   listHighlightColorProfile,
   changeHighlightColor,
+  setConfigID,
 }: ContextMenuProps) => {
   if (menuType === "context-menu") {
     return (
@@ -53,17 +55,24 @@ const ContextMenu = ({
         {listHighlightColorProfile && listHighlightColorProfile.length > 0 ? (
           <div className="flex gap-2 p-1 w-40 max-w-xs overflow-x-scroll 
            [&::-webkit-scrollbar]:h-2
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-300
-  ">
+            [&::-webkit-scrollbar-track]:rounded-full
+            [&::-webkit-scrollbar-track]:bg-gray-100
+            [&::-webkit-scrollbar-thumb]:rounded-full
+            [&::-webkit-scrollbar-thumb]:bg-gray-300
+            ">
             {listHighlightColorProfile.map((profile, index) => (
               <div
                 key={index}
                 className="w-5 h-5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: profile.configColor.S }}
-                onClick={() => changeHighlightColor && changeHighlightColor(profile.configColor.S)}
+                onClick={() => {
+                  if (changeHighlightColor) {
+                    changeHighlightColor(profile.configColor.S);
+                  }
+                  if (setConfigID) {
+                    setConfigID(profile.configID.S);
+                  }
+                }}
               />
             ))}
           </div>
