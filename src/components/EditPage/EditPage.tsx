@@ -304,6 +304,7 @@ const EditPage = () => {
         selectedProfileID={selectedProfileID}
         setHighlights={setHighlights}
         highlights={highlights}
+        resetHighlights={resetHighlights}
       />
       <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
         {url ? (

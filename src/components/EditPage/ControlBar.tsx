@@ -29,22 +29,9 @@ interface ControlBarProps {
   highlightColorProfile: HighlightColorProfileProps[];
   highlights: Array<CommentedHighlight>;
   setHighlights: (highlights: Array<CommentedHighlight>) => void;
+  resetHighlights: () => void;
 }
 
-interface Field {
-  id: number;
-  highlightColor: string;
-  font: string;
-  textColor: string;
-  textBackgroundColor: string;
-  fontSize: string;
-  bold: boolean;
-  italic: boolean;
-  underline: boolean;
-  strikethrough: boolean;
-  align: string;
-  indent: number;
-}
 
 const ControlBar = ({
   highlights,
@@ -53,12 +40,14 @@ const ControlBar = ({
   setSelectedProfileID,
   setPdfScaleValue,
   highlightColorProfile,
+  resetHighlights,
 }: ControlBarProps) => {
   const [zoom, setZoom] = useState<number | null>(null);
   const [profileConfigPopup, setProfileConfigPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  const [fields, setFields] = useState<Field[]>([]);
+  // const [fields, setFields] = useState<Field[]>([]);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
+
 
 
   const zoomIn = () => {
@@ -89,10 +78,35 @@ const ControlBar = ({
     setLocalProfile([...highlightColorProfile]);
   }, [highlightColorProfile]);
 
+  const handleAddProfileField = () => {
+    const newField: HighlightColorProfileProps = {
+      userID: { S: "placeholder-user-id" },
+      highlightColorProfile: { S: "default" },
+      configColor: { S: "#000000" },
+      configID: { S: `default-${localProfile.length + 1}` },
+      color: { S: "#000000" },
+      background: { S: "" },
+      font: { S: "serif" },
+      bold: { BOOL: false },
+      italic: { BOOL: false },
+      underline: { BOOL: false },
+      strike: { BOOL: false },
+      header: { N: 0 },
+      list: { S: "" },
+      script: { S: "" },
+      indent: { N: 0 },
+      align: { S: "left" },
+      size: { S: "small" },
+    };
 
-  // useEffect(() => {
-  //   console.log("Local profile updated:", localProfile);
-  // }, [localProfile]);  // Dependency array ensures this runs when localProfile changes
+    setLocalProfile((prevProfile) => [...prevProfile, newField]);
+  };
+
+  const handleRemoveProfile = (index: number) => {
+    setLocalProfile((prevProfile) =>
+      prevProfile.filter((_, i) => i !== index)
+    );
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
@@ -211,6 +225,11 @@ const ControlBar = ({
         <div className="bg-white rounded-md">1</div>
         <p className="text-sm">of 57</p>
       </div>
+      <div
+        className="cursor-pointer mt-auto text-center"
+        onClick={resetHighlights}>
+        reset
+      </div>
       {profileConfigPopup && (
         <div
           ref={popupRef}
@@ -239,9 +258,12 @@ const ControlBar = ({
                     <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-11">
                       {profile.configColor.S.toUpperCase()}
                     </label>
-                    {/* <div className="rounded-sm bg-[#E1E1E1] text-center px-3">
+                    <button
+                      onClick={() => handleRemoveProfile(index)}
+                      className="remove-button bg-[#E1E1E1] text-[#333333] px-3 rounded hover:text-[#FE3E3E]"
+                    >
                       Remove
-                    </div> */}
+                    </button>
                   </div>
 
                   {/* Font */}
@@ -401,7 +423,7 @@ const ControlBar = ({
                           handleProfileChange(
                             index,
                             'list',
-                            localProfile[index].list.S === 'ordered' ? 'bullet' : ''
+                            localProfile[index].list.S === 'bullet' ? '' : 'bullet'
                           )
                         }
                       >
@@ -415,7 +437,7 @@ const ControlBar = ({
                           handleProfileChange(
                             index,
                             'list',
-                            localProfile[index].list.S === 'bullet' ? 'ordered' : ''
+                            localProfile[index].list.S === 'ordered' ? '' : 'ordered'
                           )
                         }
                       >
@@ -428,13 +450,13 @@ const ControlBar = ({
               ))}
             </div>
 
-            {/* <button
-            type="button"
-            onClick={handleAddField}
-            className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
-          >
-            Add
-          </button> */}
+            <button
+              type="button"
+              onClick={handleAddProfileField}
+              className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
+            >
+              Add
+            </button>
             <button
               type="button"
               onClick={handleSubmit}

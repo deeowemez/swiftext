@@ -89,7 +89,7 @@ const insertItems = async (items) => {
         strike: { BOOL: false },
         header: { N: 3 },
         list: { S: "" },
-        script: { S: "super" },
+        script: { S: "" },
         indent: { N: 2 },
         align: { S: "right" },
         size: { S: "small" },

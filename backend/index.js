@@ -152,7 +152,7 @@ app.get('/profile/:id', async (req, res) => {
 
 app.post("/profile/save", async (req, res) => {
     const items = req.body.items; // Expect an array of items in the request body
-    console.log(items);
+    // console.log(items);
 
     if (!items || !Array.isArray(items)) {
         return res.status(400).json({ error: 'Invalid items format' });
