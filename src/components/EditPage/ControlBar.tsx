@@ -290,18 +290,18 @@ const ControlBar = ({
                         <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
                           <div
                             className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
-                            style={{ backgroundColor: profile.backgroundColor.S }}
+                            style={{ backgroundColor: profile.background.S }}
                           >
                             <input
                               type="color"
                               name="highlightColor"
                               className="opacity-0 cursor-pointer"
-                              value={profile.backgroundColor.S}
-                              onChange={(e) => handleProfileChange(index, 'backgroundColor', e.target.value)}
+                              value={profile.background.S}
+                              onChange={(e) => handleProfileChange(index, 'background', e.target.value)}
                             />
                           </div>
                           <label className="text-center text-sm">
-                            {profile.backgroundColor.S === '' ? 'Transparent' : profile.backgroundColor.S.toUpperCase()}
+                            {profile.background.S === '' ? 'Transparent' : profile.background.S.toUpperCase()}
                           </label>
                         </div>
                       </div>
@@ -350,10 +350,12 @@ const ControlBar = ({
                             value={profile.indent.N}
                             onChange={(e) => handleProfileChange(index, 'indent', Number(e.target.value))}
                           >
-                            <option value={1}>1</option>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                            <option value={4}>4</option>
+                            <option value={0}>1</option>
+                            <option value={1}>2</option>
+                            <option value={2}>3</option>
+                            <option value={3}>4</option>
+                            <option value={4}>5</option>
+                            <option value={5}>6</option>
                           </select>
                         </div>
                       </div>
@@ -399,7 +401,7 @@ const ControlBar = ({
                           handleProfileChange(
                             index,
                             'list',
-                            localProfile[index].list.S === 'ordered' ? 'bullet' : 'bullet'
+                            localProfile[index].list.S === 'ordered' ? 'bullet' : ''
                           )
                         }
                       >
@@ -413,7 +415,7 @@ const ControlBar = ({
                           handleProfileChange(
                             index,
                             'list',
-                            localProfile[index].list.S === 'bullet' ? 'ordered' : 'ordered'
+                            localProfile[index].list.S === 'bullet' ? 'ordered' : ''
                           )
                         }
                       >

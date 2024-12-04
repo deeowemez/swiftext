@@ -7,7 +7,7 @@ export interface HighlightColorProfileProps {
   configColor: { S: string },
   configID: { S: string },
   color: { S: string },
-  backgroundColor: { S: string },
+  background: { S: string },
   font: { S: string },
   bold: { BOOL: boolean },
   italic: { BOOL: boolean },

@@ -43,7 +43,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             insert: highlight.content.text + '\n',
             attributes: {
               color: matchingProfile.color.S,
-              backgroundColor: matchingProfile.backgroundColor.S,
+              background: matchingProfile.background.S,
               font: matchingProfile.font.S,
               bold: matchingProfile.bold.BOOL,
               italic: matchingProfile.italic.BOOL,
