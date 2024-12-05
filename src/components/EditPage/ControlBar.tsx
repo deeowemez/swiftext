@@ -20,6 +20,7 @@ import orderedListIcon from "../../assets/images/profile-config/ordered-list.svg
 import unorderedListIcon from "../../assets/images/profile-config/unordered-list.svg";
 import { HighlightColorProfileProps } from "./ContextMenu";
 import { CommentedHighlight } from "./types";
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface ControlBarProps {
@@ -80,10 +81,10 @@ const ControlBar = ({
 
   const handleAddProfileField = () => {
     const newField: HighlightColorProfileProps = {
-      userID: { S: "placeholder-user-id" },
+      userID: { S: "user123" },
       highlightColorProfile: { S: "default" },
       configColor: { S: "#000000" },
-      configID: { S: `default-${localProfile.length + 1}` },
+      configID: { S: `config-${uuidv4()}` },
       color: { S: "#000000" },
       background: { S: "" },
       font: { S: "serif" },
@@ -91,7 +92,7 @@ const ControlBar = ({
       italic: { BOOL: false },
       underline: { BOOL: false },
       strike: { BOOL: false },
-      header: { N: 0 },
+      header: { N: 3 },
       list: { S: "" },
       script: { S: "" },
       indent: { N: 0 },
@@ -150,11 +151,11 @@ const ControlBar = ({
   const handleSubmit = async () => {
     try {
       const currentColorMap = profileColorMap(highlightColorProfile);
-
+      console.log('localprofile: ', localProfile);
       const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
+      setSelectedProfileID(!selectedProfileID);
       if (response.data.success) {
-        setSelectedProfileID(!selectedProfileID);
-
+      
         // Check for changes in the color map
         const updatedColorMap = profileColorMap(localProfile);
         console.log('current colormap: ', currentColorMap);

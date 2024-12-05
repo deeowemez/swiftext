@@ -35,69 +35,108 @@ const createTable = async () => {
   }
 };
 
-const insertItems = async (items) => {
-  const colorItems = [
-      {
-        userID: { S: "user123" },
-        highlightColorProfile: { S: "default" },
-        configColor: { S: "#FF5733" },
-        configID: { S: "default-1" },
-        background: { S: "" },
-        color: { S: "#000000" },
-        font: { S: "monospace" },
-        bold: { BOOL: false },
-        italic: { BOOL: true },
-        underline: { BOOL: false },
-        strike: { BOOL: false },
-        header: { N: 1 },
-        list: { S: "" },
-        script: { S: "" },
-        indent: { N: 0 },
-        align: { S: "left" },
-        size: { S: "huge" },
-      },
-      {
-        userID: { S: "user123" },
-        highlightColorProfile: { S: "default" },
-        configColor: { S: "#FF57DE" },
-        configID: { S: "default-2" },
-        background: { S: "" },
-        color: { S: "#000000" },
-        font: { S: "monospace" },
-        bold: { BOOL: false },
-        italic: { BOOL: false },
-        underline: { BOOL: true },
-        strike: { BOOL: false },
-        header: { N: 2 },
-        list: { S: "check" },
-        script: { S: "" },
-        indent: { N: 1 },
-        align: { S: "left" },
-        size: { S: "large" },
-      },
-      {
-        userID: { S: "user123" },
-        highlightColorProfile: { S: "default" },
-        configColor: { S: "#FFC300" },
-        configID: { S: "default-3" },
-        background: { S: "" },
-        color: { S: "#000000" },
-        font: { S: "monospace" },
-        bold: { BOOL: true },
-        italic: { BOOL: false },
-        underline: { BOOL: false },
-        strike: { BOOL: false },
-        header: { N: 3 },
-        list: { S: "" },
-        script: { S: "" },
-        indent: { N: 2 },
-        align: { S: "right" },
-        size: { S: "small" },
-      },
-    ];
-    
 
-  // console.log('items in insertItems func: ', items);
+const colorItems = [
+  {
+    userID: { S: "user123" },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FF5733" },
+    configID: { S: "default-1" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: false },
+    italic: { BOOL: true },
+    underline: { BOOL: false },
+    strike: { BOOL: false },
+    header: { N: 1 },
+    list: { S: "" },
+    script: { S: "" },
+    indent: { N: 0 },
+    align: { S: "left" },
+    size: { S: "huge" },
+  },
+  {
+    userID: { S: "user123" },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FF57DE" },
+    configID: { S: "default-2" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: false },
+    italic: { BOOL: false },
+    underline: { BOOL: true },
+    strike: { BOOL: false },
+    header: { N: 2 },
+    list: { S: "check" },
+    script: { S: "" },
+    indent: { N: 1 },
+    align: { S: "left" },
+    size: { S: "large" },
+  },
+  {
+    userID: { S: "user123" },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FFC300" },
+    configID: { S: "default-3" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: true },
+    italic: { BOOL: false },
+    underline: { BOOL: false },
+    strike: { BOOL: false },
+    header: { N: 3 },
+    list: { S: "" },
+    script: { S: "" },
+    indent: { N: 2 },
+    align: { S: "right" },
+    size: { S: "small" },
+  },
+];
+
+const updateHighlightColorProfiles = async (newItems) => {
+  // Get the existing items in the table for the given highlightColorProfile
+  const existingItems = await getHighlightProfile('default');
+
+  // Convert the existing items into a map for easier comparison
+  const existingItemsMap = new Map(
+    existingItems.map(item => [item.configID.S, item])
+  );
+  console.log('existing map: ', existingItemsMap);
+
+  // Compare and remove items that no longer exist in the new list
+  for (const existingItem of existingItems) {
+    const itemInNewList = newItems.find(item => item.configID.S === existingItem.configID.S);
+    if (!itemInNewList) {
+      // Item is not in the new list, so delete it
+      console.log('item not in new list: ', existingItem);
+      await deleteItem(existingItem.userID.S, existingItem.configID.S);
+    }
+  }
+
+  // Add or update items in the table
+  for (const newItem of newItems) {
+    const existingItem = existingItemsMap.get(newItem.configID.S);
+
+    if (!existingItem) {
+      // Item does not exist in the table, so add it
+      console.log('Adding new item: ', newItem);
+      await insertItems([newItem]);
+    } else {
+      // Item exists, but we re-insert it to ensure it matches the new list
+      console.log('Re-uploading item: ', newItem);
+      await deleteItem(newItem.userID.S, newItem.configID.S); // Delete the existing item
+      await insertItems([newItem]); // Insert the new item
+    }
+  }
+
+  console.log("Table updated successfully.");
+};
+
+
+const insertItems = async (items) => {
   const results = [];
   try {
     for (const item of items) {
@@ -196,4 +235,4 @@ const main = async () => {
 
 // main();
 
-module.exports = { getHighlightProfile, insertItems };
+module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles };

@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const { Pool } = require('pg');
 require('dotenv').config();
-const { getHighlightProfile, insertItems } = require('./dynamoConfig');
+const { getHighlightProfile, insertItems, updateHighlightColorProfiles } = require('./dynamoConfig');
 
 const app = express();
 app.use(cors());
@@ -152,14 +152,15 @@ app.get('/profile/:id', async (req, res) => {
 
 app.post("/profile/save", async (req, res) => {
     const items = req.body.items; // Expect an array of items in the request body
-    // console.log(items);
+    console.log(items);
 
     if (!items || !Array.isArray(items)) {
         return res.status(400).json({ error: 'Invalid items format' });
       }
 
     try {
-        const response = await insertItems(items);
+        const response = await updateHighlightColorProfiles(items);
+        console.log('resposnie: ', response);
         res.status(200).json({
             success: true,
             message: "Items inserted successfully",

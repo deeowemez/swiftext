@@ -33,7 +33,8 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       const matchingProfile = highlightColorProfile.find(
         (profile) =>
           // profile.highlightColorProfile.S === highlight.profileID &&
-          profile.configColor.S === highlight.color
+          // profile.configColor.S === highlight.color
+          profile.configID.S === highlight.configID
       );
 
       if (matchingProfile) {
