@@ -177,11 +177,12 @@ const ControlBar = ({
 
         if (Object.keys(changedColors).length > 0) {
           // Update the highlights with the new colors for each changed key
-          const updatedHighlights = highlights.map(highlight => {
-            const newColor = changedColors[highlight.configID];
-            console.log('newcolor: ', newColor);
-            return newColor ? { ...highlight, color: newColor } : highlight;
-          });
+          const updatedHighlights = highlights
+            .filter(highlight => updatedColorMap[highlight.configID]) // Filter out highlights with no matching configID
+            .map(highlight => {
+              const newColor = changedColors[highlight.configID];
+              return newColor ? { ...highlight, color: newColor } : highlight;
+            });
 
           console.log('updated highglihts', updatedHighlights);
 
