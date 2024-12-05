@@ -22,7 +22,6 @@ import { HighlightColorProfileProps } from "./ContextMenu";
 import { CommentedHighlight } from "./types";
 import { v4 as uuidv4 } from 'uuid';
 
-
 interface ControlBarProps {
   selectedProfileID: boolean;  // Now using boolean to track the profile selection state
   setSelectedProfileID: (value: boolean) => void;
@@ -48,8 +47,6 @@ const ControlBar = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   // const [fields, setFields] = useState<Field[]>([]);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
-
-
 
   const zoomIn = () => {
     if (zoom) {
@@ -155,7 +152,7 @@ const ControlBar = ({
       const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
       setSelectedProfileID(!selectedProfileID);
       if (response.data.success) {
-      
+
         // Check for changes in the color map
         const updatedColorMap = profileColorMap(localProfile);
         console.log('current colormap: ', currentColorMap);

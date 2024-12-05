@@ -5,10 +5,10 @@ import 'react-quill/dist/quill.snow.css';
 import arrowIcon from "../../assets/images/expand-arrow.svg";
 import { CommentedHighlight } from "./types";
 import { HighlightColorProfileProps } from "./ContextMenu";
-
-const Font = Quill.import("formats/font") as any;
-Font.whitelist = ["arial", "courier", "georgia", "times-new-roman", "verdana"];
-Quill.register(Font, true);
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import { saveAs } from 'file-saver';
+import * as quillToWord from 'quill-to-word';
 
 interface ConfigBarProps {
   highlights: Array<CommentedHighlight>;
@@ -21,7 +21,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 }) => {
 
   const [editorHtml, setEditorHtml] = useState('');
-
   const quillRef = useRef<ReactQuill | null>(null);
 
   useEffect(() => {
@@ -81,6 +80,8 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     setEditorHtml(value); // This will capture the content of the editor
   };
 
+
+
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -102,11 +103,54 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     ['clean']                                         // remove formatting button
   ];
 
+  const exportToPDF = () => {
+    const quillContent = document.querySelector(".ql-editor");
+    if (quillContent) {
+      html2canvas(quillContent as HTMLElement).then((canvas) => {
+        const pdf = new jsPDF("p", "mm", "a4");
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = 190; // Adjust based on page size
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+        pdf.save("document.pdf");
+      });
+    } else {
+      console.error("Quill editor content not found");
+    }
+  };
+
+  const exportToWord = async () => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      const delta = editor.getContents(); // Get the Quill editor's delta
+
+      const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
+        exportAs: 'blob', // Explicitly type as one of the allowed values
+      };
+      
+      const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
+      saveAs(docAsBlob, 'word-export.docx');
+    }
+  };
+
+
   return (
     <div className="flex min-h-screen w-full items-start font-sserif relative">
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
       <div className="flex flex-1 flex-col gap-6 bg-[#F4F4F4] p-8 h-screen text-center " >
         {/* <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div> */}
+        <div>
+          Annotations
+          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
+            onClick={exportToPDF}>
+            PDF
+          </button>
+          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
+            onClick={exportToWord}>
+            Word
+          </button>
+        </div>
         <div className="bg-white flex-[3] rounded-ss-lg overflow-y-auto">
           <ReactQuill
             value={editorHtml}
@@ -114,6 +158,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             ref={quillRef}
             readOnly={true}
             theme="snow"
+            className="h-full"
             modules={{ toolbar: false }}
           />
           <div></div>
