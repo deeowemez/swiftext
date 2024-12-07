@@ -34,7 +34,7 @@ const resetHash = () => {
 };
 
 const EditPage = () => {
-  const [highlightColor, setHighlightColor] = useState("#71a3c1");
+  const [highlightColor, setHighlightColor] = useState("");
   const [configID, setConfigID] = useState("default-1");
   const [selectedProfileID, setSelectedProfileID] = useState<boolean>(false);
   const [highlightColorProfile, setHighlightColorProfile] = useState<HighlightColorProfileProps[]>([]);
@@ -54,9 +54,11 @@ const EditPage = () => {
 
   useEffect(() => {
     console.log('filepath: ', filePath);
+
     const loadFileByPath = async () => {
       if (filePath) {
         try {
+          // Fetch the file
           const response = await axios.get(`http://localhost:5000/edit?filePath=${encodeURIComponent(filePath)}`, {
             responseType: 'blob', // Ensures we get the file as a Blob
           });
@@ -81,8 +83,18 @@ const EditPage = () => {
 
           reader.readAsDataURL(file);
 
+          // Fetch the highlights for the file using the filePath
+          const response_highlights = await axios.get(`http://localhost:5000/highlights?filePath=${encodeURIComponent(filePath)}`);
+
+          if (response_highlights.data.success) {
+            // Assuming highlights data is returned as an object or array
+            setHighlights(response_highlights.data.highlights);
+          } else {
+            console.log("No highlights found.");
+          }
+
         } catch (error) {
-          console.error("Error fetching file:", error);
+          console.error("Error fetching file or highlights:", error);
         }
       }
     };

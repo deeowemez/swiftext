@@ -45,7 +45,7 @@ const upload = multer({ storage: storage });
 
 app.get('/api/uploads', async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM uploads');
+        const result = await pool.query('SELECT * FROM files');
         res.status(200).json(result.rows);
     } catch (error) {
         res.status(500).json({ error: 'Database query failed' });
@@ -63,7 +63,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         const modFilePath = 'backend/' + req.file.path;
         // console.log('req.file.paht: ', req.file.path);
         const result = await pool.query(
-            'INSERT INTO uploads (filename, filepath, mod_filepath) VALUES ($1, $2, $3) RETURNING id',
+            'INSERT INTO files (filename, filepath, mod_filepath) VALUES ($1, $2, $3) RETURNING id',
             [req.file.originalname, req.file.path, modFilePath]
         );
         res.status(200).send({
@@ -80,6 +80,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 // Fetch a specific file by its path
 app.get('/edit', async (req, res) => {
     const filePath = req.query.filePath;
+    console.log('req.query: ', req.query);
     console.log('fileP: ', filePath);
 
     // Ensure the file path is valid and exists on the server
@@ -94,6 +95,71 @@ app.get('/edit', async (req, res) => {
     });
 });
 
+// Endpoint to retrieve highlights for a specific user and file
+app.get('/highlights', async (req, res) => {
+    const filePath = req.query.filePath;
+
+    try {
+        const result = await pool.query(
+            'SELECT highlights FROM highlights WHERE filepath = $1',
+            [filePath]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).send('No highlights found for this file and user.');
+        }
+
+        res.status(200).json({
+            success: true,
+            highlights: result.rows[0].highlights,
+        });
+    } catch (err) {
+        console.error('Error fetching highlights:', err);
+        res.status(500).json({ success: false, error: 'Failed to fetch highlights' });
+    }
+});
+
+// Endpoint to save or update highlights for a user and file
+app.post('/highlights', async (req, res) => {
+    const filePath = req.query.filePath;
+    console.log('highlights filep: ', filePath);
+    const { highlights } = req.body;
+
+    if (!highlights) {
+        return res.status(400).json({ error: 'Highlights data is required' });
+    }
+
+    try {
+        // Check if highlights already exist for this user and file
+        const checkResult = await pool.query(
+            'SELECT * FROM highlights WHERE filepath = $1',
+            [filePath]
+        );
+
+        if (checkResult.rows.length > 0) {
+            // Update existing highlights
+            await pool.query(
+                'UPDATE highlights SET highlights = $1 WHERE filepath = $2',
+                [JSON.stringify(highlights), filePath]
+            );
+        } else {
+            // Insert new highlights
+            await pool.query(
+                'INSERT INTO highlights (filepath, highlights) VALUES ($1, $2)',
+                [filePath, JSON.stringify(highlights)]
+            );
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Highlights saved successfully.',
+        });
+    } catch (err) {
+        console.error('Error saving highlights:', err);
+        res.status(500).json({ success: false, error: 'Failed to save highlights' });
+    }
+});
+
 // remove file metadata from db and delete file from system
 app.delete('/files/:id', async (req, res) => {
     const fileId = req.params.id;
@@ -101,7 +167,7 @@ app.delete('/files/:id', async (req, res) => {
 
     try {
         // Fetch file details from the database to get the file path
-        const fileQuery = 'SELECT filepath FROM uploads WHERE id = $1';
+        const fileQuery = 'SELECT filepath FROM files WHERE id = $1';
         const result = await pool.query(fileQuery, [fileId]);
 
         if (result.rows.length === 0) {
@@ -111,7 +177,7 @@ app.delete('/files/:id', async (req, res) => {
         const filePath = result.rows[0].filepath;
 
         // Delete file from the database
-        const deleteQuery = 'DELETE FROM uploads WHERE id = $1';
+        const deleteQuery = 'DELETE FROM files WHERE id = $1';
         await pool.query(deleteQuery, [fileId]);
 
         // Delete the actual file from the filesystem
@@ -156,7 +222,7 @@ app.post("/profile/save", async (req, res) => {
 
     if (!items || !Array.isArray(items)) {
         return res.status(400).json({ error: 'Invalid items format' });
-      }
+    }
 
     try {
         const response = await updateHighlightColorProfiles(items);

@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect, Profiler } from "react";
 import ReactQuill from 'react-quill';
+import { useParams } from "react-router-dom";
 import Quill from "quill";
 import 'react-quill/dist/quill.snow.css';
 import arrowIcon from "../../assets/images/expand-arrow.svg";
+import axios, { AxiosError } from "axios";
 import { CommentedHighlight } from "./types";
 import { HighlightColorProfileProps } from "./ContextMenu";
 import jsPDF from "jspdf";
@@ -22,6 +24,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
   const [editorHtml, setEditorHtml] = useState('');
   const quillRef = useRef<ReactQuill | null>(null);
+  const { '*': filePath } = useParams();
 
   useEffect(() => {
     // Generate content based on highlights and their associated color profiles
@@ -81,7 +84,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   };
 
 
-
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
     ['blockquote', 'code-block'],
@@ -128,11 +130,26 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
         exportAs: 'blob', // Explicitly type as one of the allowed values
       };
-      
+
       const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
       saveAs(docAsBlob, 'word-export.docx');
     }
   };
+
+  const saveHighlights = async () => {
+    console.log('filepath: ', filePath);
+    if (highlights.length > 0) {
+      // Send highlights data to the server
+      const response = await axios.post(
+        `http://localhost:5000/highlights?filePath=${encodeURIComponent(filePath || "")}`,
+        { highlights } // Send highlights in the request body
+      );
+
+      console.log('Highlights saved successfully:', response.data);
+    } else {
+      console.log('No highlights to save.');
+    }
+  }
 
 
   return (
@@ -141,6 +158,11 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       <div className="flex flex-1 flex-col gap-6 bg-[#F4F4F4] p-8 h-screen text-center " >
         {/* <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div> */}
         <div>
+          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
+            onClick={saveHighlights}
+          >
+            Save highlights
+          </button>
           Annotations
           <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
             onClick={exportToPDF}>
