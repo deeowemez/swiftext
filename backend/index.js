@@ -122,7 +122,6 @@ app.get('/highlights', async (req, res) => {
 // Endpoint to save or update highlights for a user and file
 app.post('/highlights', async (req, res) => {
     const filePath = req.query.filePath;
-    console.log('highlights filep: ', filePath);
     const { highlights } = req.body;
 
     if (!highlights) {

@@ -66,4 +66,4 @@ const main = async () => {
     // deleteAllTables();
 }
 
-main();
+// main();

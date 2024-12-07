@@ -21,7 +21,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
     highlights
  }) => {
     return (
-        <div className="flex gap-10 bg-[#F4F4F4] rounded-3xl px-5 py-2 z-50 relative">
+        <div className="flex gap-10 bg-[#F4F4F4] rounded-3xl px-5 py-2 z-50 relative shadow-md">
             <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'highlightPen' ? 'bg-[#FFE7D4]' : ''
                 }`} onClick={() => toggleActiveTool('highlightPen')}>
                 <img src={highlightIcon} alt="highlight icon" className="w-5" />
