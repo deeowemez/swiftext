@@ -11,6 +11,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
+import { pdfExporter } from 'quill-to-pdf';
 
 interface ConfigBarProps {
   highlights: Array<CommentedHighlight>;
@@ -58,7 +59,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
         clearTimeout(autoSaveTimer);
       }
     };
-  }, [highlights, filePath, autoSaveTimer]);
+  }, [highlights, filePath]);
 
   useEffect(() => {
     // Generate content based on highlights and their associated color profiles
@@ -134,22 +135,23 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     ['clean']                                         // remove formatting button
   ];
 
-  const exportToPDF = () => {
-    const quillContent = document.querySelector(".ql-editor");
-    if (quillContent) {
-      html2canvas(quillContent as HTMLElement).then((canvas) => {
-        const pdf = new jsPDF("p", "mm", "a4");
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = 190; // Adjust based on page size
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-        pdf.save("document.pdf");
-      });
+  const exportToPDF = async () => {
+    if (quillRef.current) {
+      const editor = quillRef.current.getEditor();
+      try {
+        // Use the editor's HTML content
+        const delta = editor.getContents();
+        const pdfAsBlob = await pdfExporter.generatePdf(delta); // converts to PDF
+        saveAs(pdfAsBlob, 'pdf-export.pdf'); // downloads from the browser
+      } catch (error) {
+        console.error("Error generating PDF:", error);
+      }
     } else {
       console.error("Quill editor content not found");
     }
   };
+  
+
 
   const exportToWord = async () => {
     if (quillRef.current) {
@@ -184,7 +186,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   return (
     <div className="flex min-h-screen w-full items-start font-sserif relative">
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
-      <div className="flex flex-1 flex-col gap-6 bg-[#F4F4F4] p-8 h-screen text-center " >
+      <div className="flex flex-1 flex-col gap-2 bg-[#F4F4F4] p-8 h-screen text-center " >
         {/* <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div> */}
         <div>
           {/* <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
@@ -202,7 +204,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             Word
           </button>
         </div>
-        <div className="bg-white flex-[3] rounded-ss-lg overflow-y-auto">
+        <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto">
           <ReactQuill
             value={editorHtml}
             onChange={handleChange}

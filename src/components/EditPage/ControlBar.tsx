@@ -231,14 +231,14 @@ const ControlBar = ({
       {profileConfigPopup && (
         <div
           ref={popupRef}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md p-10 z-10 overflow-y-auto"
+          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+          w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
         >
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="grid grid-rows-[88%_12%] grid-cols-3 w-full h-full"> 
             {/* Render all dynamically added fields */}
-            <div className="flex flex-wrap gap-2 max-w-full">
+            <div className="col-span-3 row-start-1 flex flex-wrap justify-center gap-5">
               {localProfile.map((profile, index) => (
-                <div key={profile.configID.S} className="w-[49%] max-w-[415px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
-
+                <div key={profile.configID.S} className="w-full max-w-[420px] max-h-[180px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
                   {/* Highlight Color */}
                   <div className="flex flex-col gap-2.5 items-center">
                     <div
@@ -334,12 +334,15 @@ const ControlBar = ({
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
                             className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
-                            value={profile.size.S}
-                            onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
+                            value={profile.header.N}
+                            onChange={(e) => handleProfileChange(index, 'header', e.target.value)}
                           >
-                            <option value="small">Small</option>
-                            <option value="large">Medium</option>
-                            <option value="huge">Large</option>
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                            <option value={4}>4</option>
+                            <option value={5}>5</option>
+                            <option value={6}>6</option>
                           </select>
                         </div>
                       </div>
@@ -447,21 +450,22 @@ const ControlBar = ({
                 </div>
               ))}
             </div>
-
-            <button
-              type="button"
-              onClick={handleAddProfileField}
-              className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
-            >
-              Save
-            </button>
+            <div className="row-start-2 col-start-3 bg-red flex justify-end items-start">
+              <button
+                type="button"
+                onClick={handleAddProfileField}
+                className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
+              >
+                Add
+              </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
+              >
+                Save
+              </button>
+            </div>
           </form>
         </div>
       )
