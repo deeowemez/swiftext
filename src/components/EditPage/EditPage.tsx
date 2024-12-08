@@ -50,6 +50,7 @@ const EditPage = () => {
   const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
   const [highlightPen, setHighlightPen] = useState<boolean>(true);
   const [activeTool, setActiveTool] = useState<string>('highlightPen');
+  const [currentUserID, setcurrentUserID] = useState<string>('');
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
   useEffect(() => {

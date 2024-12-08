@@ -232,7 +232,7 @@ const ControlBar = ({
         <div
           ref={popupRef}
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-          w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-gray-300 shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
+          w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
         >
           <form onSubmit={handleSubmit} className="grid grid-rows-[88%_12%] grid-cols-3 w-full h-full"> 
             {/* Render all dynamically added fields */}

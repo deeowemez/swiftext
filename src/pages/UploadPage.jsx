@@ -3,6 +3,8 @@ import '../styles/index.css';
 
 import Header from "../components/Homepage/Header";
 import Footer from "../components/Homepage/Footer";
+import Login from "../components/Homepage/Login";
+import CreateAccount from "../components/Homepage/CreateAccount";
 
 const UploadPage = () => {
     const fileInputRef = useRef(null);
@@ -40,6 +42,7 @@ const UploadPage = () => {
     return (
         <div className="flex flex-col w-screen p-0 m-0 overflow-x-hidden relative min-h-screen">
             <Header />
+            <CreateAccount />
             {isVideoVisible && (
                 <div className="fixed top-0 left-0 flex flex-col w-full h-full justify-center items-center bg-white z-50 opacity-90">
                     <video src="upload-video.mp4" autoPlay muted className="w-[1100px] h-[700px] p-10 z-10"onEnded={handleVideoEnd}
