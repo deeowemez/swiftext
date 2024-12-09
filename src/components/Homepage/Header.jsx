@@ -1,6 +1,9 @@
 import React from "react";
 
-const Header = () => {
+const Header = ({
+    onLoginClick,
+    onSignUpClick
+}) => {
     return (
         <header className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
             <a href="/" className="flex">
@@ -15,10 +18,11 @@ const Header = () => {
                 </ul>
             </nav>
             <div className="flex gap-10">
-                <button>
+                <button onClick={onLoginClick}>
                     Log In
                 </button>
-                <button className="border-2 border-[#FF903D] rounded-lg px-4 py-2 text-[#FF903D]">
+                <button onClick={onSignUpClick}
+                    className="border-2 border-[#FF903D] rounded-lg px-4 py-2 text-[#FF903D]">
                     Sign Up
                 </button>
             </div>
