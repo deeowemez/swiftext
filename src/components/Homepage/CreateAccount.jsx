@@ -1,4 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import axios from 'axios';
+
+const validationSchema = Yup.object({
+    username: Yup.string().required('Username is required'),
+    email: Yup.string().email('Invalid email address').required('Email is required'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+});
 
 const CreateAccount = ({ onClose }) => {
     const overlayRef = useRef();
@@ -19,61 +28,96 @@ const CreateAccount = ({ onClose }) => {
         };
     }, [onClose]);
 
+    // Formik initial values and onSubmit handler
+    const initialValues = {
+        username: '',
+        email: '',
+        password: '',
+    };
+
+    const handleSubmit = async (values) => {
+        try {
+            console.log("Form Submitted", values);
+
+            // Send a POST request to the registration API
+            const response = await axios.post('http://localhost:5000/api/auth/register', {
+                username: values.username,
+                email: values.email,
+                password: values.password
+            });
+
+            // Handle success response (e.g., show success message or redirect to login page)
+            console.log('User registered successfully:', response.data);
+            onClose(); 
+
+        } catch (error) {
+            console.error('Error registering user:', error.response ? error.response.data : error.message);
+
+            // Display error message to user
+            setErrorMessage(error.response ? error.response.data : 'An error occurred. Please try again.');
+        }
+    };
+
     return (
         <div className="w-full h-full relative font-sserif">
             <div
-                ref={overlayRef} 
+                ref={overlayRef}
                 className={`fixed flex flex-col justify-center border border-[#C1C1C1] w-1/3 h-3/4 max-h-[580px] top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#F4F4F4] shadow-xl rounded-xl py-8 overflow-y-auto z-20
-                transition-all duration-300 transform ${
-                    show ? "opacity-100 scale-100" : "opacity-0 scale-95"
-                }`}
+                transition-opacity duration-300 transform ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                    }`}
             >
-                <form action="">
-                    <div className="px-8 mb-4">
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                            Username
-                        </label>
-                        <input
-                            type="username"
-                            id="username"
-                            name="username"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="px-8 mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="px-8 mb-6">
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            required
-                        />
-                    </div>
-                    <div className="px-8 mb-4">
-                        <button
-                            type="submit"
-                            className="w-full bg-[#FF903D] text-white py-2 px-4 rounded-md hover:bg-[#FF8224] transition"
-                        >
-                            Sign up
-                        </button>
-                    </div>
-                </form>
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    <Form>
+                        <div className="px-8 mb-4">
+                            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                                Username
+                            </label>
+                            <Field
+                                type="text"
+                                id="username"
+                                name="username"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <ErrorMessage name="username" component="div" className="text-red-500 text-xs" />
+                        </div>
+                        <div className="px-8 mb-4">
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                                Email
+                            </label>
+                            <Field
+                                type="email"
+                                id="email"
+                                name="email"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
+                        </div>
+                        <div className="px-8 mb-6">
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                                Password
+                            </label>
+                            <Field
+                                type="password"
+                                id="password"
+                                name="password"
+                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            />
+                            <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
+                        </div>
+                        <div className="px-8 mb-4">
+                            <button
+                                type="submit"
+                                className="w-full bg-[#FF903D] text-white py-2 px-4 rounded-md hover:bg-[#FF8224] transition"
+                            >
+                                Sign up
+                            </button>
+                        </div>
+                    </Form>
+                </Formik>
                 <p className="text-xs text-center text-gray-600">
                     or login with
                 </p>
@@ -86,6 +130,6 @@ const CreateAccount = ({ onClose }) => {
             </div>
         </div>
     );
-}
+};
 
 export default CreateAccount;

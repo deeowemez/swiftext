@@ -7,6 +7,7 @@ require('dotenv').config();
 const fileRoutes = require('./routes/fileRoutes');
 const highlightRoutes = require('./routes/highlightRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Use Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/highlights', highlightRoutes);
 app.use('/api/profile', profileRoutes);

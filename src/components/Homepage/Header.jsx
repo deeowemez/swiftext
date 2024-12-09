@@ -12,9 +12,9 @@ const Header = ({
             </a>
             <nav>
                 <ul className="flex gap-x-10 cursor-pointer">
-                    <li><a href="/" className="text-[#5A5959]">Home</a></li>
-                    <li><a href="/edit" className="text-[#5A5959]">Edit</a></li>
-                    <li><a href="/files" className="text-[#5A5959]">Files</a></li>
+                    {/* <li><a href="/" className="text-[#5A5959]">Home</a></li> */}
+                    {/* <li><a href="/edit" className="text-[#5A5959]">Edit</a></li> */}
+                    {/* <li><a href="/files" className="text-[#5A5959]">Files</a></li> */}
                 </ul>
             </nav>
             <div className="flex gap-10">

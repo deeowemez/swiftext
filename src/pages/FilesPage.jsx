@@ -3,6 +3,8 @@ import axios from 'axios';
 import Header from "../components/Homepage/Header";
 import Footer from "../components/Homepage/Footer";
 import { useNavigate } from 'react-router-dom';
+import Login from "../components/Homepage/Login";
+import CreateAccount from "../components/Homepage/CreateAccount";
 
 
 const FilesPage = () => {
@@ -11,6 +13,11 @@ const FilesPage = () => {
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [files, setFiles] = useState([]); // State to store uploaded files    
+    const [overlayType, setOverlayType] = useState(null);
+
+    const handleOverlayClose = () => {
+        setOverlayType(null);
+    };
 
     // initial loading of files every time files page viewed
     useEffect(() => {
@@ -65,7 +72,7 @@ const FilesPage = () => {
             console.log('file info: ', file);
             const response = await axios.delete(`http://localhost:5000/api/files/${file.id}`);
             console.log('File deleted successfully:', response.data);
-            
+
             const updatedFiles = await axios.get('http://localhost:5000/api/files');
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
@@ -101,7 +108,10 @@ const FilesPage = () => {
 
     return (
         <div className="flex flex-col w-screen min-h-screen font-sserif">
-            <Header />
+            <Header
+                onLoginClick={() => setOverlayType("login")}
+                onSignUpClick={() => setOverlayType("createAccount")}
+            />
             <div className="flex flex-col flex-1 py-10 px-36" onDrop={handleDrop} onDragOver={handleDragOver}>
                 <div className="flex justify-between">
                     <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
@@ -140,7 +150,7 @@ const FilesPage = () => {
                                     <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
                                     <div className="flex gap-4 items-center">
                                         <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div>
-                                        <img src="src/assets/images/more-alt.svg" alt="more svg" 
+                                        <img src="src/assets/images/more-alt.svg" alt="more svg"
                                             onClick={(event) => {
                                                 event.stopPropagation();
                                                 handleDeleteFile(file);
@@ -153,6 +163,8 @@ const FilesPage = () => {
                     ))}
                 </div>
             </div>
+            {overlayType === "login" && <Login onClose={handleOverlayClose} />}
+            {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
             {/* <Footer /> */}
         </div>
     );
