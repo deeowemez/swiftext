@@ -1,10 +1,15 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { createUser, findUserByEmail } = require('../models/userModel');
+const crypto = require('crypto');
+
+const generateUserID = () => {
+    return crypto.randomBytes(8).toString('hex');
+};
 
 // Register a new user
 const register = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { userID, username, email, password } = req.body;
     console.log('req.body: ', req.body);
 
     try {
@@ -13,8 +18,10 @@ const register = async (req, res) => {
             return res.status(400).send('User already exists');
         }
 
-        const newUser = await createUser(username, email, password);
-        res.status(201).json({ username: newUser.username, email: newUser.email, password: newUser.password });
+        const userID = generateUserID();
+
+        const newUser = await createUser(userID, username, email, password);
+        res.status(201).json({ userID: newUser.userID, username: newUser.username, email: newUser.email, password: newUser.password });
     } catch (err) {
         console.error(err);
         res.status(500).send('Error registering user');
@@ -38,7 +45,7 @@ const login = async (req, res) => {
 
         // Generate JWT
         const token = jwt.sign(
-            { id: user.id, username: user.username, email: user.email },
+            { userID: user.userid, username: user.username, email: user.email },
             process.env.JWT_SECRET, // This should be an environment variable
             { expiresIn: '1h' } // Token expiration time
         );

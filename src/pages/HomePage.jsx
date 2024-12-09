@@ -10,16 +10,26 @@ import Footer from "../components/Homepage/Footer";
 import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
 
-const HomePage = () => {
+
+const HomePage = ({
+    user,
+    setUser }) => {
     const [overlayType, setOverlayType] = useState(null);
 
     const handleOverlayClose = () => {
         setOverlayType(null);
     };
 
+    useEffect(() => {
+        if (user) {
+            console.log("User changed:", user);
+        }
+    }, [user]);
+
     return (
         <div className="w-screen p-0 m-0 overflow-x-hidden">
             <Header
+                user={user}
                 onLoginClick={() => setOverlayType("login")}
                 onSignUpClick={() => setOverlayType("createAccount")}
             />
@@ -29,7 +39,11 @@ const HomePage = () => {
             <Footline />
             <Footer />
 
-            {overlayType === "login" && <Login onClose={handleOverlayClose} />}
+            {overlayType === "login" &&
+                <Login
+                    setUser={setUser}
+                    onClose={handleOverlayClose}
+                />}
             {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
         </div>
     )

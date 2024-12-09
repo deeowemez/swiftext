@@ -7,10 +7,15 @@ import UploadPage from './pages/UploadPage';
 import FilesPage from './pages/FilesPage';
 
 function App() {
+  const [user, setUser] = useState({});
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={
+          <HomePage 
+            user={user}
+            setUser={setUser}
+          />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route 
           path="/edit/*" 

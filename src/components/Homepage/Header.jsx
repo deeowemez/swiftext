@@ -1,6 +1,7 @@
 import React from "react";
 
 const Header = ({
+    user,
     onLoginClick,
     onSignUpClick
 }) => {
@@ -18,13 +19,22 @@ const Header = ({
                 </ul>
             </nav>
             <div className="flex gap-10">
-                <button onClick={onLoginClick}>
-                    Log In
-                </button>
-                <button onClick={onSignUpClick}
-                    className="border-2 border-[#FF903D] rounded-lg px-4 py-2 text-[#FF903D]">
-                    Sign Up
-                </button>
+                {/* Conditionally render buttons or the username */}
+                {Object.keys(user).length === 0 ? (
+                    <>
+                        <button onClick={onLoginClick}>
+                            Log In
+                        </button>
+                        <button onClick={onSignUpClick}
+                            className="border-2 border-[#FF903D] rounded-lg px-4 py-2 text-[#FF903D]">
+                            Sign Up
+                        </button>
+                    </>
+                ) : (
+                    <div>
+                        Hi, {user.username}!
+                    </div>
+                )}
             </div>
 
         </header>

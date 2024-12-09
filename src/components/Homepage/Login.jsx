@@ -2,13 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { default as jwtDecode } from 'jwt-decode';
 
 const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
 });
 
-const Login = ({ onClose }) => {
+const Login = ({ 
+    onClose,
+    setUser, }) => {
     const overlayRef = useRef();
     const [show, setShow] = useState(false);
     const [loginError, setLoginError] = useState("");
@@ -36,8 +39,15 @@ const Login = ({ onClose }) => {
             // Store the token (example using localStorage)
             localStorage.setItem('authToken', token);
 
-            console.log('Login successful', response.data);
-            onClose(); // Optionally close the form after successful login
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.userID; // Access the `id` from the payload
+        
+            console.log("Decoded User:", decodedToken);
+        
+            // Set the userID in the state or context
+            setUser(decodedToken);
+            onClose();
+
         } catch (error) {
             console.error("Login error:", error);
             setLoginError("Invalid email or password"); // Set the error message
@@ -52,7 +62,7 @@ const Login = ({ onClose }) => {
                     }`}
             >
                 <Formik
-                    initialValues={{ email: '', password: '' }}
+                    initialValues={{ email: '', password: ''}}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
