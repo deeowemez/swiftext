@@ -16,7 +16,7 @@ const FilesPage = () => {
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/uploads');
+                const response = await axios.get('http://localhost:5000/api/files');
                 console.log('response data: ', response.data);
                 setFiles(response.data);
             } catch (error) {
@@ -44,14 +44,14 @@ const FilesPage = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post('http://localhost:5000/upload', formData, {
+            const response = await axios.post('http://localhost:5000/api/files/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
             // Fetch updated files list after successful upload
-            const updatedFiles = await axios.get('http://localhost:5000/api/uploads');
+            const updatedFiles = await axios.get('http://localhost:5000/api/files');
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
 
@@ -63,10 +63,10 @@ const FilesPage = () => {
     const handleDeleteFile = async (file) => {
         try {
             console.log('file info: ', file);
-            const response = await axios.delete(`http://localhost:5000/files/${file.id}`);
+            const response = await axios.delete(`http://localhost:5000/api/files/${file.id}`);
             console.log('File deleted successfully:', response.data);
             
-            const updatedFiles = await axios.get('http://localhost:5000/api/uploads');
+            const updatedFiles = await axios.get('http://localhost:5000/api/files');
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
         } catch (error) {

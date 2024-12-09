@@ -34,7 +34,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
         console.log('Auto-saving highlights...');
         try {
           await axios.post(
-            `http://localhost:5000/highlights?filePath=${encodeURIComponent(filePath || "")}`,
+            `http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
             { highlights }
           );
           console.log('Highlights saved successfully');

@@ -60,7 +60,7 @@ const EditPage = () => {
       if (filePath) {
         try {
           // Fetch the file
-          const response = await axios.get(`http://localhost:5000/edit?filePath=${encodeURIComponent(filePath)}`, {
+          const response = await axios.get(`http://localhost:5000/api/files/edit?filePath=${encodeURIComponent(filePath)}`, {
             responseType: 'blob', // Ensures we get the file as a Blob
           });
 
@@ -85,7 +85,7 @@ const EditPage = () => {
           reader.readAsDataURL(file);
 
           // Fetch the highlights for the file using the filePath
-          const response_highlights = await axios.get(`http://localhost:5000/highlights?filePath=${encodeURIComponent(filePath)}`);
+          const response_highlights = await axios.get(`http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath)}`);
 
           if (response_highlights.data.success) {
             // Assuming highlights data is returned as an object or array
@@ -159,7 +159,7 @@ const EditPage = () => {
 
   const fetchHighlightProfiles = async (profileID: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/profile/${profileID}`);
+      const response = await axios.get(`http://localhost:5000/api/profile/${profileID}`);
       const { data } = response;
       if (data.success) {
         return data.data; // The list of highlight color profiles

@@ -148,7 +148,7 @@ const ControlBar = ({
   const handleSubmit = async () => {
     try {
       const currentColorMap = profileColorMap(highlightColorProfile);
-      const response = await axios.post("http://localhost:5000/profile/save", { items: localProfile });
+      const response = await axios.post("http://localhost:5000/api/profile/save", { items: localProfile });
       setSelectedProfileID(!selectedProfileID);
       if (response.data.success) {
 
