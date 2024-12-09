@@ -2,9 +2,27 @@ import React from "react";
 
 const Header = ({
     user,
+    setUser,
     onLoginClick,
     onSignUpClick
 }) => {
+    const handleLogout = () => {
+        // Remove the token from localStorage
+        localStorage.removeItem("authToken");
+
+        // Optionally, reset the user state to an empty object or null
+        setUser({});
+
+        // // You can also call an API to log out if needed (for example, clearing server session)
+        // axios.post('http://localhost:5000/api/auth/logout')
+        //     .then(response => {
+        //         console.log('Logged out successfully');
+        //     })
+        //     .catch(error => {
+        //         console.error('Error logging out', error);
+        //     });
+    };
+
     return (
         <header className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
             <a href="/" className="flex">
@@ -19,8 +37,16 @@ const Header = ({
                 </ul>
             </nav>
             <div className="flex gap-10">
-                {/* Conditionally render buttons or the username */}
-                {Object.keys(user).length === 0 ? (
+                {user?.username ? (
+                    <>
+                        <div>
+                            Hi, {user.username}!
+                        </div>
+                        <button onClick={handleLogout} className="ml-4">
+                            Log Out
+                        </button>
+                    </>
+                ) : (
                     <>
                         <button onClick={onLoginClick}>
                             Log In
@@ -30,10 +56,6 @@ const Header = ({
                             Sign Up
                         </button>
                     </>
-                ) : (
-                    <div>
-                        Hi, {user.username}!
-                    </div>
                 )}
             </div>
 

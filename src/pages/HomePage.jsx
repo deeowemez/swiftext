@@ -30,6 +30,7 @@ const HomePage = ({
         <div className="w-screen p-0 m-0 overflow-x-hidden">
             <Header
                 user={user}
+                setUser={setUser}
                 onLoginClick={() => setOverlayType("login")}
                 onSignUpClick={() => setOverlayType("createAccount")}
             />

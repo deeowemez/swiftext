@@ -234,11 +234,11 @@ const ControlBar = ({
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
           w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
         >
-          <form onSubmit={handleSubmit} className="grid grid-rows-[88%_12%] grid-cols-3 w-full h-full"> 
+          <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[92%_8%] w-full h-full"> 
             {/* Render all dynamically added fields */}
-            <div className="col-span-3 row-start-1 flex flex-wrap justify-center gap-5">
+            <div className="row-start-1 flex flex-wrap justify-center gap-5">
               {localProfile.map((profile, index) => (
-                <div key={profile.configID.S} className="w-full max-w-[420px] max-h-[180px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
+                <div key={profile.configID.S} className="w-full max-w-[400px] max-h-[180px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE]">
                   {/* Highlight Color */}
                   <div className="flex flex-col gap-2.5 items-center">
                     <div
@@ -450,7 +450,7 @@ const ControlBar = ({
                 </div>
               ))}
             </div>
-            <div className="row-start-2 col-start-3 bg-red flex justify-end items-start">
+            <div className="row-start-2 bg-red flex justify-end items-start">
               <button
                 type="button"
                 onClick={handleAddProfileField}
