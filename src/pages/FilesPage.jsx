@@ -7,7 +7,10 @@ import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
 
 
-const FilesPage = () => {
+const FilesPage = ({
+    user,
+    setUser
+}) => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
@@ -21,17 +24,24 @@ const FilesPage = () => {
 
     // initial loading of files every time files page viewed
     useEffect(() => {
-        const fetchFiles = async () => {
-            try {
-                const response = await axios.get('http://localhost:5000/api/files');
-                console.log('response data: ', response.data);
-                setFiles(response.data);
-            } catch (error) {
-                console.error('Error fetching files:', error);
-            }
-        };
-        fetchFiles();
-    }, []);
+        const storedUser = JSON.parse(localStorage.getItem('user'));
+        console.log('user filespage: ', storedUser);
+    
+        if (storedUser && storedUser.userID) {
+            const fetchFiles = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:5000/api/files?userID=${storedUser.userID}`);
+                    console.log('response data: ', response.data);
+                    setFiles(response.data);
+                } catch (error) {
+                    console.error('Error fetching files:', error);
+                }
+            };
+            fetchFiles();
+        } else {
+            setFiles([]);
+        }
+    }, [user]);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -42,6 +52,12 @@ const FilesPage = () => {
     };
 
     const handleFileUpload = async (file) => {
+        if (!user || !user.userID) {
+            setUploadStatus('You must be logged in to upload files.');
+            window.alert('You must be logged in to upload files.');
+            return;
+        }
+
         if (!file) {
             setUploadStatus('Please select a file to upload.');
             return;
@@ -49,16 +65,17 @@ const FilesPage = () => {
 
         const formData = new FormData();
         formData.append('file', file);
+        console.log('userID: ', user.userID);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/files/upload', formData, {
+            const response = await axios.post(`http://localhost:5000/api/files/upload?userID=${user.userID}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
             // Fetch updated files list after successful upload
-            const updatedFiles = await axios.get('http://localhost:5000/api/files');
+            const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
 
@@ -73,7 +90,7 @@ const FilesPage = () => {
             const response = await axios.delete(`http://localhost:5000/api/files/${file.id}`);
             console.log('File deleted successfully:', response.data);
 
-            const updatedFiles = await axios.get('http://localhost:5000/api/files');
+            const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
         } catch (error) {
@@ -109,6 +126,8 @@ const FilesPage = () => {
     return (
         <div className="flex flex-col w-screen min-h-screen font-sserif">
             <Header
+                user={user}
+                setUser={setUser}
                 onLoginClick={() => setOverlayType("login")}
                 onSignUpClick={() => setOverlayType("createAccount")}
             />
@@ -163,7 +182,9 @@ const FilesPage = () => {
                     ))}
                 </div>
             </div>
-            {overlayType === "login" && <Login onClose={handleOverlayClose} />}
+            {overlayType === "login" && <Login
+                setUser={setUser}
+                onClose={handleOverlayClose} />}
             {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
             {/* <Footer /> */}
         </div>

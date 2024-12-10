@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const Header = ({
     user,
@@ -6,9 +6,16 @@ const Header = ({
     onLoginClick,
     onSignUpClick
 }) => {
+    
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        setUser(user);
+    }, []);
+
     const handleLogout = () => {
         // Remove the token from localStorage
         localStorage.removeItem("authToken");
+        localStorage.removeItem("user");
 
         // Optionally, reset the user state to an empty object or null
         setUser({});
@@ -31,9 +38,9 @@ const Header = ({
             </a>
             <nav>
                 <ul className="flex gap-x-10 cursor-pointer">
-                    {/* <li><a href="/" className="text-[#5A5959]">Home</a></li> */}
+                    <li><a href="/" className="text-[#5A5959]">Home</a></li>
                     {/* <li><a href="/edit" className="text-[#5A5959]">Edit</a></li> */}
-                    {/* <li><a href="/files" className="text-[#5A5959]">Files</a></li> */}
+                    <li><a href="/files" className="text-[#5A5959]">Files</a></li>
                 </ul>
             </nav>
             <div className="flex gap-10">

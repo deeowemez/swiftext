@@ -10,8 +10,9 @@ const validationSchema = Yup.object({
 });
 
 const Login = ({ 
-    onClose,
-    setUser, }) => {
+    setUser,
+    onClose
+}) => {
     const overlayRef = useRef();
     const [show, setShow] = useState(false);
     const [loginError, setLoginError] = useState("");
@@ -40,8 +41,10 @@ const Login = ({
             localStorage.setItem('authToken', token);
 
             const decodedToken = jwtDecode(token);
-            const userId = decodedToken.userID; // Access the `id` from the payload
         
+            // After successful login
+            localStorage.setItem('user', JSON.stringify(decodedToken));
+
             console.log("Decoded User:", decodedToken);
         
             // Set the userID in the state or context

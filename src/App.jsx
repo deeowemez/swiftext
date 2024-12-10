@@ -12,18 +12,26 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={
-          <HomePage 
+          <HomePage
             user={user}
             setUser={setUser}
           />} />
-        <Route path="/upload" element={<UploadPage />} />
-        <Route 
-          path="/edit/*" 
-          element={<EditPage />} 
+        <Route path="/upload" element={
+          <UploadPage
+            user={user}
+            setUser={setUser}
+          />} />
+        <Route
+          path="/edit/*"
+          element={<EditPage />}
         />
         <Route
           path="/files"
-          element={<FilesPage />}
+          element={
+            <FilesPage
+              user={user}
+              setUser={setUser}
+            />}
         />
       </Routes>
     </Router>

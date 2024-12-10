@@ -5,6 +5,8 @@ const pool = require('../db/psql'); // Importing database pool
 
 // Logging middleware
 const uploadFile = async (req, res) => {
+    const { userID } = req.query;
+    // console.log('req body upload: ', req);
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -12,8 +14,8 @@ const uploadFile = async (req, res) => {
     try {
         const modFilePath = 'backend/' + req.file.path;
         const result = await pool.query(
-            'INSERT INTO files (filename, filepath, mod_filepath) VALUES ($1, $2, $3) RETURNING id',
-            [req.file.originalname, req.file.path, modFilePath]
+            'INSERT INTO files (userID, filename, filepath, mod_filepath) VALUES ($1, $2, $3, $4) RETURNING id',
+            [userID, req.file.originalname, req.file.path, modFilePath]
         );
         res.status(200).send({
             fileName: req.file.originalname,
@@ -27,8 +29,12 @@ const uploadFile = async (req, res) => {
 };
 
 const getAllFiles = async (req, res) => {
+    const { userID } = req.query;
+    if (!userID) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
     try {
-        const result = await pool.query('SELECT * FROM files');
+        const result = await pool.query('SELECT * FROM files WHERE userID = $1', [userID]);
         res.status(200).json(result.rows);
     } catch (error) {
         res.status(500).json({ error: 'Database query failed' });

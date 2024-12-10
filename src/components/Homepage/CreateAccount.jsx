@@ -12,6 +12,11 @@ const validationSchema = Yup.object({
 const CreateAccount = ({ onClose }) => {
     const overlayRef = useRef();
     const [show, setShow] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -48,7 +53,7 @@ const CreateAccount = ({ onClose }) => {
 
             // Handle success response (e.g., show success message or redirect to login page)
             console.log('User registered successfully:', response.data);
-            onClose(); 
+            onClose();
 
         } catch (error) {
             console.error('Error registering user:', error.response ? error.response.data : error.message);
@@ -96,16 +101,25 @@ const CreateAccount = ({ onClose }) => {
                             />
                             <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
                         </div>
-                        <div className="px-8 mb-6">
+                        <div className="px-8 mb-6 w-full">
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                 Password
                             </label>
-                            <Field
-                                type="password"
-                                id="password"
-                                name="password"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <div className="flex">
+                                <Field
+                                    type={isPasswordVisible ? "text" : "password"}
+                                    id="password"
+                                    name="password"
+                                    className="mt-1 block w-5/6 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
+                                    className="p-2 text-gray-500 focus:outline-none text-sm text-center"
+                                >
+                                    {isPasswordVisible ? "Hide" : "Show"}
+                                </button>
+                            </div>
                             <ErrorMessage name="password" component="div" className="text-red-500 text-xs" />
                         </div>
                         <div className="px-8 mb-4">
