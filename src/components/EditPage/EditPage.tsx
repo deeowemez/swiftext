@@ -231,7 +231,9 @@ const EditPage = () => {
   const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
     console.log("Deleting highlight", highlight);
     saveToUndoStack();
-    setHighlights(highlights.filter((h) => h.id != highlight.id));
+    setTimeout(() => {
+      setHighlights(highlights.filter((h) => h.id != highlight.id));
+    }, 0);
   };
 
   const editHighlight = (
