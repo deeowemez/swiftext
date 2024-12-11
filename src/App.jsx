@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import HomePage from './pages/HomePage';
 import EditPage from './components/EditPage/EditPage';
@@ -8,6 +8,11 @@ import FilesPage from './pages/FilesPage';
 
 function App() {
   const [user, setUser] = useState({});
+
+  useEffect(() => {
+    console.log('user details: ', user);
+  }, [user]);
+
   return (
     <Router>
       <Routes>
@@ -23,7 +28,11 @@ function App() {
           />} />
         <Route
           path="/edit/*"
-          element={<EditPage />}
+          element={
+            <EditPage
+              user={user}
+              setUser={setUser}
+            />}
         />
         <Route
           path="/files"

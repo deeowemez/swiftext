@@ -12,13 +12,18 @@ import html2canvas from "html2canvas";
 import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
 import { pdfExporter } from 'quill-to-pdf';
+import { User } from "./EditPage"
 
 interface ConfigBarProps {
+  user: User;
+  setUser: void;
   highlights: Array<CommentedHighlight>;
   highlightColorProfile: HighlightColorProfileProps[];
 }
 
 const ConfigBar: React.FC<ConfigBarProps> = ({
+  user,
+  setUser,
   highlights,
   highlightColorProfile
 }) => {
@@ -73,7 +78,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       );
 
       if (matchingProfile) {
-        console.log('mp: ', matchingProfile);
+        // console.log('mp: ', matchingProfile);
         return [
           {
             insert: highlight.content.text + '\n',
@@ -136,34 +141,88 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   ];
 
   const exportToPDF = async () => {
-    if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      try {
-        // Use the editor's HTML content
-        const delta = editor.getContents();
-        const pdfAsBlob = await pdfExporter.generatePdf(delta); // converts to PDF
-        saveAs(pdfAsBlob, 'pdf-export.pdf'); // downloads from the browser
-      } catch (error) {
-        console.error("Error generating PDF:", error);
+    try {
+      const docFile = await exportToWord(false);
+      if (!(docFile instanceof Blob)) {
+        console.error('Error: Failed to generate Word file or the result is not a Blob');
+        return;
       }
-    } else {
-      console.error("Quill editor content not found");
+      const formData = new FormData();
+      console.log('docfile', docFile);
+      formData.append('file', docFile, 'pdf-export.docx');
+      const responseUpload = await axios.post(`http://localhost:5000/api/files/upload?userID=${user.userID}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const fileId = responseUpload.data.id;
+      console.log('wordtopdf fileid: ', responseUpload.data);
+
+      const response = await axios.get(`http://localhost:5000/api/files/convert?fileId=${fileId}`, {
+        responseType: 'blob', // Important to handle binary data
+      });
+
+      console.log('convertResponse headers:', response.headers);
+
+      if (response.status === 200) {
+        // Create a Blob from the response data
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+
+        // Create a URL for the Blob
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Create a hidden anchor element to trigger the download
+        const a = document.createElement('a');
+        a.href = blobUrl;
+
+        // Extract the filename from the Content-Disposition header, if available
+        const contentDisposition = response.headers['content-disposition'];
+        console.log('content disposition: ', contentDisposition);
+        let fileName = 'downloaded-file.pdf'; // Default filename
+        if (contentDisposition) {
+          const match = contentDisposition.match(/filename="(.+)"/);
+          if (match && match[1]) {
+            fileName = match[1];
+          }
+        }
+
+        a.download = fileName; // Set the filename for the download
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Clean up the Blob URL
+        window.URL.revokeObjectURL(blobUrl);
+
+        console.log('File downloaded successfully.');
+
+        // // Delete word file and remove from files table
+        // const responseRemoveFile = await axios.delete(`http://localhost:5000/api/files/${fileId}`);
+        // console.log('File deleted successfully:', responseRemoveFile.data);
+      } else {
+        console.error('Error during file download:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching the file:', error);
     }
-  };
-  
+  }
 
-
-  const exportToWord = async () => {
+  const exportToWord = async (exportWordOnly: boolean) => {
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
-      const delta = editor.getContents(); // Get the Quill editor's delta
+      const delta = editor.getContents();
 
       const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
-        exportAs: 'blob', // Explicitly type as one of the allowed values
+        exportAs: 'blob',
       };
 
       const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
-      saveAs(docAsBlob, 'word-export.docx');
+      if (exportWordOnly) {
+        saveAs(docAsBlob, 'word-export.docx');
+      } else {
+        return docAsBlob;
+      }
     }
   };
 
@@ -182,7 +241,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   //   }
   // }
 
-
   return (
     <div className="flex min-h-screen w-full items-start font-sserif relative">
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
@@ -200,7 +258,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             PDF
           </button>
           <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={exportToWord}>
+            onClick={() => exportToWord(true)}>
             Word
           </button>
         </div>

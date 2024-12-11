@@ -33,7 +33,16 @@ const resetHash = () => {
   document.location.hash = "";
 };
 
-const EditPage = () => {
+export interface User {
+  userID: string;
+  username: string;
+  email: string;
+}
+
+const EditPage: React.FC<{
+  user: User;
+  setUser: void;
+}> = ({ user, setUser }) => {
   const [highlightColor, setHighlightColor] = useState("");
   const [configID, setConfigID] = useState("default-1");
   const [selectedProfileID, setSelectedProfileID] = useState<boolean>(false);
@@ -52,6 +61,10 @@ const EditPage = () => {
   const [activeTool, setActiveTool] = useState<string>('highlightPen');
   const [currentUserID, setcurrentUserID] = useState<string>('');
   const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
+
+  useEffect(() => {
+    console.log('file details: ', pdfFile);
+  }, [pdfFile]);
 
   useEffect(() => {
     console.log('filepath: ', filePath);
@@ -368,6 +381,8 @@ const EditPage = () => {
       </div>
       <div className="w-2/5">
         <ConfigBar
+          user={user}
+          setUser={setUser}
           highlights={highlights}
           highlightColorProfile={highlightColorProfile}
         />

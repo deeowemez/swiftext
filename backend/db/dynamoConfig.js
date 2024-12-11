@@ -104,14 +104,14 @@ const updateHighlightColorProfiles = async (newItems) => {
   const existingItemsMap = new Map(
     existingItems.map(item => [item.configID.S, item])
   );
-  console.log('existing map: ', existingItemsMap);
+  // console.log('existing map: ', existingItemsMap);
 
   // Compare and remove items that no longer exist in the new list
   for (const existingItem of existingItems) {
     const itemInNewList = newItems.find(item => item.configID.S === existingItem.configID.S);
     if (!itemInNewList) {
       // Item is not in the new list, so delete it
-      console.log('item not in new list: ', existingItem);
+      // console.log('item not in new list: ', existingItem);
       await deleteItem(existingItem.userID.S, existingItem.configID.S);
     }
   }
@@ -122,11 +122,11 @@ const updateHighlightColorProfiles = async (newItems) => {
 
     if (!existingItem) {
       // Item does not exist in the table, so add it
-      console.log('Adding new item: ', newItem);
+      // console.log('Adding new item: ', newItem);
       await insertItems([newItem]);
     } else {
       // Item exists, but we re-insert it to ensure it matches the new list
-      console.log('Re-uploading item: ', newItem);
+      // console.log('Re-uploading item: ', newItem);
       await deleteItem(newItem.userID.S, newItem.configID.S); // Delete the existing item
       await insertItems([newItem]); // Insert the new item
     }

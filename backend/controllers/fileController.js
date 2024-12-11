@@ -1,6 +1,10 @@
+const { exec } = require('child_process');
 const fs = require('fs');
+const multer = require('multer');
 const path = require('path');
 const { Pool } = require('pg');
+const libre = require('libreoffice-convert');
+libre.convertAsync = require('util').promisify(libre.convert);
 const pool = require('../db/psql'); // Importing database pool
 
 // Logging middleware
@@ -45,8 +49,7 @@ const deleteFile = async (req, res) => {
     const fileId = req.params.id;
     console.log('fileID: ', fileId);
     try {
-        const fileQuery = 'SELECT filepath FROM files WHERE id = $1';
-        const result = await pool.query(fileQuery, [fileId]);
+        const result = await pool.query('SELECT filepath FROM files WHERE id = $1', [fileId]);
         console.log('result: ', result);
 
         if (result.rows.length === 0) {
@@ -54,8 +57,7 @@ const deleteFile = async (req, res) => {
         }
 
         const filePath = result.rows[0].filepath;
-        const deleteQuery = 'DELETE FROM files WHERE id = $1';
-        await pool.query(deleteQuery, [fileId]);
+        await pool.query('DELETE FROM files WHERE id = $1', [fileId]);
 
         const parentPath = path.dirname(__dirname);
         const fullFilePath = path.join(parentPath, filePath);
@@ -89,4 +91,91 @@ const editFile = async (req, res) => {
     });
 };
 
-module.exports = { uploadFile, getAllFiles, deleteFile, editFile };
+const convertToPdf = async (req, res) => {
+    const { fileId } = req.query;
+
+    if (!fileId) {
+        return res.status(400).send('File ID is required');
+    }
+
+    try {
+        // Retrieve file path from database
+        const result = await pool.query('SELECT filepath, filename FROM files WHERE id = $1', [fileId]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).send('File not found');
+        }
+
+        const filePathExt = result.rows[0].filepath;
+        const filename = result.rows[0].filename;
+
+        const fileNumber = path.join(path.basename(filePathExt, '.docx')); //1733913722819 
+        const parentPath = path.dirname(__dirname); //wordToPdf
+        const absoluteInputPath = path.join(parentPath, filePathExt);
+        const pdfName = `${fileNumber}_${filename}.pdf`;
+        const outputPath = path.join(parentPath, 'wordToPdf', pdfName);
+
+        // Ensure the file exists
+        if (!fs.existsSync(absoluteInputPath)) {
+            return res.status(404).send('Input file not found');
+        }
+
+        const command = `libreoffice --headless --convert-to pdf "${absoluteInputPath}" --outdir "${path.dirname(outputPath)}" && mv "${path.join(path.dirname(outputPath), `${fileNumber}.pdf`)}" "${outputPath}"`;
+
+        // console.log('command: ', command);
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Error converting file: ${error.message}`);
+                return res.status(500).send('Error converting file');
+            }
+
+            if (stderr) {
+                console.error(`stderr: ${stderr}`);
+                return res.status(500).send('Error during conversion');
+            }
+
+            // Set the Content-Disposition header for download
+            res.setHeader('Content-Disposition', `attachment; filename="${pdfName}"`);
+            res.setHeader('Content-Type', 'application/pdf');
+
+            // Send the file
+            res.sendFile(outputPath, async (err) => {
+                if (err) {
+                    console.error('Error sending file:', err);
+                    res.status(500).send('Error sending the file');
+                } else {
+                    try {
+                        // Delete the database record
+                        await pool.query('DELETE FROM files WHERE id = $1', [fileId]);
+
+                        // Delete the Word file
+                        fs.unlink(absoluteInputPath, (unlinkErr) => {
+                            if (unlinkErr) {
+                                console.error('Error deleting Word file:', unlinkErr);
+                            } else {
+                                console.log('Word file deleted successfully:', absoluteInputPath);
+                            }
+                        });
+
+                        // Delete the PDF file
+                        fs.unlink(outputPath, (unlinkErr) => {
+                            if (unlinkErr) {
+                                console.error('Error deleting PDF file:', unlinkErr);
+                            } else {
+                                console.log('PDF file deleted successfully:', outputPath);
+                            }
+                        });
+                    } catch (dbErr) {
+                        console.error('Error deleting database record:', dbErr);
+                    }
+                }
+            });
+        });
+    } catch (err) {
+        console.error('Error fetching file details or converting file:', err);
+        res.status(500).send('Error processing the request');
+    }
+};
+
+module.exports = { uploadFile, getAllFiles, deleteFile, editFile, convertToPdf };

@@ -14,12 +14,20 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(cors({
+    exposedHeaders: ['Content-Disposition'], // Allow the Content-Disposition header
+}));
 
 // Use Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/files', fileRoutes);
 app.use('/api/highlights', highlightRoutes);
 app.use('/api/profile', profileRoutes);
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Serve static files from the 'uploads' directory
+app.use('/wordToPdf', express.static(path.join(__dirname, 'wordToPdf')));
 
 // Add a root route for testing
 app.get('/', (req, res) => {

@@ -21,11 +21,13 @@ const createTables = async () => {
 
         CREATE TABLE IF NOT EXISTS files (
             id SERIAL PRIMARY KEY,
+            userID VARCHAR(255) NOT NULL,
             filename VARCHAR(255) NOT NULL,
             filepath VARCHAR(255) NOT NULL,
             last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             tag VARCHAR(255),
-            mod_filepath VARCHAR(255) NOT NULL
+            mod_filepath VARCHAR(255) NOT NULL,
+            CONSTRAINT fk_user FOREIGN KEY (userID) REFERENCES users(userID) ON DELETE CASCADE
         );
         
         CREATE TABLE IF NOT EXISTS highlights (
@@ -48,9 +50,9 @@ const createTables = async () => {
 
 const deleteAllTables = async () => {
     const queries = `
-        DROP TABLE IF EXISTS highlights CASCADE;
         DROP TABLE IF EXISTS files CASCADE;
         DROP TABLE IF EXISTS users CASCADE;
+        DROP TABLE IF EXISTS highlights CASCADE;
     `;
 
     try {
@@ -64,8 +66,8 @@ const deleteAllTables = async () => {
 };
 
 const main = async () => {
-    createTables();
-    // deleteAllTables();
+    // createTables();
+    deleteAllTables();
 }
 
 // main();

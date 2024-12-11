@@ -22,7 +22,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
  }) => {
     return (
         <div className="flex gap-10 bg-[#F4F4F4] rounded-3xl px-5 py-2 z-50 relative shadow-md">
-            <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'highlightPen' ? 'bg-[#FFE7D4]' : ''
+            <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'highlightPen' ? 'bg-[#FFE7D4]' : "hover:bg-[#FFE7D4]"
                 }`} onClick={() => toggleActiveTool('highlightPen')}>
                 <img src={highlightIcon} alt="highlight icon" className="w-5" />
             </div>
@@ -38,7 +38,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
             >
                 <img src={redoIcon} alt="redo icon" className="cursor-pointer w-5" />
             </div>
-            <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'eraser' ? 'bg-[#FFE7D4]' : ''
+            <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'eraser' ? 'bg-[#FFE7D4]' : "hover:bg-[#FFE7D4]"
                 }`} onClick={() => toggleActiveTool('eraser')}>
                 <img src={eraserIcon} alt="eraser icon" className="cursor-pointer w-5" />
             </div>
