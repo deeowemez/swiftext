@@ -25,8 +25,8 @@ import { User } from "./EditPage";
 
 interface ControlBarProps {
   user: User;
-  selectedProfileID: boolean;  // Now using boolean to track the profile selection state
-  setSelectedProfileID: (value: boolean) => void;
+  forceRenderProfile: boolean;  // Now using boolean to track the profile selection state
+  setForceRenderProfile: (value: boolean) => void;
   setPdfScaleValue: (value: number) => void;
   highlightColorProfile: HighlightColorProfileProps[];
   highlights: Array<CommentedHighlight>;
@@ -39,8 +39,8 @@ const ControlBar = ({
   user,
   highlights,
   setHighlights,
-  selectedProfileID,
-  setSelectedProfileID,
+  forceRenderProfile,
+  setForceRenderProfile,
   setPdfScaleValue,
   highlightColorProfile,
   resetHighlights,
@@ -153,7 +153,7 @@ const ControlBar = ({
     try {
       const currentColorMap = profileColorMap(highlightColorProfile);
       const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${user.userID}`, { items: localProfile });
-      setSelectedProfileID(!selectedProfileID);
+      setForceRenderProfile(!forceRenderProfile);
       if (response.data.success) {
 
         // Check for changes in the color map
@@ -200,7 +200,7 @@ const ControlBar = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+  
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
@@ -322,7 +322,7 @@ const ControlBar = ({
                               className="opacity-0 cursor-pointer"
                               value={profile.background.S}
                               onChange={(e) => handleProfileChange(index, 'background', e.target.value)}
-                              
+
                             />
                           </div>
                           <label className="text-center text-sm">

@@ -1,16 +1,26 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { createUser, findUserByEmail } = require('../models/userModel');
+const { updateHighlightColorProfiles, defaultProfile } = require('../db/dynamoConfig');
 const crypto = require('crypto');
 
 const generateUserID = () => {
     return crypto.randomBytes(8).toString('hex');
 };
 
+const insertDefaultProfile = async (userID) => {
+    try {
+        await updateHighlightColorProfiles(defaultProfile(userID), userID);
+        console.log("Default profiles inserted successfully");
+    } catch (error) {
+        console.error("Error inserting default profiles:", error);
+    }
+};
+
 // Register a new user
 const register = async (req, res) => {
     const { userID, username, email, password } = req.body;
-    console.log('req.body: ', req.body);
+    // console.log('req.body: ', req.body);
 
     try {
         const existingUser = await findUserByEmail(email);
@@ -18,9 +28,12 @@ const register = async (req, res) => {
             return res.status(400).send('User already exists');
         }
 
-        const userID = generateUserID();
+        const generatedUserID = generateUserID();
 
-        const newUser = await createUser(userID, username, email, password);
+        const newUser = await createUser(generatedUserID, username, email, password);
+
+        await insertDefaultProfile(generatedUserID);
+
         res.status(201).json({ userID: newUser.userID, username: newUser.username, email: newUser.email, password: newUser.password });
     } catch (err) {
         console.error(err);

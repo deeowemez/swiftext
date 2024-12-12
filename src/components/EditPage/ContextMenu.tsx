@@ -28,7 +28,7 @@ export interface ContextMenuProps {
   editComment?: () => void;
   deleteHighlight?: () => void;
   listHighlightColorProfile?: HighlightColorProfileProps[];
-  changeHighlightColor?: (hiColor: string) => void;
+  setHighlightColor?: (hiColor: string) => void;
   setConfigID?: (configID: string) => void;
 }
 
@@ -39,7 +39,7 @@ const ContextMenu = ({
   editComment,
   deleteHighlight,
   listHighlightColorProfile,
-  changeHighlightColor,
+  setHighlightColor,
   setConfigID,
 }: ContextMenuProps) => {
   if (menuType === "context-menu") {
@@ -66,8 +66,8 @@ const ContextMenu = ({
                 className="w-5 h-5 rounded-full flex-shrink-0"
                 style={{ backgroundColor: profile.configColor.S }}
                 onClick={() => {
-                  if (changeHighlightColor) {
-                    changeHighlightColor(profile.configColor.S);
+                  if (setHighlightColor) {
+                    setHighlightColor(profile.configColor.S);
                   }
                   if (setConfigID) {
                     setConfigID(profile.configID.S);

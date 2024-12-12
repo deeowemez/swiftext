@@ -2,10 +2,9 @@ const { getHighlightProfile, updateHighlightColorProfiles } = require('../db/dyn
 
 const getProfile = async (req, res) => {
     const userID = req.params.id;
-    console.log('userid getprofile: ', userID);
+
     try {
         const response = await getHighlightProfile(userID);
-        console.log('response getprofile: ', response);
         res.status(200).json({
             success: true,
             data: response,

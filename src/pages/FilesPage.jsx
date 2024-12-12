@@ -138,7 +138,7 @@ const FilesPage = ({
                         <input type="text" placeholder="Search files" className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12 " />
                     </div>
                     <div className="flex gap-5 text-[#5A5959] text-sm items-center">
-                        <div className="p-2 hover:bg-gray-50 rounded-full mr-3 cursor-pointer"
+                        <div className="p-2 hover:bg-slate-100 rounded-full mr-3 cursor-pointer"
                             onClick={handleImageClick}
                         >
                             <input type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />

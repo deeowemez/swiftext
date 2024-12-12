@@ -35,67 +35,6 @@ const createTable = async () => {
   }
 };
 
-
-const colorItems = [
-  {
-    userID: { S: "71762101b373411a" },
-    highlightColorProfile: { S: "default" },
-    configColor: { S: "#FF5733" },
-    configID: { S: "default-1" },
-    background: { S: "" },
-    color: { S: "#000000" },
-    font: { S: "monospace" },
-    bold: { BOOL: false },
-    italic: { BOOL: true },
-    underline: { BOOL: false },
-    strike: { BOOL: false },
-    header: { N: 1 },
-    list: { S: "" },
-    script: { S: "" },
-    indent: { N: 0 },
-    align: { S: "left" },
-    size: { S: "huge" },
-  },
-  {
-    userID: { S: "71762101b373411a" },
-    highlightColorProfile: { S: "default" },
-    configColor: { S: "#FF57DE" },
-    configID: { S: "default-2" },
-    background: { S: "" },
-    color: { S: "#000000" },
-    font: { S: "monospace" },
-    bold: { BOOL: false },
-    italic: { BOOL: false },
-    underline: { BOOL: true },
-    strike: { BOOL: false },
-    header: { N: 2 },
-    list: { S: "check" },
-    script: { S: "" },
-    indent: { N: 1 },
-    align: { S: "left" },
-    size: { S: "large" },
-  },
-  {
-    userID: { S: "71762101b373411a" },
-    highlightColorProfile: { S: "default" },
-    configColor: { S: "#FFC300" },
-    configID: { S: "default-3" },
-    background: { S: "" },
-    color: { S: "#000000" },
-    font: { S: "monospace" },
-    bold: { BOOL: true },
-    italic: { BOOL: false },
-    underline: { BOOL: false },
-    strike: { BOOL: false },
-    header: { N: 3 },
-    list: { S: "" },
-    script: { S: "" },
-    indent: { N: 2 },
-    align: { S: "right" },
-    size: { S: "small" },
-  },
-];
-
 const updateHighlightColorProfiles = async (newItems, userID) => {
   // Get the existing items in the table for the given highlightColorProfile
   const existingItems = await getHighlightProfile(userID);
@@ -135,6 +74,65 @@ const updateHighlightColorProfiles = async (newItems, userID) => {
   console.log("Table updated successfully.");
 };
 
+const defaultProfile = (userID) => [
+  {
+    userID: { S: userID },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FF5733" },
+    configID: { S: "default-1" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: false },
+    italic: { BOOL: true },
+    underline: { BOOL: false },
+    strike: { BOOL: false },
+    header: { N: 1 },
+    list: { S: "" },
+    script: { S: "" },
+    indent: { N: 0 },
+    align: { S: "left" },
+    size: { S: "huge" },
+  },
+  {
+    userID: { S: userID },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FF57DE" },
+    configID: { S: "default-2" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: false },
+    italic: { BOOL: false },
+    underline: { BOOL: true },
+    strike: { BOOL: false },
+    header: { N: 2 },
+    list: { S: "check" },
+    script: { S: "" },
+    indent: { N: 1 },
+    align: { S: "left" },
+    size: { S: "large" },
+  },
+  {
+    userID: { S: userID },
+    highlightColorProfile: { S: "default" },
+    configColor: { S: "#FFC300" },
+    configID: { S: "default-3" },
+    background: { S: "" },
+    color: { S: "#000000" },
+    font: { S: "monospace" },
+    bold: { BOOL: true },
+    italic: { BOOL: false },
+    underline: { BOOL: false },
+    strike: { BOOL: false },
+    header: { N: 3 },
+    list: { S: "" },
+    script: { S: "" },
+    indent: { N: 2 },
+    align: { S: "right" },
+    size: { S: "small" },
+  },
+];
 
 const insertItems = async (items) => {
   const results = [];
@@ -187,7 +185,7 @@ const getHighlightProfile = async (userID) => {
     const response = await dynamoDB.send(command);
 
     // Output the retrieved items
-    console.log("Items in table:", response.Items);
+    // console.log("Items in table:", response.Items);
     return response.Items;
   } catch (error) {
     console.error("Error listing items:", error);
@@ -235,4 +233,4 @@ const main = async () => {
 
 // main();
 
-module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles };
+module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles, defaultProfile };

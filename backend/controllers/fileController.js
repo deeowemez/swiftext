@@ -47,10 +47,10 @@ const getAllFiles = async (req, res) => {
 
 const deleteFile = async (req, res) => {
     const fileId = req.params.id;
-    console.log('fileID: ', fileId);
+    // console.log('fileID: ', fileId);
     try {
         const result = await pool.query('SELECT filepath FROM files WHERE id = $1', [fileId]);
-        console.log('result: ', result);
+        // console.log('result: ', result);
 
         if (result.rows.length === 0) {
             return res.status(404).send(`File with ID ${fileId} not found`);
@@ -61,7 +61,7 @@ const deleteFile = async (req, res) => {
 
         const parentPath = path.dirname(__dirname);
         const fullFilePath = path.join(parentPath, filePath);
-        console.log('fullFilePath: ', fullFilePath);
+        // console.log('fullFilePath: ', fullFilePath);
         fs.unlink(fullFilePath, (err) => {
             if (err) {
                 return res.status(500).send(`Error deleting file: ${err.message}`);
@@ -80,7 +80,6 @@ const editFile = async (req, res) => {
     // Ensure the file path is valid and exists on the server
     const parentPath = path.dirname(__dirname);
     const fullFilePath = path.join(parentPath, filePath);
-    console.log('fileP: ', fullFilePath);
 
     // Send the file or an error response
     res.sendFile(fullFilePath, (err) => {
