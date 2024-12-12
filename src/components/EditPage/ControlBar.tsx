@@ -21,8 +21,10 @@ import unorderedListIcon from "../../assets/images/profile-config/unordered-list
 import { HighlightColorProfileProps } from "./ContextMenu";
 import { CommentedHighlight } from "./types";
 import { v4 as uuidv4 } from 'uuid';
+import { User } from "./EditPage";
 
 interface ControlBarProps {
+  user: User;
   selectedProfileID: boolean;  // Now using boolean to track the profile selection state
   setSelectedProfileID: (value: boolean) => void;
   setPdfScaleValue: (value: number) => void;
@@ -34,6 +36,7 @@ interface ControlBarProps {
 
 
 const ControlBar = ({
+  user,
   highlights,
   setHighlights,
   selectedProfileID,
@@ -73,12 +76,13 @@ const ControlBar = ({
   };
 
   useEffect(() => {
+    console.log('highlightcolorprofile: ', highlightColorProfile);
     setLocalProfile([...highlightColorProfile]);
   }, [highlightColorProfile]);
 
   const handleAddProfileField = () => {
     const newField: HighlightColorProfileProps = {
-      userID: { S: "user123" },
+      userID: { S: user.userID },
       highlightColorProfile: { S: "default" },
       configColor: { S: "#000000" },
       configID: { S: `config-${uuidv4()}` },
@@ -148,7 +152,7 @@ const ControlBar = ({
   const handleSubmit = async () => {
     try {
       const currentColorMap = profileColorMap(highlightColorProfile);
-      const response = await axios.post("http://localhost:5000/api/profile/save", { items: localProfile });
+      const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${user.userID}`, { items: localProfile });
       setSelectedProfileID(!selectedProfileID);
       if (response.data.success) {
 
@@ -318,17 +322,16 @@ const ControlBar = ({
                               className="opacity-0 cursor-pointer"
                               value={profile.background.S}
                               onChange={(e) => handleProfileChange(index, 'background', e.target.value)}
+                              
                             />
                           </div>
                           <label className="text-center text-sm">
-                            {profile.background.S === '' ? 'Transparent' : profile.background.S.toUpperCase()}
+                            {profile.background.S === '' ? 'None' : profile.background.S.toUpperCase()}
                           </label>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex justify-between mb-4">
-                      {/* Font Size */}
+                      {/* Header
                       <div className="flex gap-1.5">
                         <img src={fontSizeIcon} alt="" className="w-3.5" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
@@ -343,6 +346,25 @@ const ControlBar = ({
                             <option value={4}>4</option>
                             <option value={5}>5</option>
                             <option value={6}>6</option>
+                          </select>
+                        </div>
+                      </div> */}
+                    </div>
+
+                    <div className="flex justify-between mb-4">
+                      {/* Font Size */}
+                      <div className="flex gap-1.5">
+                        <img src={fontSizeIcon} alt="" className="w-3.5" />
+                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                          <select
+                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                            value={profile.size.S}
+                            onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
+                          >
+                            <option value="small">Small</option>
+                            <option value="normal">Medium</option>
+                            <option value="large">Large</option>
+                            <option value="huge">Huge</option>
                           </select>
                         </div>
                       </div>

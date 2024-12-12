@@ -38,7 +38,7 @@ const createTable = async () => {
 
 const colorItems = [
   {
-    userID: { S: "user123" },
+    userID: { S: "71762101b373411a" },
     highlightColorProfile: { S: "default" },
     configColor: { S: "#FF5733" },
     configID: { S: "default-1" },
@@ -57,7 +57,7 @@ const colorItems = [
     size: { S: "huge" },
   },
   {
-    userID: { S: "user123" },
+    userID: { S: "71762101b373411a" },
     highlightColorProfile: { S: "default" },
     configColor: { S: "#FF57DE" },
     configID: { S: "default-2" },
@@ -76,7 +76,7 @@ const colorItems = [
     size: { S: "large" },
   },
   {
-    userID: { S: "user123" },
+    userID: { S: "71762101b373411a" },
     highlightColorProfile: { S: "default" },
     configColor: { S: "#FFC300" },
     configID: { S: "default-3" },
@@ -96,9 +96,9 @@ const colorItems = [
   },
 ];
 
-const updateHighlightColorProfiles = async (newItems) => {
+const updateHighlightColorProfiles = async (newItems, userID) => {
   // Get the existing items in the table for the given highlightColorProfile
-  const existingItems = await getHighlightProfile('default');
+  const existingItems = await getHighlightProfile(userID);
 
   // Convert the existing items into a map for easier comparison
   const existingItemsMap = new Map(
@@ -172,12 +172,12 @@ const insertItems = async (items) => {
   return results;
 };
 
-const getHighlightProfile = async (profile) => {
+const getHighlightProfile = async (userID) => {
   const params = {
     TableName: "HighlightColorProfiles",
-    FilterExpression: "highlightColorProfile  = :profile",  // Filter for items where userID is 'user123'
+    FilterExpression: "userID = :userID",
     ExpressionAttributeValues: {
-      ":profile": { S: profile }  // Replace with the userID you want to filter by
+      ":userID": { S: userID },
     }
   };
 
@@ -187,7 +187,7 @@ const getHighlightProfile = async (profile) => {
     const response = await dynamoDB.send(command);
 
     // Output the retrieved items
-    // console.log("Items in table:", response.Items);
+    console.log("Items in table:", response.Items);
     return response.Items;
   } catch (error) {
     console.error("Error listing items:", error);
@@ -227,9 +227,9 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 
 const main = async () => {
   // await createTable();
-  await insertItems();
+  // await insertItems();
   // await deleteItemsByHighlightColorProfile('default');
-  const response = await getHighlightProfile("default");
+  const response = await getHighlightProfile("71762101b373411a");
   console.log(response);
 };
 

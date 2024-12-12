@@ -71,7 +71,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
     const content = highlights.flatMap((highlight) => {
       // console.log('highlights: ', highlight);
-      // console.log('profile: ', highlightColorProfile);
+      console.log('profile: ', highlightColorProfile);
       const matchingProfile = highlightColorProfile.find(
         (profile) =>
           profile.configID.S === highlight.configID
@@ -197,9 +197,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
         console.log('File downloaded successfully.');
 
-        // // Delete word file and remove from files table
-        // const responseRemoveFile = await axios.delete(`http://localhost:5000/api/files/${fileId}`);
-        // console.log('File deleted successfully:', responseRemoveFile.data);
       } else {
         console.error('Error during file download:', response.statusText);
       }
@@ -215,7 +212,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
       const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
         exportAs: 'blob',
-      };
+      } 
 
       const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
       if (exportWordOnly) {

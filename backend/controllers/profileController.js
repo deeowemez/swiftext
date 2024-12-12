@@ -1,9 +1,11 @@
 const { getHighlightProfile, updateHighlightColorProfiles } = require('../db/dynamoConfig');
 
 const getProfile = async (req, res) => {
-    const profileID = req.params.id;
+    const userID = req.params.id;
+    console.log('userid getprofile: ', userID);
     try {
-        const response = await getHighlightProfile(profileID);
+        const response = await getHighlightProfile(userID);
+        console.log('response getprofile: ', response);
         res.status(200).json({
             success: true,
             data: response,
@@ -18,13 +20,14 @@ const getProfile = async (req, res) => {
 };
 
 const saveProfile = async (req, res) => {
+    const { userID } = req.query;
     const items = req.body.items;
     if (!items || !Array.isArray(items)) {
         return res.status(400).json({ error: 'Invalid items format' });
     }
 
     try {
-        const response = await updateHighlightColorProfiles(items);
+        const response = await updateHighlightColorProfiles(items, userID);
         res.status(200).json({
             success: true,
             message: "Items inserted successfully",

@@ -1,4 +1,4 @@
-const pool = require('../db/psql'); // Importing database pool
+const pool = require('../db/psql');
 
 const getHighlights = async (req, res) => {
     const filePath = req.query.filePath;

@@ -69,6 +69,10 @@ const EditPage: React.FC<{
   useEffect(() => {
     console.log('filepath: ', filePath);
 
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    console.log('user editpage: ', storedUser);
+
+
     const loadFileByPath = async () => {
       if (filePath) {
         try {
@@ -84,7 +88,8 @@ const EditPage: React.FC<{
           // Use the file object in your component
           setPdfFile(file);
 
-          fetchAndSetProfile('default');
+          const profile = fetchAndSetProfile(storedUser.userID);
+          console.log('editpage profile: ', profile);
 
           // Convert File to Data URL for preview or further usage
           const reader = new FileReader();
@@ -118,7 +123,7 @@ const EditPage: React.FC<{
 
   useEffect(() => {
     console.log('selectedprofileid: ', selectedProfileID);
-    fetchAndSetProfile('default');
+    // fetchAndSetProfile('default', user.userID);
   }, [selectedProfileID]); // Dependency array watches selectedProfileID
 
   useEffect(() => {
@@ -170,9 +175,9 @@ const EditPage: React.FC<{
     setHighlightColor(hiColor);
   };
 
-  const fetchHighlightProfiles = async (profileID: string) => {
+  const fetchHighlightProfiles = async (profileID: string, userID: string) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/profile/${profileID}`);
+      const response = await axios.get(`http://localhost:5000/api/profile?id=${profileID}&userid=${userID}`);
       const { data } = response;
       if (data.success) {
         return data.data; // The list of highlight color profiles
@@ -186,10 +191,24 @@ const EditPage: React.FC<{
     }
   };
 
-  const fetchAndSetProfile = async (profileID: string) => {
-    const profile = await fetchHighlightProfiles(profileID);
+  const fetchAndSetProfile = async (userID: string) => {
+    // const profile = await fetchHighlightProfiles(profileID, userID);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/profile/${userID}`);
+      const { data } = response;
+      console.log('fetchprofile dta: ', data.data)
+      if (data.success) {
+        setHighlightColorProfile(data.data);
+        return data.data; // The list of highlight color profiles
+      } else {
+        console.error("Error fetching profiles:", data.error);
+        return [];
+      }
+    } catch (error) {
+      console.error("Axios error:", error);
+      return [];
+    }
     // setHighlightColorProfileID(profileID);
-    setHighlightColorProfile(profile);
   };
 
 
@@ -326,6 +345,7 @@ const EditPage: React.FC<{
   return (
     <div className="flex w-screen min-h-screen">
       <ControlBar
+        user={user}
         setPdfScaleValue={(value) => setPdfScaleValue(value)}
         highlightColorProfile={highlightColorProfile}
         setSelectedProfileID={setSelectedProfileID}
