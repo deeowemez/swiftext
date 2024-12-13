@@ -13,6 +13,7 @@ const CreateAccount = ({ onClose }) => {
     const overlayRef = useRef();
     const [show, setShow] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -51,15 +52,17 @@ const CreateAccount = ({ onClose }) => {
                 password: values.password
             });
 
-            // Handle success response (e.g., show success message or redirect to login page)
-            console.log('User registered successfully:', response.data);
-            onClose();
+            // Show success popup
+            setShowSuccessPopup(true);
+
+            // Hide success popup after 2 seconds
+            setTimeout(() => {
+                setShowSuccessPopup(false);
+                onClose(); // Close modal
+            }, 2000);
 
         } catch (error) {
             console.error('Error registering user:', error.response ? error.response.data : error.message);
-
-            // Display error message to user
-            setErrorMessage(error.response ? error.response.data : 'An error occurred. Please try again.');
         }
     };
 
@@ -132,6 +135,7 @@ const CreateAccount = ({ onClose }) => {
                         </div>
                     </Form>
                 </Formik>
+
                 <p className="text-xs text-center text-gray-600">
                     or login with
                 </p>
@@ -142,6 +146,11 @@ const CreateAccount = ({ onClose }) => {
                     Already have an account? <span className="text-[#FF903D] underline" ><a href="">Log in!</a></span>
                 </p>
             </div>
+            {showSuccessPopup && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
+                    Account create successfully!
+                </div>
+            )}
         </div>
     );
 };

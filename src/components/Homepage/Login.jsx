@@ -9,13 +9,20 @@ const validationSchema = Yup.object({
     password: Yup.string().required('Password is required'),
 });
 
-const Login = ({ 
+const Login = ({
     setUser,
     onClose
 }) => {
     const overlayRef = useRef();
     const [show, setShow] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [loginError, setLoginError] = useState("");
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
+    const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+
+    const togglePasswordVisibility = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -41,19 +48,26 @@ const Login = ({
             localStorage.setItem('authToken', token);
 
             const decodedToken = jwtDecode(token);
-        
+
             // After successful login
             localStorage.setItem('user', JSON.stringify(decodedToken));
 
             console.log("Decoded User:", decodedToken);
-        
+
             // Set the userID in the state or context
             setUser(decodedToken);
-            onClose();
+
+            setShowSuccessPopup(true); // Show success popup
+            setTimeout(() => {
+                setShowSuccessPopup(false);
+                onClose();
+            }, 1000);
 
         } catch (error) {
             console.error("Login error:", error);
             setLoginError("Invalid email or password"); // Set the error message
+            setShowErrorPopup(true); // Show error popup
+            setTimeout(() => setShowErrorPopup(false), 3000);
         }
     };
 
@@ -65,7 +79,7 @@ const Login = ({
                     }`}
             >
                 <Formik
-                    initialValues={{ email: '', password: ''}}
+                    initialValues={{ email: '', password: '' }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
                 >
@@ -86,12 +100,21 @@ const Login = ({
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                 Password
                             </label>
-                            <Field
-                                type="password"
-                                id="password"
-                                name="password"
-                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            <div className="flex">
+                                <Field
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    className="mt-1 block w-5/6 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={togglePasswordVisibility}
+                                    className="p-2 text-gray-500 focus:outline-none text-sm text-center"
+                                >
+                                    {isPasswordVisible ? "Hide" : "Show"}
+                                </button>
+                            </div>
                             <ErrorMessage name="password" component="div" className="text-sm text-red-500" />
                         </div>
                         <div className="px-8 mb-4">
@@ -117,6 +140,17 @@ const Login = ({
                     Forgot Password? Reset <span className="text-[#3d50ff] underline" ><a href="">here</a></span>.
                 </p>
             </div>
+            {showErrorPopup && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-md">
+                    {loginError}
+                </div>
+            )}
+
+            {showSuccessPopup && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
+                    Login successful!
+                </div>
+            )}
         </div>
     );
 };

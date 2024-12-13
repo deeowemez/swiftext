@@ -231,11 +231,11 @@ const ControlBar = ({
           className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
           w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
         >
-          <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[92%_8%] w-full h-full">
+          <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[90%_10%] w-full h-full">
             {/* Render all dynamically added fields */}
-            <div className="row-start-1 flex flex-wrap content-start items-start justify-start gap-3 overflow-x-auto">
+            <div className="row-start-1 flex flex-wrap content-start items-start justify-center gap-3 overflow-x-auto">
               {localProfile.map((profile, index) => (
-                <div key={profile.configID.S} className="w-full max-w-[400px] max-h-[180px] h-[180px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
+                <div key={profile.configID.S} className="w-full max-w-[400px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
                   {/* Highlight Color */}
                   <div className="flex flex-col gap-2.5 items-center">
                     <div
@@ -250,7 +250,7 @@ const ControlBar = ({
                         onChange={(e) => handleProfileChange(index, 'configColor', e.target.value)}
                       />
                     </div>
-                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-11">
+                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
                       {profile.configColor.S.toUpperCase()}
                     </label>
                     <button
@@ -260,10 +260,10 @@ const ControlBar = ({
                       Remove
                     </button>
                   </div>
-
-                  {/* Font */}
-                  <div className="p-3 w-full">
-                    <div className="flex gap-2 mb-4">
+                  
+                  <div className="px-3 py-1.5 w-full">
+                    {/* Font */}
+                    {/* <div className="flex gap-2 mb-4">
                       <img src={fontIcon} alt="" className="w-3" />
                       <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
                         <select
@@ -276,7 +276,7 @@ const ControlBar = ({
                           <option value="monospace">Monospace</option>
                         </select>
                       </div>
-                    </div>
+                    </div> */}
 
                     <div className="flex justify-between mb-4">
                       {/* Text Color */}
