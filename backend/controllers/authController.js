@@ -1,7 +1,9 @@
+// const passport = require('passport');
+// const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { createUser, findUserByEmail } = require('../models/userModel');
-const { updateHighlightColorProfiles, defaultProfile } = require('../db/dynamoConfig');
+const { updateHighlightColorProfiles, defaultProfile } = require('../db/dynamo');
 const crypto = require('crypto');
 
 const generateUserID = () => {
@@ -16,6 +18,44 @@ const insertDefaultProfile = async (userID) => {
         console.error("Error inserting default profiles:", error);
     }
 };
+
+// passport.use(
+//     new GoogleStrategy(
+//         {
+//             clientID: process.env.GOOGLE_CLIENT_ID,
+//             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//             callbackURL: '/auth/google/callback',
+//         },
+//         async (accessToken, refreshToken, profile, done) => {
+//             try {
+//                 const email = profile.emails[0].value;
+//                 let user = await findUserByEmail(email);
+
+//                 if (!user) {
+//                     // Create a new user if not found
+//                     const userID = generateUserID();
+//                     user = await createUser(userID, profile.displayName, email, null);
+//                     await insertDefaultProfile(userID);
+//                 }
+
+//                 done(null, user);
+//             } catch (error) {
+//                 console.error('Error in Google Strategy:', error);
+//                 done(error, null);
+//             }
+//         }
+//     )
+// );
+
+// // Serialize and deserialize user
+// passport.serializeUser((user, done) => {
+//     done(null, user.userID);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//     const user = await findUserByEmail(id);
+//     done(null, user);
+// });
 
 // Register a new user
 const register = async (req, res) => {

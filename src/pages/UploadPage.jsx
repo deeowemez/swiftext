@@ -6,7 +6,10 @@ import Footer from "../components/Homepage/Footer";
 import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
 
-const UploadPage = () => {
+const UploadPage = ({
+    user,
+    setUser
+}) => {
     const fileInputRef = useRef(null);
     const [isVideoVisible, setIsVideoVisible] = useState(false);
     const [overlayType, setOverlayType] = useState(null);
@@ -48,6 +51,8 @@ const UploadPage = () => {
     return (
         <div className="flex flex-col w-screen p-0 m-0 overflow-x-hidden relative min-h-screen">
             <Header
+                user={user}
+                setUser={setUser}
                 onLoginClick={() => setOverlayType("login")}
                 onSignUpClick={() => setOverlayType("createAccount")}
             />

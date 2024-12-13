@@ -1,4 +1,4 @@
-const { getHighlightProfile, updateHighlightColorProfiles } = require('../db/dynamoConfig');
+const { getHighlightProfile, updateHighlightColorProfiles } = require('../db/dynamo');
 
 const getProfile = async (req, res) => {
     const userID = req.params.id;

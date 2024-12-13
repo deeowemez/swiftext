@@ -24,6 +24,16 @@ const Login = ({
         setIsPasswordVisible(!isPasswordVisible);
     };
 
+    // useEffect(() => {
+    //     const params = new URLSearchParams(window.location.search);
+    //     const token = params.get('token');
+
+    //     if (token) {
+    //         localStorage.setItem('authToken', token);
+    //         navigate('/profile'); // Redirect to a protected route
+    //     }
+    // }, []);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (overlayRef.current && !overlayRef.current.contains(event.target)) {
@@ -102,7 +112,7 @@ const Login = ({
                             </label>
                             <div className="flex">
                                 <Field
-                                    type="password"
+                                    type={isPasswordVisible ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     className="mt-1 block w-5/6 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -131,7 +141,11 @@ const Login = ({
                     or login with
                 </p>
                 <div className="flex justify-center p-1">
-                    <img src="src/assets/images/google-logo.svg" alt="" className="w-11 cursor-pointer" />
+                    <img src="src/assets/images/google-logo.svg" alt="" className="w-11 cursor-pointer"
+                        onClick={() => {
+                            window.location.href = 'http://localhost:5000/auth/google'; // Update with your backend URL
+                        }}
+                    />
                 </div>
                 <p className="text-xs text-center text-gray-600 mb-2">
                     No Account? <span className="text-[#FF903D] underline" ><a href="">Sign up!</a></span>
