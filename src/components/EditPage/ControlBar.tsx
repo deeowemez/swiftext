@@ -34,7 +34,6 @@ interface ControlBarProps {
   resetHighlights: () => void;
 }
 
-
 const ControlBar = ({
   user,
   highlights,
@@ -48,7 +47,6 @@ const ControlBar = ({
   const [zoom, setZoom] = useState<number | null>(null);
   const [profileConfigPopup, setProfileConfigPopup] = useState(false);
   const popupRef = useRef<HTMLDivElement | null>(null);
-  // const [fields, setFields] = useState<Field[]>([]);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
 
   const zoomIn = () => {
@@ -158,21 +156,17 @@ const ControlBar = ({
 
         // Check for changes in the color map
         const updatedColorMap = profileColorMap(localProfile);
-        console.log('current colormap: ', currentColorMap);
-        console.log('updated colormap: ', updatedColorMap);
 
         const changedColors: Record<string, string> = Object.keys(currentColorMap).reduce((acc, key) => {
-          console.log('current colormap key: ', currentColorMap[key]);
-          console.log('updated colormap key: ', updatedColorMap[key]);
           if (currentColorMap[key] !== updatedColorMap[key]) {
             // If color has changed, store the key and updated color
             acc[key] = updatedColorMap[key];
           }
-          console.log('acc', acc);
+          // console.log('acc', acc);
           return acc;
         }, {} as Record<string, string>);
 
-        console.log('changed colors: ', changedColors);
+        // console.log('changed colors: ', changedColors);
         setProfileConfigPopup(false);
 
         if (Object.keys(changedColors).length > 0) {
@@ -204,7 +198,6 @@ const ControlBar = ({
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
-
         <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
           <img src={cottageIcon} alt="home-icon" className="w-7" />
         </a>

@@ -1,17 +1,13 @@
 import React, { useState, useRef, useEffect, Profiler } from "react";
 import ReactQuill from 'react-quill';
 import { useParams } from "react-router-dom";
-import Quill from "quill";
 import 'react-quill/dist/quill.snow.css';
 import arrowIcon from "../../assets/images/expand-arrow.svg";
 import axios, { AxiosError } from "axios";
 import { CommentedHighlight } from "./types";
 import { HighlightColorProfileProps } from "./ContextMenu";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
-import { pdfExporter } from 'quill-to-pdf';
 import { User } from "./EditPage"
 
 interface ConfigBarProps {
@@ -79,26 +75,38 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
       if (matchingProfile) {
         // console.log('mp: ', matchingProfile);
-        return [
-          {
-            insert: highlight.content.text + '\n',
-            attributes: {
-              color: matchingProfile.color.S,
-              background: matchingProfile.background.S,
-              font: matchingProfile.font.S,
-              bold: matchingProfile.bold.BOOL,
-              italic: matchingProfile.italic.BOOL,
-              underline: matchingProfile.underline.BOOL,
-              strike: matchingProfile.strike.BOOL,
-              header: matchingProfile.header.N,
-              list: matchingProfile.list.S,
-              script: matchingProfile.script.S,
-              indent: matchingProfile.indent.N,
-              align: matchingProfile.align.S,
-              size: matchingProfile.size.S,
+        if (highlight.type === 'text') {
+          return [
+            {
+              insert: highlight.content.text + '\n',
+              attributes: {
+                color: matchingProfile.color.S,
+                background: matchingProfile.background.S,
+                font: matchingProfile.font.S,
+                bold: matchingProfile.bold.BOOL,
+                italic: matchingProfile.italic.BOOL,
+                underline: matchingProfile.underline.BOOL,
+                strike: matchingProfile.strike.BOOL,
+                header: matchingProfile.header.N,
+                list: matchingProfile.list.S,
+                script: matchingProfile.script.S,
+                indent: matchingProfile.indent.N,
+                align: matchingProfile.align.S,
+                size: matchingProfile.size.S,
+              },
             },
-          },
-        ];
+          ];
+        } else if (highlight.type === 'area') {
+          return [
+            {
+              insert: {
+                image: highlight.content.image,
+              }
+            },
+
+            { insert: '\n' }, // Insert a newline after the image
+          ]
+        }
       }
 
       return [];
@@ -117,7 +125,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const handleChange = (value: string) => {
     setEditorHtml(value); // This will capture the content of the editor
   };
-
 
   const toolbarOptions = [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -212,7 +219,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
       const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
         exportAs: 'blob',
-      } 
+      }
 
       const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
       if (exportWordOnly) {

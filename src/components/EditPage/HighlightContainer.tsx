@@ -48,7 +48,6 @@ const HighlightContainer = ({
         onContextMenu && onContextMenu(event, highlight)
       }
       style={{ backgroundColor: highlight.color }}
-    // highlightColor={highlightColor}
     />
   ) : (
     <AreaHighlight
@@ -73,6 +72,7 @@ const HighlightContainer = ({
         onContextMenu && onContextMenu(event, highlight)
       }
       onEditStart={() => toggleEditInProgress(true)}
+      style={{ backgroundColor: highlight.color }}
     />
   );
 

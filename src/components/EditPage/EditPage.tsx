@@ -192,7 +192,10 @@ const EditPage: React.FC<{
       const target = event.target as HTMLElement;
 
       // Check if the right-click is not within a highlight container
-      if (!target.closest('.TextHighlight__part')) {
+      if (
+        !target.closest('.TextHighlight__part') &&
+        !target.closest('.AreaHighlight__part')
+      ) {
         if (activeTool == 'highlightPen') {
           event.preventDefault();
           setContextMenu({
@@ -297,14 +300,12 @@ const EditPage: React.FC<{
     const toggleActiveTool = (activeTool: string) => {
       setActiveTool(activeTool);
       console.log('Active Tool: ', activeTool);
-      console.log('highlightPen bef: ', highlightPen);
       if (activeTool == 'eraser') {
         setHighlightPen(false);
       }
       if (highlightPen == false && activeTool == 'highlightPen') {
         setHighlightPen(true);
       }
-      console.log('highlightPen aft: ', highlightPen);
     };
 
     // Hash listeners for autoscrolling to highlights
