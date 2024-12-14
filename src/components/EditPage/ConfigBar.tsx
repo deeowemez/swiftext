@@ -9,6 +9,7 @@ import { HighlightColorProfileProps } from "./ContextMenu";
 import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
 import { User } from "./EditPage"
+import Quill from 'quill';
 
 interface ConfigBarProps {
   user: User;
@@ -77,6 +78,15 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
         // console.log('mp: ', matchingProfile);
         if (highlight.type === 'text') {
           return [
+            {
+              insert: '• ',
+              attributes: {
+                color: matchingProfile.configColor.S,
+                bold: true,
+                align: matchingProfile.align.S,
+                size: 'large',
+              }
+            },
             {
               insert: highlight.content.text + '\n',
               attributes: {
@@ -216,12 +226,19 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
       const delta = editor.getContents();
+      console.log('delta: ', delta);
+
+      // Filter out all ops where 'insert' is equal to '• '
+      const cleanedOps = delta.ops.filter(op => op.insert !== '• ');
+
+      // Optionally, you can set the cleaned delta back into the editor
+      // editor.setContents(cleanedOps);
 
       const quillToWordConfig: { exportAs: "blob" | "doc" | "buffer" | "base64" } = {
         exportAs: 'blob',
       }
 
-      const docAsBlob = await quillToWord.generateWord(delta, quillToWordConfig) as Blob;
+      const docAsBlob = await quillToWord.generateWord({ ops: cleanedOps }, quillToWordConfig) as Blob;
       if (exportWordOnly) {
         saveAs(docAsBlob, 'word-export.docx');
       } else {

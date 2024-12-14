@@ -149,6 +149,11 @@ const ControlBar = ({
 
   const handleSubmit = async () => {
     try {
+      if (localProfile.length > 15) {
+        console.error("Profile exceeds the maximum limit of 15 items.");
+        alert("You can only have a maximum of 15 items in your profile.");
+        return; // Exit the function if the limit is exceeded
+      }
       const currentColorMap = profileColorMap(highlightColorProfile);
       const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${user.userID}`, { items: localProfile });
       setForceRenderProfile(!forceRenderProfile);
@@ -194,13 +199,18 @@ const ControlBar = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
+
   return (
     <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
       <div className="flex flex-col gap-5 p-[10px] ">
-        <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
-          <img src={cottageIcon} alt="home-icon" className="w-7" />
-        </a>
+        <div className="relative">
+          <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
+            <img src={cottageIcon} alt="home-icon" className="w-7" />
+            <div className="absolute left-[2px] top-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              Home
+            </div>
+          </a>
+        </div>
         <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4] cursor-pointer">
           <img src={searchIcon} alt="search icon" className="w-7" />
         </div>
@@ -260,7 +270,7 @@ const ControlBar = ({
                       Remove
                     </button>
                   </div>
-                  
+
                   <div className="px-3 py-1.5 w-full">
                     {/* Font */}
                     {/* <div className="flex gap-2 mb-4">
