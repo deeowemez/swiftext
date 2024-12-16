@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, Profiler } from "react";
+import React, { useState, useRef, useEffect, Profiler, Dispatch, SetStateAction } from "react";
 import ReactQuill from 'react-quill';
 import { useParams } from "react-router-dom";
 import 'react-quill/dist/quill.snow.css';
@@ -10,19 +10,27 @@ import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
 import { User } from "./EditPage"
 import Quill from 'quill';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+
 
 interface ConfigBarProps {
   user: User;
   setUser: void;
   highlights: Array<CommentedHighlight>;
+  setHighlights: (highlights: Array<CommentedHighlight>) => void;
   highlightColorProfile: HighlightColorProfileProps[];
+  showArrangementOverlay: boolean;
+  setShowArrangementOverlay: Dispatch<SetStateAction<boolean>>;
 }
 
 const ConfigBar: React.FC<ConfigBarProps> = ({
   user,
   setUser,
   highlights,
-  highlightColorProfile
+  setHighlights,
+  highlightColorProfile,
+  showArrangementOverlay,
+  setShowArrangementOverlay
 }) => {
   const [editorHtml, setEditorHtml] = useState('');
   const quillRef = useRef<ReactQuill | null>(null);
@@ -131,6 +139,22 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       editor.setContents(content);
     }
   }, [highlights, highlightColorProfile]);
+
+  // Handle Drag-and-Drop
+  const onDragEnd = (result: any) => {
+    const { destination, source } = result;
+
+    // If dropped outside the list or in the same position, do nothing
+    if (!destination || destination.index === source.index) {
+      return;
+    }
+
+    const updatedHighlights = Array.from(highlights);
+    const [movedItem] = updatedHighlights.splice(source.index, 1);
+    updatedHighlights.splice(destination.index, 0, movedItem);
+
+    setHighlights(updatedHighlights);
+  };
 
   const handleChange = (value: string) => {
     setEditorHtml(value); // This will capture the content of the editor
@@ -282,8 +306,13 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             onClick={() => exportToWord(true)}>
             Word
           </button>
+          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
+            onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }}>
+            Rearrange
+          </button>
         </div>
         <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto">
+
           <ReactQuill
             value={editorHtml}
             onChange={handleChange}
@@ -293,7 +322,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             className="h-full"
             modules={{ toolbar: false }}
           />
-          <div></div>
         </div>
       </div>
     </div>

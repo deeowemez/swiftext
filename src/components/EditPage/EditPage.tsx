@@ -20,6 +20,7 @@ import { CommentedHighlight } from "./types";
 import Quill from "quill";
 import ControlBar from "./ControlBar";
 import ConfigBar from "./ConfigBar";
+import HighlightArrangementOverlay from "./HighlightArrangementOverlay";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -61,6 +62,7 @@ const EditPage: React.FC<{
     const [pdfScaleValue, setPdfScaleValue] = useState<number | undefined>(undefined,);
     const [highlightPen, setHighlightPen] = useState<boolean>(true);
     const [activeTool, setActiveTool] = useState<string>('highlightPen');
+    const [showArrangementOverlay, setShowArrangementOverlay] = useState<boolean>(false);
     const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
     useEffect(() => {
@@ -364,6 +366,10 @@ const EditPage: React.FC<{
               <p>Please upload a PDF file to highlight</p>
             </div>
           )}
+          {showArrangementOverlay && <HighlightArrangementOverlay
+            highlights={highlights}
+            setHighlights={setHighlights}
+          />}
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10"> {/* transform */}
             <Toolbar
               toggleActiveTool={toggleActiveTool}
@@ -379,7 +385,10 @@ const EditPage: React.FC<{
             user={user}
             setUser={setUser}
             highlights={highlights}
+            setHighlights={setHighlights}
             highlightColorProfile={highlightColorProfile}
+            showArrangementOverlay={showArrangementOverlay}
+            setShowArrangementOverlay={setShowArrangementOverlay}
           />
         </div>
         {contextMenu && <ContextMenu {...contextMenu} />}
