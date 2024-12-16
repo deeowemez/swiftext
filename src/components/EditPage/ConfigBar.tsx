@@ -34,6 +34,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const [editorHtml, setEditorHtml] = useState('');
   const quillRef = useRef<ReactQuill | null>(null);
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
+  const [showColorIndicator, setShowColorIndicator] = useState<boolean>(false);
   const { '*': filePath } = useParams();
 
   useEffect(() => {
@@ -84,48 +85,71 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       if (matchingProfile) {
         // console.log('mp: ', matchingProfile);
         if (highlight.type === 'text') {
-          return [
-            {
-              insert: '• ',
-              attributes: {
-                color: matchingProfile.configColor.S,
-                bold: true,
-                align: matchingProfile.align.S,
-                size: 'large',
-              }
-            },
-            {
-              insert: highlight.content.text + '\n',
-              attributes: {
-                color: matchingProfile.color.S,
-                background: matchingProfile.background.S,
-                font: matchingProfile.font.S,
-                bold: matchingProfile.bold.BOOL,
-                italic: matchingProfile.italic.BOOL,
-                underline: matchingProfile.underline.BOOL,
-                strike: matchingProfile.strike.BOOL,
-                header: matchingProfile.header.N,
-                list: matchingProfile.list.S,
-                script: matchingProfile.script.S,
-                indent: matchingProfile.indent.N,
-                align: matchingProfile.align.S,
-                size: matchingProfile.size.S,
+          if (showColorIndicator) {
+            return [
+              {
+                insert: '•• ',
+                attributes: {
+                  color: matchingProfile.configColor.S,
+                  bold: true,
+                  align: matchingProfile.align.S,
+                  size: matchingProfile.size.S,
+                }
               },
-            },
-          ];
-        } else if (highlight.type === 'area') {
-          return [
-            {
-              insert: {
-                image: highlight.content.image,
-              }
-            },
-
-            { insert: '\n' }, // Insert a newline after the image
-          ]
+              {
+                insert: highlight.content.text + '\n',
+                attributes: {
+                  color: matchingProfile.color.S,
+                  background: matchingProfile.background.S,
+                  font: matchingProfile.font.S,
+                  bold: matchingProfile.bold.BOOL,
+                  italic: matchingProfile.italic.BOOL,
+                  underline: matchingProfile.underline.BOOL,
+                  strike: matchingProfile.strike.BOOL,
+                  header: matchingProfile.header.N,
+                  list: matchingProfile.list.S,
+                  script: matchingProfile.script.S,
+                  indent: matchingProfile.indent.N,
+                  align: matchingProfile.align.S,
+                  size: matchingProfile.size.S,
+                },
+              },
+            ];
+          }
+          else {
+            return [
+              {
+                insert: highlight.content.text + '\n',
+                attributes: {
+                  color: matchingProfile.color.S,
+                  background: matchingProfile.background.S,
+                  font: matchingProfile.font.S,
+                  bold: matchingProfile.bold.BOOL,
+                  italic: matchingProfile.italic.BOOL,
+                  underline: matchingProfile.underline.BOOL,
+                  strike: matchingProfile.strike.BOOL,
+                  header: matchingProfile.header.N,
+                  list: matchingProfile.list.S,
+                  script: matchingProfile.script.S,
+                  indent: matchingProfile.indent.N,
+                  align: matchingProfile.align.S,
+                  size: matchingProfile.size.S,
+                },
+              },
+            ];
+          }
         }
-      }
+      } else if (highlight.type === 'area') {
+        return [
+          {
+            insert: {
+              image: highlight.content.image,
+            }
+          },
 
+          { insert: '\n' }, // Insert a newline after the image
+        ]
+      }
       return [];
     });
 
@@ -137,7 +161,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       // ]);
       editor.setContents(content);
     }
-  }, [highlights, highlightColorProfile]);
+  }, [highlights, highlightColorProfile, showColorIndicator]);
 
   const handleChange = (value: string) => {
     setEditorHtml(value); // This will capture the content of the editor
@@ -292,6 +316,14 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
             onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }}>
             Rearrange
+          </button>
+          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
+            onClick={() => {
+              setShowColorIndicator(!showColorIndicator);
+              console.log('showColorIndicator: ', showColorIndicator);
+              // setHighlights(highlights);
+            }}>
+            Highlight Color Indicator
           </button>
         </div>
         <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto">
