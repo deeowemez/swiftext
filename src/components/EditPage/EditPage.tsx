@@ -239,6 +239,7 @@ const EditPage: React.FC<{
       // console.log("Current profile: ", highlightColorProfile[0].highlightColorProfile.S);
     }, [highlights, highlightColorProfile]); // This effect runs every time 'highlights' changes
 
+
     const deleteHighlight = (highlight: ViewportHighlight | Highlight) => {
       console.log("Deleting highlight", highlight);
       saveToUndoStack();
@@ -331,7 +332,7 @@ const EditPage: React.FC<{
           highlights={highlights}
           resetHighlights={resetHighlights}
         />
-        <div className="min-h-screen overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
+        <div className="min-h-screen w-full overflow-hidden relative flex flex-1" onContextMenu={handleViewportContextMenu}>
           {url ? (
             <PdfLoader document={url}>
               {(pdfDocument) => (
@@ -369,6 +370,7 @@ const EditPage: React.FC<{
           {showArrangementOverlay && <HighlightArrangementOverlay
             highlights={highlights}
             setHighlights={setHighlights}
+            setShowArrangementOverlay={setShowArrangementOverlay}
           />}
           <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10"> {/* transform */}
             <Toolbar

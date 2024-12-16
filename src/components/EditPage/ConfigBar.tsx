@@ -10,7 +10,6 @@ import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
 import { User } from "./EditPage"
 import Quill from 'quill';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 
 interface ConfigBarProps {
@@ -139,22 +138,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       editor.setContents(content);
     }
   }, [highlights, highlightColorProfile]);
-
-  // Handle Drag-and-Drop
-  const onDragEnd = (result: any) => {
-    const { destination, source } = result;
-
-    // If dropped outside the list or in the same position, do nothing
-    if (!destination || destination.index === source.index) {
-      return;
-    }
-
-    const updatedHighlights = Array.from(highlights);
-    const [movedItem] = updatedHighlights.splice(source.index, 1);
-    updatedHighlights.splice(destination.index, 0, movedItem);
-
-    setHighlights(updatedHighlights);
-  };
 
   const handleChange = (value: string) => {
     setEditorHtml(value); // This will capture the content of the editor

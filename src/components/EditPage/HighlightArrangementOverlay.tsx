@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { CommentedHighlight } from "./types";
 import arrangeIcon from "../../assets/images/line-double.svg";
@@ -6,12 +6,28 @@ import arrangeIcon from "../../assets/images/line-double.svg";
 interface HighlightArrangementOverlayProps {
     highlights: Array<CommentedHighlight>;
     setHighlights: (highlights: Array<CommentedHighlight>) => void;
+    setShowArrangementOverlay: Dispatch<SetStateAction<boolean>>;
 }
 
 const HighlightArrangementOverlay: React.FC<HighlightArrangementOverlayProps> = ({
     highlights,
     setHighlights,
+    setShowArrangementOverlay
 }) => {
+    const overlayRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [setShowArrangementOverlay]);
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (overlayRef.current && !overlayRef.current.contains(event.target as Node)) {
+            setShowArrangementOverlay(false);
+        }
+    };
 
     // Handle Drag-and-Drop
     const onDragEnd = (result: any) => {
@@ -30,7 +46,10 @@ const HighlightArrangementOverlay: React.FC<HighlightArrangementOverlayProps> = 
     };
 
     return (
-        <div className="absolute top-2 left-2 bg-white">
+        <div 
+        ref={overlayRef }
+        className="absolute top-[20px] left-[20px]
+        p-5 h-5/6 w-11/12 bg-[#F4F4F4] rounded-xl z-20 overflow-x-auto">
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="highlights-list">
                     {(provided) => (
@@ -52,9 +71,11 @@ const HighlightArrangementOverlay: React.FC<HighlightArrangementOverlayProps> = 
                                             ref={provided.innerRef}
                                             className="highlight-item text-black text-left mb-1"
                                         >
-                                            <div className="flex ">
-                                                <img src={arrangeIcon} alt="" className="w-3 mx-2" />
-                                                <p style={{ color: highlight.color }}>• </p>
+                                            <div className="flex items-center">
+                                                <div className="flex items-center">
+                                                    <img src={arrangeIcon} alt="" className="w-3 mx-2" />
+                                                    <p className="text-[25px] mr-1" style={{ color: highlight.color }}>• </p>
+                                                </div>
                                                 <span>{highlight.content.text}</span>
                                             </div>
                                         </li>
