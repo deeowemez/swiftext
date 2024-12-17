@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, Dispatch, SetStateAction } from "react";
 import axios, { AxiosError } from "axios";
 import cottageIcon from "../../assets/images/cottage.svg";
 import searchIcon from "../../assets/images/search-gr.svg";
@@ -33,6 +33,8 @@ interface ControlBarProps {
   highlightColorProfile: HighlightColorProfileProps[];
   highlights: Array<CommentedHighlight>;
   setHighlights: (highlights: Array<CommentedHighlight>) => void;
+  showResetHighlightsWarning: boolean;
+  setShowResetHighlightsWarning: Dispatch<SetStateAction<boolean>>;
   resetHighlights: () => void;
 }
 
@@ -43,6 +45,8 @@ const ControlBar = ({
   forceRenderProfile,
   setForceRenderProfile,
   setPdfScaleValue,
+  showResetHighlightsWarning,
+  setShowResetHighlightsWarning,
   highlightColorProfile,
   resetHighlights,
 }: ControlBarProps) => {
@@ -231,51 +235,53 @@ const ControlBar = ({
             iconSize="w-7"
             altText="trash-can-icon"
             tooltipText="Delete all Highlights"
-            onClick={resetHighlights}
+            onClick={() => { setShowResetHighlightsWarning(!showResetHighlightsWarning) }}
             direction="right"
           />
         </div>
       </div>
       {profileConfigPopup && (
-        <div
-          ref={popupRef}
-          className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-          w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-10 overflow-y-auto"
-        >
-          <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[90%_10%] w-full h-full">
-            {/* Render all dynamically added fields */}
-            <div className="row-start-1 flex flex-wrap content-start items-start justify-center gap-3 overflow-x-auto">
-              {localProfile.map((profile, index) => (
-                <div key={profile.configID.S} className="w-full max-w-[400px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
-                  {/* Highlight Color */}
-                  <div className="flex flex-col gap-2.5 items-center">
-                    <div
-                      className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center cursor-pointer"
-                      style={{ backgroundColor: profile.configColor.S }}
-                    >
-                      <input
-                        type="color"
-                        name="highlightColor"
-                        className="opacity-0 w-full h-full cursor-pointer"
-                        value={profile.configColor.S}
-                        onChange={(e) => handleProfileChange(index, 'configColor', e.target.value)}
-                      />
-                    </div>
-                    <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
-                      {profile.configColor.S.toUpperCase()}
-                      
-                    </label>
-                    <button
-                      onClick={() => handleRemoveProfile(index)}
-                      className="remove-button bg-[#E1E1E1] text-[#333333] px-3 rounded hover:text-[#FE3E3E]"
-                    >
-                      Remove
-                    </button>
-                  </div>
+        <>
+        <div className="fixed inset-0 bg-[#F4F4F4] opacity-0 z-20" />
+          <div
+            ref={popupRef}
+            className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
+          w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-20 overflow-y-auto"
+          >
+            <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[90%_10%] w-full h-full">
+              {/* Render all dynamically added fields */}
+              <div className="row-start-1 flex flex-wrap content-start items-start justify-center gap-3 overflow-x-auto">
+                {localProfile.map((profile, index) => (
+                  <div key={profile.configID.S} className="w-full max-w-[400px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
+                    {/* Highlight Color */}
+                    <div className="flex flex-col gap-2.5 items-center">
+                      <div
+                        className="w-8 h-8 rounded-full overflow-hidden flex justify-center items-center cursor-pointer"
+                        style={{ backgroundColor: profile.configColor.S }}
+                      >
+                        <input
+                          type="color"
+                          name="highlightColor"
+                          className="opacity-0 w-full h-full cursor-pointer"
+                          value={profile.configColor.S}
+                          onChange={(e) => handleProfileChange(index, 'configColor', e.target.value)}
+                        />
+                      </div>
+                      <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
+                        {profile.configColor.S.toUpperCase()}
 
-                  <div className="px-3 py-1.5 w-full">
-                    {/* Font */}
-                    {/* <div className="flex gap-2 mb-4">
+                      </label>
+                      <button
+                        onClick={() => handleRemoveProfile(index)}
+                        className="remove-button bg-[#E1E1E1] text-[#333333] px-3 rounded hover:text-[#FE3E3E]"
+                      >
+                        Remove
+                      </button>
+                    </div>
+
+                    <div className="px-3 py-1.5 w-full">
+                      {/* Font */}
+                      {/* <div className="flex gap-2 mb-4">
                       <img src={fontIcon} alt="" className="w-3" />
                       <div className="bg-[#E1E1E1] w-full flex flex-1 items-center rounded-sm gap-2 px-2 cursor-pointer">
                         <select
@@ -290,53 +296,53 @@ const ControlBar = ({
                       </div>
                     </div> */}
 
-                    <div className="flex justify-between mb-4">
-                      {/* Text Color */}
-                      <div className="flex gap-1.5 items-center">
-                        <IcontipButton icon={textColorIcon} iconSize="w-3.5" altText="text-color-icon" tooltipText="Text Color" direction="left" />
-                        <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
-                          <div
-                            className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer rounded-sm"
-                            style={{ backgroundColor: profile.color.S }}
-                          >
-                            <input
-                              type="color"
-                              name="highlightColor"
-                              className="opacity-0 w-full cursor-pointer"
-                              value={profile.color.S}
-                              onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
-                            />
+                      <div className="flex justify-between mb-4">
+                        {/* Text Color */}
+                        <div className="flex gap-1.5 items-center">
+                          <IcontipButton icon={textColorIcon} iconSize="w-3.5" altText="text-color-icon" tooltipText="Text Color" direction="left" />
+                          <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
+                            <div
+                              className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer rounded-sm"
+                              style={{ backgroundColor: profile.color.S }}
+                            >
+                              <input
+                                type="color"
+                                name="highlightColor"
+                                className="opacity-0 w-full cursor-pointer"
+                                value={profile.color.S}
+                                onChange={(e) => handleProfileChange(index, 'color', e.target.value)}
+                              />
+                            </div>
+                            <label className="text-center text-sm">
+                              {profile.color.S.toUpperCase()}
+                            </label>
                           </div>
-                          <label className="text-center text-sm">
-                            {profile.color.S.toUpperCase()}
-                          </label>
                         </div>
-                      </div>
 
-                      {/* Text Background Color */}
-                      <div className="flex gap-1.5 items-center">
-                        <IcontipButton icon={textBackgroundColorIcon} iconSize="w-3.5" altText="text-bg-color-icon" tooltipText="Text Background Color" direction="left" />
-                        <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
-                          <div
-                            className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
-                            style={{ backgroundColor: profile.background.S }}
-                          >
-                            <input
-                              type="color"
-                              name="highlightColor"
-                              className="opacity-0 cursor-pointer"
-                              value={profile.background.S}
-                              onChange={(e) => handleProfileChange(index, 'background', e.target.value)}
+                        {/* Text Background Color */}
+                        <div className="flex gap-1.5 items-center">
+                          <IcontipButton icon={textBackgroundColorIcon} iconSize="w-3.5" altText="text-bg-color-icon" tooltipText="Text Background Color" direction="left" />
+                          <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
+                            <div
+                              className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
+                              style={{ backgroundColor: profile.background.S }}
+                            >
+                              <input
+                                type="color"
+                                name="highlightColor"
+                                className="opacity-0 cursor-pointer"
+                                value={profile.background.S}
+                                onChange={(e) => handleProfileChange(index, 'background', e.target.value)}
 
-                            />
+                              />
+                            </div>
+                            <label className="text-center text-sm">
+                              {profile.background.S === '' ? 'None' : profile.background.S.toUpperCase()}
+                            </label>
                           </div>
-                          <label className="text-center text-sm">
-                            {profile.background.S === '' ? 'None' : profile.background.S.toUpperCase()}
-                          </label>
                         </div>
-                      </div>
 
-                      {/* Header
+                        {/* Header
                       <div className="flex gap-1.5 items-center">
                         <img src={fontSizeIcon} alt="" className="w-3.5" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
@@ -354,152 +360,156 @@ const ControlBar = ({
                           </select>
                         </div>
                       </div> */}
-                    </div>
+                      </div>
 
-                    <div className="flex justify-between mb-4">
-                      {/* Font Size */}
-                      <div className="flex gap-1.5 items-center">
-                        <IcontipButton icon={fontSizeIcon} iconSize="w-3.5" altText="font-size-icon" tooltipText="Font Size" direction="left" />
-                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
-                          <select
-                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
-                            value={profile.size.S}
-                            onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
-                          >
-                            <option value="small">Small</option>
-                            <option value="normal">Medium</option>
-                            <option value="large">Large</option>
-                            <option value="huge">Huge</option>
-                          </select>
+                      <div className="flex justify-between mb-4">
+                        {/* Font Size */}
+                        <div className="flex gap-1.5 items-center">
+                          <IcontipButton icon={fontSizeIcon} iconSize="w-3.5" altText="font-size-icon" tooltipText="Font Size" direction="left" />
+                          <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                            <select
+                              className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                              value={profile.size.S}
+                              onChange={(e) => handleProfileChange(index, 'size', e.target.value)}
+                            >
+                              <option value="small">Small</option>
+                              <option value="normal">Medium</option>
+                              <option value="large">Large</option>
+                              <option value="huge">Huge</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Text Alignment*/}
+                        <div className="flex gap-1.5 items-center">
+                          <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
+                          <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                            <select
+                              className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                              value={profile.align.S}
+                              onChange={(e) => handleProfileChange(index, 'align', e.target.value)}
+                            >
+                              <option value="left">Left</option>
+                              <option value="center">Center</option>
+                              <option value="right">Right</option>
+                              <option value="justify">Justify</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Indentation */}
+                        <div className="flex gap-1.5 items-center">
+                          <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
+                          <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
+                            <select
+                              className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
+                              value={profile.indent.N}
+                              onChange={(e) => handleProfileChange(index, 'indent', Number(e.target.value))}
+                            >
+                              <option value={0}>1</option>
+                              <option value={1}>2</option>
+                              <option value={2}>3</option>
+                              <option value={3}>4</option>
+                              <option value={4}>5</option>
+                              <option value={5}>6</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
 
-                      {/* Text Alignment*/}
-                      <div className="flex gap-1.5 items-center">
-                        <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
-                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
-                          <select
-                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
-                            value={profile.align.S}
-                            onChange={(e) => handleProfileChange(index, 'align', e.target.value)}
-                          >
-                            <option value="left">Left</option>
-                            <option value="center">Center</option>
-                            <option value="right">Right</option>
-                            <option value="justify">Justify</option>
-                          </select>
+                      <div className="flex pl-5 justify-between">
+                        {/* Bold */}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].bold.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={(e) => handleProfileChange(index, 'bold', !localProfile[index].bold.BOOL)}
+                        >
+                          <IcontipButton icon={boldIcon} iconSize="w-3" altText="bold-icon" tooltipText="Bold" direction="top" />
+                        </div>
+
+                        {/* Italic */}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].italic.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={(e) => handleProfileChange(index, 'italic', !localProfile[index].italic.BOOL)}
+                        >
+                          <IcontipButton icon={italicIcon} iconSize="w-3" altText="italic-icon" tooltipText="Italic" direction="top" />
+                        </div>
+
+                        {/* Undeline */}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].underline.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={(e) => handleProfileChange(index, 'underline', !localProfile[index].underline.BOOL)}
+                        >
+                          <IcontipButton icon={underlineIcon} iconSize="w-3" altText="underline-icon" tooltipText="Underline" direction="top" />
+                        </div>
+
+                        {/* Strikethrough */}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].strike.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={(e) => handleProfileChange(index, 'strike', !localProfile[index].strike.BOOL)}
+                        >
+                          <IcontipButton icon={strikethroughIcon} iconSize="w-3" altText="strikethrough-icon" tooltipText="Strikethrough" direction="top" />
+                        </div>
+
+                        {/* Unordered List */}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'bullet' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={() =>
+                            handleProfileChange(
+                              index,
+                              'list',
+                              localProfile[index].list.S === 'bullet' ? '' : 'bullet'
+                            )
+                          }
+                        >
+                          <IcontipButton icon={unorderedListIcon} iconSize="w-3" altText="unordered-list-icon" tooltipText="Unordered List (Bullets)" direction="top" />
+                        </div>
+
+                        {/* Ordered List*/}
+                        <div
+                          className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'ordered' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
+                          onClick={() =>
+                            handleProfileChange(
+                              index,
+                              'list',
+                              localProfile[index].list.S === 'ordered' ? '' : 'ordered'
+                            )
+                          }
+                        >
+                          <IcontipButton icon={orderedListIcon} iconSize="w-3" altText="ordered-list-icon" tooltipText="Ordered List (Numbers)" direction="top" />
                         </div>
                       </div>
 
-                      {/* Indentation */}
-                      <div className="flex gap-1.5 items-center">
-                        <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
-                        <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
-                          <select
-                            className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
-                            value={profile.indent.N}
-                            onChange={(e) => handleProfileChange(index, 'indent', Number(e.target.value))}
-                          >
-                            <option value={0}>1</option>
-                            <option value={1}>2</option>
-                            <option value={2}>3</option>
-                            <option value={3}>4</option>
-                            <option value={4}>5</option>
-                            <option value={5}>6</option>
-                          </select>
-                        </div>
-                      </div>
                     </div>
-
-                    <div className="flex pl-5 justify-between">
-                      {/* Bold */}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].bold.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={(e) => handleProfileChange(index, 'bold', !localProfile[index].bold.BOOL)}
-                      >
-                        <IcontipButton icon={boldIcon} iconSize="w-3" altText="bold-icon" tooltipText="Bold" direction="top" />
-                      </div>
-
-                      {/* Italic */}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].italic.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={(e) => handleProfileChange(index, 'italic', !localProfile[index].italic.BOOL)}
-                      >
-                        <IcontipButton icon={italicIcon} iconSize="w-3" altText="italic-icon" tooltipText="Italic" direction="top" />
-                      </div>
-
-                      {/* Undeline */}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].underline.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={(e) => handleProfileChange(index, 'underline', !localProfile[index].underline.BOOL)}
-                      >
-                        <IcontipButton icon={underlineIcon} iconSize="w-3" altText="underline-icon" tooltipText="Underline" direction="top" />
-                      </div>
-
-                      {/* Strikethrough */}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].strike.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={(e) => handleProfileChange(index, 'strike', !localProfile[index].strike.BOOL)}
-                      >
-                        <IcontipButton icon={strikethroughIcon} iconSize="w-3" altText="strikethrough-icon" tooltipText="Strikethrough" direction="top" />
-                      </div>
-
-                      {/* Unordered List */}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'bullet' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={() =>
-                          handleProfileChange(
-                            index,
-                            'list',
-                            localProfile[index].list.S === 'bullet' ? '' : 'bullet'
-                          )
-                        }
-                      >
-                        <IcontipButton icon={unorderedListIcon} iconSize="w-3" altText="unordered-list-icon" tooltipText="Unordered List (Bullets)" direction="top" />
-                      </div>
-
-                      {/* Ordered List*/}
-                      <div
-                        className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].list.S === 'ordered' ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
-                        onClick={() =>
-                          handleProfileChange(
-                            index,
-                            'list',
-                            localProfile[index].list.S === 'ordered' ? '' : 'ordered'
-                          )
-                        }
-                      >
-                        <IcontipButton icon={orderedListIcon} iconSize="w-3" altText="ordered-list-icon" tooltipText="Ordered List (Numbers)" direction="top" />
-                      </div>
-                    </div>
-
                   </div>
-                </div>
-              ))}
-            </div>
-            <div className="row-start-2 bg-red flex justify-end items-start">
-              <button
-                type="button"
-                onClick={handleAddProfileField}
-                className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
-              >
-                Add
-              </button>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
-              >
-                Save
-              </button>
-            </div>
-          </form>
-        </div>
+                ))}
+              </div>
+              <div className="row-start-2 bg-red flex justify-end items-start">
+                <button
+                  type="button"
+                  onClick={handleAddProfileField}
+                  className="px-8 py-2 font-sserif bg-[#E1E1E1] text-[#383838] rounded-md mr-4 mt-4"
+                >
+                  Add
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="px-8 py-2 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-md mt-4"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </>
       )
       }
     </div >
+
   )
+
 }
+
 
 
 export default ControlBar;

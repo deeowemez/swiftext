@@ -20,6 +20,7 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
   direction = "top",
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   let timeoutId: NodeJS.Timeout;
 
   const handleMouseEnter = () => {
@@ -31,6 +32,11 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
   const handleMouseLeave = () => {
     clearTimeout(timeoutId); // Clear timeout if the cursor leaves early
     setShowTooltip(false);
+  };
+
+  const handleClick = () => {
+    setIsClicked(true); // Set clicked to true when the icon is clicked
+    if (onClick) onClick();
   };
 
   const tooltipClasses = {
@@ -46,10 +52,10 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={className} onClick={onClick}>
+      <div className={className} onClick={handleClick}>
         <img src={icon} alt={altText} className={iconSize} />
       </div>
-      {showTooltip && (
+      {showTooltip && !isClicked && (
         <div
           className={`absolute bg-black text-white text-xs px-2 py-1 rounded opacity-100 transition-opacity z-20 ${tooltipClasses[direction]}`}
         >

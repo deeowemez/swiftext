@@ -46,47 +46,49 @@ const HighlightArrangementOverlay: React.FC<HighlightArrangementOverlayProps> = 
     };
 
     return (
-        <div
-            ref={overlayRef}
-            className="absolute top-[20px] left-[20px]
-        p-5 h-5/6 w-11/12 bg-[#F4F4F4] rounded-xl shadow-lg border border-[#d6d6d6] z-20 overflow-x-auto">
-            <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="highlights-list">
-                    {(provided) => (
-                        <ul
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            className="highlight-list"
-                        >
-                            <p className="px-2 pb-3 text-[13px] text-gray-400">Drag to rearrange highlights</p>
-                            {highlights.map((highlight, index) => (
-                                <Draggable
-                                    key={highlight.id}
-                                    draggableId={highlight.id}
-                                    index={index}
-                                >
-                                    {(provided) => (
-                                        <li
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}
-                                            ref={provided.innerRef}
-                                            className="highlight-item text-black text-left mb-1"
-                                        >
-                                            <div className="flex items-center">
-                                                <img src={arrangeIcon} alt="" className="w-3 mx-2" />
-                                                <p className="text-[25px] mr-1" style={{ color: highlight.color }}>❚ </p>
-                                                <span>{highlight.content.text}</span>
-                                            </div>
-                                        </li>
-                                    )}
-                                </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </ul>
-                    )}
-                </Droppable>
-            </DragDropContext>
-        </div>
+        <>
+            <div className="fixed inset-0 bg-[#F4F4F4] opacity-0 z-20" />
+            <div
+                ref={overlayRef}
+                className="absolute top-[20px] left-[20px] p-5 h-5/6 w-11/12 bg-[#F4F4F4] rounded-xl shadow-lg border border-[#d6d6d6] z-20 overflow-x-auto">
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="highlights-list">
+                        {(provided) => (
+                            <ul
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className="highlight-list"
+                            >
+                                <p className="px-2 pb-3 text-[13px] text-gray-400">Drag to rearrange highlights</p>
+                                {highlights.map((highlight, index) => (
+                                    <Draggable
+                                        key={highlight.id}
+                                        draggableId={highlight.id}
+                                        index={index}
+                                    >
+                                        {(provided) => (
+                                            <li
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                ref={provided.innerRef}
+                                                className="highlight-item text-black text-left mb-1"
+                                            >
+                                                <div className="flex items-center h-10 overflow-x-hidden">
+                                                    <img src={arrangeIcon} alt="" className="w-3 mx-2" />
+                                                    <p className="text-[25px] mr-1" style={{ color: highlight.color }}>❚ </p>
+                                                    <span className="truncate">{highlight.content.text}</span>
+                                                </div>
+                                            </li>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </ul>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
+        </>
     )
 }
 

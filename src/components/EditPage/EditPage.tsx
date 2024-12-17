@@ -23,6 +23,7 @@ import ConfigBar from "./ConfigBar";
 import HighlightArrangementOverlay from "./HighlightArrangementOverlay";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import warningIcon from "../../assets/images/warning.svg"
 
 const getNextId = () => String(Math.random()).slice(2);
 
@@ -63,6 +64,7 @@ const EditPage: React.FC<{
     const [highlightPen, setHighlightPen] = useState<boolean>(true);
     const [activeTool, setActiveTool] = useState<string>('highlightPen');
     const [showArrangementOverlay, setShowArrangementOverlay] = useState<boolean>(false);
+    const [showResetHighlightsWarning, setShowResetHighlightsWarning] = useState<boolean>(false);
     const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
     useEffect(() => {
@@ -263,7 +265,7 @@ const EditPage: React.FC<{
       );
     };
 
-    const resetHighlights = () => {
+    const resetHighlights = async () => {
       setHighlights([]);
     };
 
@@ -329,6 +331,8 @@ const EditPage: React.FC<{
           setPdfScaleValue={(value) => setPdfScaleValue(value)}
           highlightColorProfile={highlightColorProfile}
           setForceRenderProfile={setForceRenderProfile}
+          showResetHighlightsWarning={showResetHighlightsWarning}
+          setShowResetHighlightsWarning={setShowResetHighlightsWarning}
           forceRenderProfile={forceRenderProfile}
           setHighlights={setHighlights}
           highlights={highlights}
@@ -396,6 +400,38 @@ const EditPage: React.FC<{
           />
         </div>
         {contextMenu && <ContextMenu {...contextMenu} />}
+        {showResetHighlightsWarning && (
+          <>
+            <div className="fixed inset-0 bg-[#F4F4F4] opacity-65 z-30" />
+            <div className="flex flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 shadow-xl border border-[#C1C1C1] bg-white w-1/3 h-[200px] rounded-lg text-white font-sserif p-10 z-30">
+              <div className="flex items-start gap-6">
+                <img src={warningIcon} alt="" className="w-20 mt-1" />
+                <div className="text-gray-600">
+                  <p className="text-lg font-semibold">Warning</p>
+                  <p className="text-sm">Proceeding with this action will delete all user highlights within the current file. Continue?</p>
+                </div>
+              </div>
+              <div className="flex justify-evenly w-full mt-4 text-sm">
+                <button
+                  className="px-6 py-2 bg-gray-300 text-gray-700 rounded-md shadow-md hover:bg-gray-400"
+                  onClick={() => { setShowResetHighlightsWarning(!showResetHighlightsWarning) }}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
+                  onClick={() => {
+                    resetHighlights
+                    setShowResetHighlightsWarning(!showResetHighlightsWarning)
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
       </div>
     );
   };

@@ -40,17 +40,15 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   useEffect(() => {
     // Auto-save highlights after 5 seconds of inactivity
     const autoSave = async () => {
-      if (highlights.length > 0) {
-        console.log('Auto-saving highlights...');
-        try {
-          await axios.post(
-            `http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
-            { highlights }
-          );
-          console.log('Highlights saved successfully');
-        } catch (error) {
-          console.error('Error saving highlights:', error);
-        }
+      console.log('Auto-saving highlights...');
+      try {
+        await axios.post(
+          `http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
+          { highlights }
+        );
+        console.log('Highlights saved successfully');
+      } catch (error) {
+        console.error('Error saving highlights:', error);
       }
     };
 
@@ -60,7 +58,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
 
     const timer = setTimeout(() => {
       autoSave();
-    }, 5000); // Delay auto-save for 5 seconds
+    }, 1000); // Delay auto-save for 5 seconds
 
     setAutoSaveTimer(timer);
 
