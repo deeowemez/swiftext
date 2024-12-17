@@ -1,5 +1,5 @@
 import React from 'react';
-import eraserIcon from "../../assets/images/eraser-alt.svg";
+import pointerIcon from "../../assets/images/pointer.svg";
 import handIcon from "../../assets/images/hand.svg";
 import highlightIcon from "../../assets/images/highlight-alt.svg";
 import redoIcon from "../../assets/images/redo.svg";
@@ -40,7 +40,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
             </div>
             <div className={`cursor-pointer w-9 h-9 flex items-center justify-center rounded-xl ${activeTool === 'eraser' ? 'bg-[#FFE7D4]' : "hover:bg-[#FFE7D4]"
                 }`} onClick={() => toggleActiveTool('eraser')}>
-                <img src={eraserIcon} alt="eraser icon" className="cursor-pointer w-5" />
+                <img src={pointerIcon} alt="eraser icon" className="cursor-pointer w-5" />
             </div>
         </div>
     )

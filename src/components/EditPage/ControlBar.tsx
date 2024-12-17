@@ -5,6 +5,7 @@ import searchIcon from "../../assets/images/search-gr.svg";
 import palletIcon from "../../assets/images/pallet-gr.svg";
 import zoomInIcon from "../../assets/images/zoom-in.svg";
 import zoomOutIcon from "../../assets/images/zoom-out.svg";
+import trashCanIcon from "../../assets/images/trash-can.svg";
 import fontIcon from "../../assets/images/profile-config/font.svg";
 import arrrowDownIcon from "../../assets/images/profile-config/chevron-down.svg";
 import textColorIcon from "../../assets/images/profile-config/font-color.svg";
@@ -18,6 +19,7 @@ import alignIcon from "../../assets/images/profile-config/text-align-justify.svg
 import leftIndentIcon from "../../assets/images/profile-config/indent-increase.svg";
 import orderedListIcon from "../../assets/images/profile-config/ordered-list.svg";
 import unorderedListIcon from "../../assets/images/profile-config/unordered-list.svg";
+import IcontipButton from "./IcontipButton";
 import { HighlightColorProfileProps } from "./ContextMenu";
 import { CommentedHighlight } from "./types";
 import { v4 as uuidv4 } from 'uuid';
@@ -201,39 +203,38 @@ const ControlBar = ({
   }, []);
 
   return (
-    <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen ">
-      <div className="flex flex-col gap-5 p-[10px] ">
-        <div className="relative">
-          <a href="/files" className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer">
-            <img src={cottageIcon} alt="home-icon" className="w-7" />
-            <div className="absolute left-[2px] top-0 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-              Home
-            </div>
-          </a>
+    <div className="flex flex-col bg-[#F4F4F4] w-[56px] h-screen font-sserif">
+      <div className="flex flex-col gap-5 p-[10px] h-screen">
+        <a href="/files">
+          <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+            icon={cottageIcon} iconSize="w-7" altText="home-icon" tooltipText="Home" direction="right" />
+        </a>
+        <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          icon={searchIcon} iconSize="w-7" altText="search-icon" tooltipText="Search" direction="right" />
+        <IcontipButton
+          className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          icon={palletIcon}
+          iconSize="w-7"
+          altText="color-palette-icon"
+          tooltipText="Color Profile"
+          onClick={() => setProfileConfigPopup((prev) => !prev)}
+          direction="right"
+        />
+        <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          icon={zoomInIcon} iconSize="w-7" altText="zoom-in-icon" tooltipText="Zoom In" onClick={zoomIn} direction="right" />
+        <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          icon={zoomOutIcon} iconSize="w-7" altText="zoom-out-icon" tooltipText="Zoom Out" onClick={zoomOut} direction="right" />
+        <div className="mt-auto">
+          <IcontipButton
+            className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#fdcbcb] cursor-pointer"
+            icon={trashCanIcon}
+            iconSize="w-7"
+            altText="trash-can-icon"
+            tooltipText="Delete all Highlights"
+            onClick={resetHighlights}
+            direction="right"
+          />
         </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] focus:bg-[#FFE7D4] cursor-pointer">
-          <img src={searchIcon} alt="search icon" className="w-7" />
-        </div>
-        <div className={`p-1.5 flex items-center justify-center rounded-xl cursor-pointer hover:bg-[#FFE7D4] ${profileConfigPopup === true ? 'bg-[#FFE7D4]' : ''}`}
-          onClick={() => setProfileConfigPopup(!profileConfigPopup)}
-        >
-          <img src={palletIcon} alt="color-pallete icon" className="w-7" />
-        </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer" onClick={zoomIn}>
-          <img src={zoomInIcon} alt="zoom-in-icon" className="w-7" />
-        </div>
-        <div className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer" onClick={zoomOut}>
-          <img src={zoomOutIcon} alt="zoom-out-icon" className="w-7" />
-        </div>
-      </div>
-      <div className="flex flex-col px-2 text-center pt-5">
-        <div className="bg-white rounded-md">1</div>
-        <p className="text-sm">of 57</p>
-      </div>
-      <div
-        className="cursor-pointer mt-auto text-center"
-        onClick={resetHighlights}>
-        reset
       </div>
       {profileConfigPopup && (
         <div
@@ -262,6 +263,7 @@ const ControlBar = ({
                     </div>
                     <label className="rounded-sm bg-[#E1E1E1] text-center px-2 mb-2">
                       {profile.configColor.S.toUpperCase()}
+                      
                     </label>
                     <button
                       onClick={() => handleRemoveProfile(index)}
@@ -290,8 +292,8 @@ const ControlBar = ({
 
                     <div className="flex justify-between mb-4">
                       {/* Text Color */}
-                      <div className="flex gap-1.5">
-                        <img src={textColorIcon} alt="" className="w-3.5" />
+                      <div className="flex gap-1.5 items-center">
+                        <IcontipButton icon={textColorIcon} iconSize="w-3.5" altText="text-color-icon" tooltipText="Text Color" direction="left" />
                         <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
                           <div
                             className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer rounded-sm"
@@ -312,8 +314,8 @@ const ControlBar = ({
                       </div>
 
                       {/* Text Background Color */}
-                      <div className="flex gap-1.5 ">
-                        <img src={textBackgroundColorIcon} alt="" className="w-3.5" />
+                      <div className="flex gap-1.5 items-center">
+                        <IcontipButton icon={textBackgroundColorIcon} iconSize="w-3.5" altText="text-bg-color-icon" tooltipText="Text Background Color" direction="left" />
                         <div className="rounded-sm bg-[#E1E1E1] flex items-center justify-center px-2 gap-1">
                           <div
                             className="w-2 h-2 overflow-hidden flex justify-center items-center cursor-pointer"
@@ -335,7 +337,7 @@ const ControlBar = ({
                       </div>
 
                       {/* Header
-                      <div className="flex gap-1.5">
+                      <div className="flex gap-1.5 items-center">
                         <img src={fontSizeIcon} alt="" className="w-3.5" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
@@ -356,8 +358,8 @@ const ControlBar = ({
 
                     <div className="flex justify-between mb-4">
                       {/* Font Size */}
-                      <div className="flex gap-1.5">
-                        <img src={fontSizeIcon} alt="" className="w-3.5" />
+                      <div className="flex gap-1.5 items-center">
+                        <IcontipButton icon={fontSizeIcon} iconSize="w-3.5" altText="font-size-icon" tooltipText="Font Size" direction="left" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
                             className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
@@ -373,8 +375,8 @@ const ControlBar = ({
                       </div>
 
                       {/* Text Alignment*/}
-                      <div className="flex gap-1.5">
-                        <img src={alignIcon} alt="" className="w-3.5" />
+                      <div className="flex gap-1.5 items-center">
+                        <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
                             className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
@@ -390,8 +392,8 @@ const ControlBar = ({
                       </div>
 
                       {/* Indentation */}
-                      <div className="flex gap-1.5">
-                        <img src={leftIndentIcon} alt="" className="w-3.5" />
+                      <div className="flex gap-1.5 items-center">
+                        <IcontipButton icon={alignIcon} iconSize="w-3.5" altText="align-icon" tooltipText="Text Alignment" direction="left" />
                         <div className="bg-[#E1E1E1] flex items-center rounded-sm gap-2 px-2 cursor-pointer">
                           <select
                             className="bg-transparent outline-none cursor-pointer text-sm appearance-none"
@@ -415,7 +417,7 @@ const ControlBar = ({
                         className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].bold.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={(e) => handleProfileChange(index, 'bold', !localProfile[index].bold.BOOL)}
                       >
-                        <img src={boldIcon} alt="" className="w-3" />
+                        <IcontipButton icon={boldIcon} iconSize="w-3" altText="bold-icon" tooltipText="Bold" direction="top" />
                       </div>
 
                       {/* Italic */}
@@ -423,7 +425,7 @@ const ControlBar = ({
                         className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].italic.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={(e) => handleProfileChange(index, 'italic', !localProfile[index].italic.BOOL)}
                       >
-                        <img src={italicIcon} alt="" className="w-3" />
+                        <IcontipButton icon={italicIcon} iconSize="w-3" altText="italic-icon" tooltipText="Italic" direction="top" />
                       </div>
 
                       {/* Undeline */}
@@ -431,7 +433,7 @@ const ControlBar = ({
                         className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].underline.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={(e) => handleProfileChange(index, 'underline', !localProfile[index].underline.BOOL)}
                       >
-                        <img src={underlineIcon} alt="" className="w-3" />
+                        <IcontipButton icon={underlineIcon} iconSize="w-3" altText="underline-icon" tooltipText="Underline" direction="top" />
                       </div>
 
                       {/* Strikethrough */}
@@ -439,7 +441,7 @@ const ControlBar = ({
                         className={`w-6 h-6 flex justify-center items-center rounded-md cursor-pointer ${localProfile[index].strike.BOOL ? 'bg-[#FFE7D4]' : 'hover:bg-[#FFE7D4]'}`}
                         onClick={(e) => handleProfileChange(index, 'strike', !localProfile[index].strike.BOOL)}
                       >
-                        <img src={strikethroughIcon} alt="" className="w-3" />
+                        <IcontipButton icon={strikethroughIcon} iconSize="w-3" altText="strikethrough-icon" tooltipText="Strikethrough" direction="top" />
                       </div>
 
                       {/* Unordered List */}
@@ -453,7 +455,7 @@ const ControlBar = ({
                           )
                         }
                       >
-                        <img src={unorderedListIcon} alt="" className="w-4" />
+                        <IcontipButton icon={unorderedListIcon} iconSize="w-3" altText="unordered-list-icon" tooltipText="Unordered List (Bullets)" direction="top" />
                       </div>
 
                       {/* Ordered List*/}
@@ -467,7 +469,7 @@ const ControlBar = ({
                           )
                         }
                       >
-                        <img src={orderedListIcon} alt="" className="w-4" />
+                        <IcontipButton icon={orderedListIcon} iconSize="w-3" altText="ordered-list-icon" tooltipText="Ordered List (Numbers)" direction="top" />
                       </div>
                     </div>
 

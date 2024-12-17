@@ -260,7 +260,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       console.log('delta: ', delta);
 
       // Filter out all ops where 'insert' is equal to '• '
-      const cleanedOps = delta.ops.filter(op => op.insert !== '• ');
+      const cleanedOps = delta.ops.filter(op => op.insert !== '❚ ');
 
       // Optionally, you can set the cleaned delta back into the editor
       // editor.setContents(cleanedOps);
@@ -304,7 +304,6 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           >
             Save highlights
           </button> */}
-          Annotations
           <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
             onClick={exportToPDF}>
             PDF
@@ -321,13 +320,11 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             onClick={() => {
               setShowColorIndicator(!showColorIndicator);
               console.log('showColorIndicator: ', showColorIndicator);
-              // setHighlights(highlights);
             }}>
-            Highlight Color Indicator
+            Indicator
           </button>
         </div>
-        <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto">
-
+        <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto border border-red p-10">
           <ReactQuill
             value={editorHtml}
             onChange={handleChange}

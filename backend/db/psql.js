@@ -34,7 +34,8 @@ const createTables = async () => {
             id SERIAL PRIMARY KEY,
             filepath VARCHAR(255) NOT NULL,
             highlights JSONB NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            CONSTRAINT fk_file FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
         );
     `;
 
