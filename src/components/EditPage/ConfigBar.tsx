@@ -88,7 +88,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           if (showColorIndicator) {
             return [
               {
-                insert: '•• ',
+                insert: '❚ ',
                 attributes: {
                   color: matchingProfile.configColor.S,
                   bold: true,

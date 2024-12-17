@@ -88,7 +88,7 @@ const EditPage: React.FC<{
             // Use the file object in your component
             setPdfFile(file);
 
-            const profile = fetchAndSetProfile(storedUser.userID);
+            const profile = await fetchAndSetProfile(storedUser.userID);
             console.log('editpage profile: ', profile);
 
             // Convert File to Data URL for preview or further usage
@@ -178,6 +178,8 @@ const EditPage: React.FC<{
 
         if (data.success && data.data.length > 0) {
           setHighlightColorProfile(data.data);
+          setHighlightColor(data.data[0].configColor.S);
+          setConfigID(data.data[0].configID.S);
           return data.data;
         } else {
           console.error("Error fetching profiles:", data.error);
