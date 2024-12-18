@@ -18,6 +18,7 @@ const FilesPage = ({
     const [fileMenu, setFileMenu] = useState(null);
     const [files, setFiles] = useState([]); // State to store uploaded files    
     const [overlayType, setOverlayType] = useState(null);
+    const [showInvalidUserPopup, setShowInvalidUserPopup] = useState(false);
 
     // initial loading of files every time files page viewed
     useEffect(() => {
@@ -41,12 +42,22 @@ const FilesPage = ({
     }, [user]);
 
     // Add event listener to close dropdown when clicking outside
-    React.useEffect(() => {
+    useEffect(() => {
         document.addEventListener('click', handleClickOutside);
         return () => {
             document.removeEventListener('click', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        if (showInvalidUserPopup) {
+            const timer = setTimeout(() => {
+                setShowInvalidUserPopup(false); // Hide the popup after showing it
+            }, 3000); // Adjust the delay (in milliseconds) as needed
+
+            return () => clearTimeout(timer); // Cleanup timer on unmount or state change
+        }
+    }, [showInvalidUserPopup]);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -74,7 +85,9 @@ const FilesPage = ({
     const handleFileUpload = async (file) => {
         if (!user || !user.userID) {
             setUploadStatus('You must be logged in to upload files.');
-            window.alert('You must be logged in to upload files.');
+            // window.alert('You must be logged in to upload files.');
+            setShowInvalidUserPopup(!showInvalidUserPopup);
+            setOverlayType("login");
             return;
         }
 
@@ -212,7 +225,7 @@ const FilesPage = ({
                                                         >
                                                             Delete File
                                                         </li>
-                                                        <li
+                                                        {/* <li
                                                             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
@@ -221,7 +234,7 @@ const FilesPage = ({
                                                             }}
                                                         >
                                                             Edit Tag
-                                                        </li>
+                                                        </li> */}
                                                     </ul>
                                                 </div>
                                             )}
@@ -237,6 +250,11 @@ const FilesPage = ({
                 setUser={setUser}
                 onClose={handleOverlayClose} />}
             {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
+            {showInvalidUserPopup && (
+                <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
+                    Please login to save files in the system! Thank you for understanding.
+                </div>
+            )}
         </div >
     );
 };

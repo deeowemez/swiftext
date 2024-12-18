@@ -37,7 +37,9 @@ const HomePage = ({
             <Headline />
             <Features />
             <Pricing />
-            <Footline />
+            <Footline
+                onSignUpClick={() => setOverlayType("createAccount")}
+            />
             <Footer />
 
             {overlayType === "login" &&
