@@ -38,6 +38,12 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const { '*': filePath } = useParams();
 
   useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    // setUser(storedUser);
+    console.log('user configbar: ', storedUser);
+  }, []);
+
+  useEffect(() => {
     // Auto-save highlights after 5 seconds of inactivity
     const autoSave = async () => {
       console.log('Auto-saving highlights...');
@@ -187,6 +193,9 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   ];
 
   const exportToPDF = async () => {
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    console.log('user configbar: ', storedUser);
+
     try {
       const docFile = await exportToWord(false);
       if (!(docFile instanceof Blob)) {
@@ -194,9 +203,10 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
         return;
       }
       const formData = new FormData();
+      console.log('export pdf user: ', storedUser.userID);
       console.log('docfile', docFile);
       formData.append('file', docFile, 'pdf-export.docx');
-      const responseUpload = await axios.post(`http://localhost:5000/api/files/upload?userID=${user.userID}`, formData, {
+      const responseUpload = await axios.post(`http://localhost:5000/api/files/upload?userID=${storedUser.userID}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -15,18 +15,15 @@ const FilesPage = ({
     const navigate = useNavigate();
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
+    const [fileMenu, setFileMenu] = useState(null);
     const [files, setFiles] = useState([]); // State to store uploaded files    
     const [overlayType, setOverlayType] = useState(null);
-
-    const handleOverlayClose = () => {
-        setOverlayType(null);
-    };
 
     // initial loading of files every time files page viewed
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem('user'));
         console.log('user filespage: ', storedUser);
-    
+
         if (storedUser && storedUser.userID) {
             const fetchFiles = async () => {
                 try {
@@ -43,11 +40,34 @@ const FilesPage = ({
         }
     }, [user]);
 
+    // Add event listener to close dropdown when clicking outside
+    React.useEffect(() => {
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedUploadFile(file);
         if (file) {
             handleFileUpload(file);
+        }
+    };
+
+    const handleOverlayClose = () => {
+        setOverlayType(null);
+    };
+
+    // Toggle dropdown visibility
+    const toggleDropdown = (fileId) => {
+        setFileMenu((prevFileMenu) => (prevFileMenu === fileId ? null : fileId));
+    };
+
+    const handleClickOutside = (event) => {
+        if (!event.target.closest('.file-card')) {
+            setFileMenu(null); // Close the dropdown if clicked outside
         }
     };
 
@@ -142,7 +162,7 @@ const FilesPage = ({
                             onClick={handleImageClick}
                         >
                             <input type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
-                            <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] "/>
+                            <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
                         </div>
                         <p>File</p>
                         <img src="src/assets/images/line.svg" alt="" />
@@ -158,25 +178,54 @@ const FilesPage = ({
                 </div>
                 <div className="file-cards flex flex-col gap-2 py-6 w-full">
                     {/* Dynamically create file cards */}
-                    {files.map((file, index) => (
+                    {files.map((file) => (
                         <div
-                            key={index}
-                            className="flex items-center justify-start bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
+                            key={file.id}
+                            className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
                             onClick={() => selectEditFile(file)}
                         >
                             <div className="bg-[#333333] w-1/12 text-white text-center ">thumbnail prev</div>
-                            <div className="flex flex-col w-11/12">
+                            <div className="flex flex-col w-11/12 relative">
                                 <p className="text-left text-md overflow-clip">{file.filename}</p>
                                 <div className="flex justify-between">
                                     <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
-                                    <div className="flex gap-4 items-center">
+                                    <div className="flex gap-4 items-center relative group">
                                         <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div>
-                                        <img src="src/assets/images/more-alt.svg" alt="more svg"
-                                            onClick={(event) => {
-                                                event.stopPropagation();
-                                                handleDeleteFile(file);
-                                            }}
-                                        />
+                                        <div className="relative">
+                                            <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleDropdown(file.id);
+                                                }}
+                                            />
+                                            {/* Dropdown Menu */}
+                                            {fileMenu === file.id && (
+                                                <div className="dropdown-container absolute right-0 bg-white border border-gray-300 rounded shadow-md mt-2 w-40 z-20">
+                                                    <ul className="text-[#5A5959]">
+                                                        <li
+                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteFile(file);
+                                                                setFileMenu(false);
+                                                            }}
+                                                        >
+                                                            Delete File
+                                                        </li>
+                                                        <li
+                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                // handleEditTag(file);
+                                                                setFileMenu(false); // Close dropdown after action
+                                                            }}
+                                                        >
+                                                            Edit Tag
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -188,8 +237,7 @@ const FilesPage = ({
                 setUser={setUser}
                 onClose={handleOverlayClose} />}
             {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
-            {/* <Footer /> */}
-        </div>
+        </div >
     );
 };
 
