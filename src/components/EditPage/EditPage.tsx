@@ -65,6 +65,7 @@ const EditPage: React.FC<{
     const [activeTool, setActiveTool] = useState<string>('highlightPen');
     const [showArrangementOverlay, setShowArrangementOverlay] = useState<boolean>(false);
     const [showResetHighlightsWarning, setShowResetHighlightsWarning] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
     const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
     useEffect(() => {
@@ -74,6 +75,8 @@ const EditPage: React.FC<{
     useEffect(() => {
       const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
       console.log('user editpage: ', storedUser);
+
+      setCurrentUser(storedUser);
 
       const loadFileByPath = async () => {
         if (filePath) {
@@ -125,7 +128,12 @@ const EditPage: React.FC<{
 
     useEffect(() => {
       console.log('forceRenderProfile: ', forceRenderProfile);
-      fetchAndSetProfile(user.userID);
+      if (currentUser) {
+        console.log('editpage currentUser.userID:', currentUser.userID);
+        fetchAndSetProfile(currentUser.userID);
+      } else {
+        console.error("No current user available.");
+      }
     }, [forceRenderProfile]);
 
     useEffect(() => {
@@ -327,7 +335,7 @@ const EditPage: React.FC<{
     return (
       <div className="flex w-screen min-h-screen">
         <ControlBar
-          user={user}
+          currentUser={currentUser}
           setPdfScaleValue={(value) => setPdfScaleValue(value)}
           highlightColorProfile={highlightColorProfile}
           setForceRenderProfile={setForceRenderProfile}

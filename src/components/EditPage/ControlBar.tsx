@@ -26,7 +26,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { User } from "./EditPage";
 
 interface ControlBarProps {
-  user: User;
+  currentUser: User | null;
   forceRenderProfile: boolean;  // Now using boolean to track the profile selection state
   setForceRenderProfile: (value: boolean) => void;
   setPdfScaleValue: (value: number) => void;
@@ -39,7 +39,7 @@ interface ControlBarProps {
 }
 
 const ControlBar = ({
-  user,
+  currentUser,
   highlights,
   setHighlights,
   forceRenderProfile,
@@ -85,8 +85,9 @@ const ControlBar = ({
   }, [highlightColorProfile]);
 
   const handleAddProfileField = () => {
+    
     const newField: HighlightColorProfileProps = {
-      userID: { S: user.userID },
+      userID: { S: currentUser?.userID ?? "defaultUserID" },
       highlightColorProfile: { S: "default" },
       configColor: { S: "#000000" },
       configID: { S: `config-${uuidv4()}` },
@@ -161,7 +162,7 @@ const ControlBar = ({
         return; // Exit the function if the limit is exceeded
       }
       const currentColorMap = profileColorMap(highlightColorProfile);
-      const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${user.userID}`, { items: localProfile });
+      const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${currentUser?.userID}`, { items: localProfile });
       setForceRenderProfile(!forceRenderProfile);
       if (response.data.success) {
 
