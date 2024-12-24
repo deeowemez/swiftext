@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es6",             // Set to "es6" or higher
+        "lib": ["dom", "es2019"],    // Add "es2015" for Promise support
+        "jsx": "react-jsx", // Set this if you're using React
+        "esModuleInterop": true, // Allows default imports of commonjs modules
+        "strict": true, // Enables strict mode (recommended)
+        "moduleResolution": "node", // Enables TypeScript to find modules like Node.js
+        "resolveJsonModule": true // Enables JSON imports
+    },
+    "include": [
+        "src/**/*" // Ensures that TypeScript includes all files in src/
+    ]
+}
