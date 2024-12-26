@@ -69,7 +69,7 @@ const CreateAccount = ({ onClose }) => {
     return (
         <>
             <div className="fixed inset-0 bg-[#F4F4F4] opacity-30 z-20" />
-            <div className="w-full h-full relative font-sserif">
+            <div className="w-full h-full relative font-sserif" id="createAccountModal">
                 <div
                     ref={overlayRef}
                     className={`fixed flex flex-col justify-center border border-[#C1C1C1] w-1/3 h-3/4 max-h-[580px] top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-[#F4F4F4] shadow-xl rounded-xl py-8 overflow-y-auto z-20
