@@ -23,12 +23,14 @@ export const test = base.extend({
 
     header: async ({ page }, use) => {
         const header = new Header(page);
+        await header.gotoHomePage();
         await use(header);
         await page.close();
     },
 
     footer: async ({ page }, use) => {
         const footer = new Footer(page);
+        await footer.gotoHomePage();
         await use(footer);
         await page.close();
     },
@@ -53,6 +55,7 @@ export const test = base.extend({
 
     filesPage: async ({ page }, use) => {
         const filesPage = new FilesPage(page);
+        await filesPage.goto();
         await use(filesPage);
         await page.close();
     },

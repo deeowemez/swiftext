@@ -24,11 +24,11 @@ class Login {
     }
 
     async clickLoginButton(){
-        await this.page.getByRole('button', { name: 'Show' }).click();
         await this.page.getByRole('button', { name: 'Login' }).click();
     }
 
     async checkLoginSuccessfulOverlayVisibility(){
+        await this.page.waitForTimeout(100);
         await expect(this.page.locator('.fixed').first()).toBeVisible();
     }
 

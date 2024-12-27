@@ -9,7 +9,7 @@ class Header {
     }
 
     async gotoHomePage() {
-        await this.page.goto('https://localhost:5173/');
+        await this.page.goto('http://localhost:5173/');
     }
 
     async clickLogo() {
@@ -28,7 +28,7 @@ class Header {
         await this.page.getByRole('button', { name: 'Log In' }).click();
     }
 
-    async clickSingUpButton() {
+    async clickSignUpButton() {
         await this.page.getByRole('button', { name: 'Sign Up' }).click();
     }
 

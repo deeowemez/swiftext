@@ -9,7 +9,12 @@ class HomePage {
     }
 
     async goto() {
-        await this.page.goto('https://localhost:5173/');
+        await this.page.goto('http://localhost:5173/');
+    }
+
+    async checkURL() {
+        const currentURL = this.page.url();
+        expect(currentURL).toBe('http://localhost:5173/');
     }
 
     async clickTrySwiftextButton() {

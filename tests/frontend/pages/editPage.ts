@@ -12,6 +12,11 @@ class EditPage {
         await this.page.goto('http://localhost:5173/edit/uploads/1734431358684.pdf');
     }
 
+    async checkURL() {
+        const currentURL = this.page.url();
+        expect(currentURL).toBe('http://localhost:5173/edit/uploads/1734431358684.pdf');
+    }
+
     async checkSampleFileVisibility() {
         await expect(this.page.getByText('A Comprehensive Dengue Prediction System for Baguio City: Incorporating aData-')).toBeVisible();
     }

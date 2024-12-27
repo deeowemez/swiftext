@@ -9,7 +9,16 @@ class FilesPage {
     }
 
     async goto() {
-        await this.page.goto('https://localhost:5173/files');
+        await this.page.goto('http://localhost:5173/files');
+    }
+
+    async checkURL() {
+        const currentURL = this.page.url();
+        expect(currentURL).toBe('http://localhost:5173/files');
+    }
+
+    async checkUploadButtonVisibility(){
+        await expect(this.page.getByRole('img', { name: 'upload svg' })).toBeVisible();
     }
 
     async checkHeaderVisibility() {
