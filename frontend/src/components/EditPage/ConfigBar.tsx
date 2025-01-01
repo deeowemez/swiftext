@@ -10,6 +10,11 @@ import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
 import { User } from "./EditPage"
 import Quill from 'quill';
+import IcontipButton from "./IcontipButton";
+import wordIcon from "../../assets/images/word.svg";
+import pdfIcon from "../../assets/images/pdf.svg";
+import rearrangeIcon from "../../assets/images/rearrange.svg";
+import indicatorIcon from "../../assets/images/indicator.svg";
 
 
 interface ConfigBarProps {
@@ -21,6 +26,7 @@ interface ConfigBarProps {
   showArrangementOverlay: boolean;
   setShowArrangementOverlay: Dispatch<SetStateAction<boolean>>;
 }
+
 
 const ConfigBar: React.FC<ConfigBarProps> = ({
   user,
@@ -306,31 +312,31 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
       <div className="flex flex-1 flex-col gap-2 bg-[#F4F4F4] p-8 h-screen text-center " >
         {/* <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div> */}
-        <div>
-          {/* <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={saveHighlights}
-          >
-            Save highlights
-          </button> */}
-          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={exportToPDF}>
-            PDF
-          </button>
-          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={() => exportToWord(true)}>
-            Word
-          </button>
-          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }}>
-            Rearrange
-          </button>
-          <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs"
-            onClick={() => {
-              setShowColorIndicator(!showColorIndicator);
-              console.log('showColorIndicator: ', showColorIndicator);
-            }}>
-            Indicator
-          </button>
+        <div className="flex justify-between items-center mb-4">
+          {/* <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs" onClick={saveHighlights}> Save highlights</button> */}
+
+          <div className="flex gap-2">
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+              icon={rearrangeIcon} iconSize="w-5" altText="rearrange-icon" tooltipText="Rearrange Highlights" direction="bottom"
+              onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }} />
+
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+              icon={indicatorIcon} iconSize="w-5" altText="indicator-icon" tooltipText="Show Highlight Colors" direction="bottom"
+              onClick={() => {
+                setShowColorIndicator(!showColorIndicator);
+                console.log('showColorIndicator: ', showColorIndicator);
+              }} />
+          </div>
+
+          <div className="flex gap-2">
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+                icon={pdfIcon} iconSize="w-5" altText="pdf-icon" tooltipText="Save as PDF" direction="bottom"
+                onClick={exportToPDF} />
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+                icon={wordIcon} iconSize="w-5" altText="word-icon" tooltipText="Save as Word" direction="bottom"
+                onClick={() => exportToWord(true)} />
+          </div>
+
         </div>
         <div className="bg-white flex-1 rounded-ss-lg overflow-y-auto border border-red p-10">
           <ReactQuill

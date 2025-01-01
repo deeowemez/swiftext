@@ -32,6 +32,7 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
   const handleMouseLeave = () => {
     clearTimeout(timeoutId); // Clear timeout if the cursor leaves early
     setShowTooltip(false);
+    setIsClicked(false);
   };
 
   const handleClick = () => {
