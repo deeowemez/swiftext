@@ -310,31 +310,32 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   return (
     <div className="flex min-h-screen w-full items-start font-sserif relative">
       {/* <img src={arrowIcon} alt="arrow-icon" className="cursor-pointer w-5 my-2 mx-3" /> */}
-      <div className="flex flex-1 flex-col gap-2 bg-[#F4F4F4] p-8 h-screen text-center " >
+      <div className="flex flex-1 flex-col gap-2 bg-[#F4F4F4] px-8 py-6 h-screen text-center " >
         {/* <div className="bg-white flex-[1] rounded-ss-lg">Highlighter color config</div> */}
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-1">
           {/* <button className="px-8 py-2 font-sserif border border-[#FFBF8F] text-[#FFBF8F] rounded-md text-xs" onClick={saveHighlights}> Save highlights</button> */}
 
-          <div className="flex gap-2">
-            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
-              icon={rearrangeIcon} iconSize="w-5" altText="rearrange-icon" tooltipText="Rearrange Highlights" direction="bottom"
-              onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }} />
-
-            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          <div className="flex gap-2 items-center">
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer "
               icon={indicatorIcon} iconSize="w-5" altText="indicator-icon" tooltipText="Show Highlight Colors" direction="bottom"
               onClick={() => {
                 setShowColorIndicator(!showColorIndicator);
                 console.log('showColorIndicator: ', showColorIndicator);
               }} />
+
+            <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+              icon={rearrangeIcon} iconSize="w-[1rem]" altText="rearrange-icon" tooltipText="Rearrange Highlights" direction="bottom"
+              onClick={() => { setShowArrangementOverlay(!showArrangementOverlay) }} />
+
           </div>
 
           <div className="flex gap-2">
             <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
-                icon={pdfIcon} iconSize="w-5" altText="pdf-icon" tooltipText="Save as PDF" direction="bottom"
-                onClick={exportToPDF} />
+              icon={pdfIcon} iconSize="w-5" altText="pdf-icon" tooltipText="Save as PDF" direction="bottom"
+              onClick={exportToPDF} />
             <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
-                icon={wordIcon} iconSize="w-5" altText="word-icon" tooltipText="Save as Word" direction="bottom"
-                onClick={() => exportToWord(true)} />
+              icon={wordIcon} iconSize="w-5" altText="word-icon" tooltipText="Save as Word" direction="bottom"
+              onClick={() => exportToWord(true)} />
           </div>
 
         </div>
