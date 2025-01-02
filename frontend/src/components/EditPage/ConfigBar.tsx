@@ -15,7 +15,9 @@ import wordIcon from "../../assets/images/word.svg";
 import pdfIcon from "../../assets/images/pdf.svg";
 import rearrangeIcon from "../../assets/images/rearrange.svg";
 import indicatorIcon from "../../assets/images/indicator.svg";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 interface ConfigBarProps {
   user: User;
@@ -212,7 +214,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       console.log('export pdf user: ', storedUser.userID);
       console.log('docfile', docFile);
       formData.append('file', docFile, 'pdf-export.docx');
-      const responseUpload = await axios.post(`http://localhost:5000/api/files/upload?userID=${storedUser.userID}`, formData, {
+      const responseUpload = await axios.post(`${process.env.BASE_URL}/api/files/upload?userID=${storedUser.userID}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
