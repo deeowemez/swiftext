@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
-        "target": "es6",             // Set to "es6" or higher
-        "lib": ["dom", "es2019"],    // Add "es2015" for Promise support
+        "target": "esnext",      
+        "module": "esnext",      
+        "lib": ["dom", "esnext"],    
         "jsx": "react-jsx", // Set this if you're using React
         "esModuleInterop": true, // Allows default imports of commonjs modules
         "strict": true, // Enables strict mode (recommended)

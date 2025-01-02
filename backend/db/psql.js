@@ -35,7 +35,7 @@ const createTables = async () => {
             filepath VARCHAR(255) NOT NULL,
             highlights JSONB NOT NULL,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT fk_file FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
+            CONSTRAINT fk_file FOREIGN KEY (id) REFERENCES files(id) ON DELETE CASCADE
         );
     `;
 
@@ -67,8 +67,8 @@ const deleteAllTables = async () => {
 };
 
 const main = async () => {
-    // createTables();
-    deleteAllTables();
+    createTables();
+    // deleteAllTables();
 }
 
 // main();

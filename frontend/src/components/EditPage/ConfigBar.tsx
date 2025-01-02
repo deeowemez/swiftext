@@ -15,9 +15,8 @@ import wordIcon from "../../assets/images/word.svg";
 import pdfIcon from "../../assets/images/pdf.svg";
 import rearrangeIcon from "../../assets/images/rearrange.svg";
 import indicatorIcon from "../../assets/images/indicator.svg";
-import dotenv from 'dotenv';
-
-dotenv.config();
+// import "dotenv/config.js";
+// require('dotenv').config();
 
 interface ConfigBarProps {
   user: User;
@@ -44,6 +43,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
   const [showColorIndicator, setShowColorIndicator] = useState<boolean>(false);
   const { '*': filePath } = useParams();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -56,8 +56,9 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     const autoSave = async () => {
       console.log('Auto-saving highlights...');
       try {
+        
         await axios.post(
-          `http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
+          `${backendUrl}/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
           { highlights }
         );
         console.log('Highlights saved successfully');
@@ -214,7 +215,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       console.log('export pdf user: ', storedUser.userID);
       console.log('docfile', docFile);
       formData.append('file', docFile, 'pdf-export.docx');
-      const responseUpload = await axios.post(`${process.env.BASE_URL}/api/files/upload?userID=${storedUser.userID}`, formData, {
+      const responseUpload = await axios.post(`${backendUrl}/api/files/upload?userID=${storedUser.userID}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -223,7 +224,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       const fileId = responseUpload.data.id;
       console.log('wordtopdf fileid: ', responseUpload.data);
 
-      const response = await axios.get(`http://localhost:5000/api/files/convert?fileId=${fileId}`, {
+      const response = await axios.get(`${backendUrl}/api/files/convert?fileId=${fileId}`, {
         responseType: 'blob', // Important to handle binary data
       });
 
@@ -299,7 +300,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   //   if (highlights.length > 0) {
   //     // Send highlights data to the server
   //     const response = await axios.post(
-  //       `http://localhost:5000/highlights?filePath=${encodeURIComponent(filePath || "")}`,
+  //       `${backendUrl}/highlights?filePath=${encodeURIComponent(filePath || "")}`,
   //       { highlights } // Send highlights in the request body
   //     );
 
