@@ -19,6 +19,8 @@ const FilesPage = ({
     const [files, setFiles] = useState([]); // State to store uploaded files    
     const [overlayType, setOverlayType] = useState(null);
     const [showInvalidUserPopup, setShowInvalidUserPopup] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+    const [filteredFiles, setFilteredFiles] = useState([]);
 
     // initial loading of files every time files page viewed
     useEffect(() => {
@@ -31,6 +33,7 @@ const FilesPage = ({
                     const response = await axios.get(`http://localhost:5000/api/files?userID=${storedUser.userID}`);
                     console.log('response data: ', response.data);
                     setFiles(response.data);
+                    setFilteredFiles(response.data);
                 } catch (error) {
                     console.error('Error fetching files:', error);
                 }
@@ -38,6 +41,7 @@ const FilesPage = ({
             fetchFiles();
         } else {
             setFiles([]);
+            setFilteredFiles([]);
         }
     }, [user]);
 
@@ -58,6 +62,16 @@ const FilesPage = ({
             return () => clearTimeout(timer); // Cleanup timer on unmount or state change
         }
     }, [showInvalidUserPopup]);
+
+    const handleSearchChange = (event) => {
+        const value = event.target.value;
+        setSearchInput(value);
+
+        const filtered = files.filter((file) =>
+            file.filename.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredFiles(filtered);
+    };
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -111,7 +125,7 @@ const FilesPage = ({
             const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
-
+            setFilteredFiles(updatedFiles.data);
         } catch (error) {
             setUploadStatus('Upload failed. Please try again.');
         }
@@ -126,6 +140,7 @@ const FilesPage = ({
             const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
+            setFilteredFiles(updatedFiles.data);
         } catch (error) {
             console.error('Error deleting file:', error);
         }
@@ -168,30 +183,36 @@ const FilesPage = ({
                 <div className="flex justify-between">
                     <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
                         <img src="src/assets/images/search.svg" alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
-                        <input type="text" placeholder="Search files" className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12 " />
+                        <input 
+                            type="text" 
+                            value={searchInput}
+                            onChange={handleSearchChange}
+                            placeholder="Search files" 
+                            className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12" />
                     </div>
                     <div className="flex gap-5 text-[#5A5959] text-sm items-center">
-                        <div className="p-2 hover:bg-slate-100 rounded-full mr-3 cursor-pointer"
+                        <div className="p-2 hover:bg-[#FFE7D4] rounded-full mr-3 cursor-pointer"
                             onClick={handleImageClick}
                         >
-                            <input type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
+                            <input 
+                                type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
                             <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
                         </div>
-                        <p>File</p>
-                        <img src="src/assets/images/line.svg" alt="" />
-                        <p>Folder</p>
+                        {/* <p>File</p> */}
+                        {/* <img src="src/assets/images/line.svg" alt="" />
+                        <p>Folder</p> */}
                     </div>
                 </div>
-                <div className="flex flex-wrap gap-10 max-w-4/5 px-3 py-4">
+                {/* <div className="flex flex-wrap gap-10 max-w-4/5 px-3 py-4">
                     <button className="bg-[#F8968E] text-white px-3 py-1 rounded-2xl">#urgent</button>
-                </div>
-                <div className="flex px-7 py-2 gap-6">
+                </div> */}
+                {/* <div className="flex px-7 py-2 gap-6">
                     <img src="src/assets/images/mark-dropdown.svg" alt="reload svg" className="w-[35px]" />
                     <img src="src/assets/images/reload.svg" alt="reload svg" className="w-[18px]" />
-                </div>
+                </div> */}
                 <div className="file-cards flex flex-col gap-2 py-6 w-full">
                     {/* Dynamically create file cards */}
-                    {files.map((file) => (
+                    {filteredFiles.map((file) => (
                         <div
                             key={file.id}
                             className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
@@ -203,29 +224,31 @@ const FilesPage = ({
                                 <div className="flex justify-between">
                                     <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
                                     <div className="flex gap-4 items-center relative group">
-                                        <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div>
-                                        <div className="relative">
-                                            <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4"
+                                        {/* <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div> */}
+                                        <div className="relative w-6 h-6 hover:bg-red-200 rounded-lg flex justify-center">
+                                            {/* <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4" */}
+                                            <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px]"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    toggleDropdown(file.id);
+                                                    // toggleDropdown(file.id);
+                                                    handleDeleteFile(file);
                                                 }}
                                             />
                                             {/* Dropdown Menu */}
-                                            {fileMenu === file.id && (
+                                            {/* {fileMenu === file.id && (
                                                 <div className="dropdown-container absolute right-0 bg-white border border-gray-300 rounded shadow-md mt-2 w-40 z-20">
                                                     <ul className="text-[#5A5959]">
                                                         <li
                                                             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                                                             onClick={(e) => {
-                                                                e.stopPropagation();
+                                                                // e.stopPropagation();
                                                                 handleDeleteFile(file);
                                                                 setFileMenu(false);
                                                             }}
                                                         >
                                                             Delete File
                                                         </li>
-                                                        {/* <li
+                                                        <li
                                                             className="px-4 py-2 cursor-pointer hover:bg-gray-200"
                                                             onClick={(e) => {
                                                                 e.stopPropagation();
@@ -234,10 +257,10 @@ const FilesPage = ({
                                                             }}
                                                         >
                                                             Edit Tag
-                                                        </li> */}
+                                                        </li>
                                                     </ul>
                                                 </div>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </div>
