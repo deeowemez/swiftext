@@ -6,7 +6,10 @@
   "directories": {
     "test": "tests"
   },
-  "scripts": {},
+  "scripts": {
+    "test:navigation": "playwright test ./tests/navigation/ --project=chromium",
+    "test:navigation:report": "playwright show-report"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deeowemez/swiftext.git"
