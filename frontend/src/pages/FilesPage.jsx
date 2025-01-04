@@ -5,18 +5,18 @@ import Footer from "../components/Homepage/Footer";
 import { useNavigate } from 'react-router-dom';
 import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
-
+import UploadComponent from "../components/UploadComponent";
 
 const FilesPage = ({
     user,
-    setUser
+    setUser,
 }) => {
     const fileInputRef = useRef(null);
     const navigate = useNavigate();
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [fileMenu, setFileMenu] = useState(null);
-    const [files, setFiles] = useState([]); // State to store uploaded files    
+    const [files, setFiles] = useState([]); 
     const [overlayType, setOverlayType] = useState(null);
     const [showInvalidUserPopup, setShowInvalidUserPopup] = useState(false);
     const [searchInput, setSearchInput] = useState('');
@@ -179,106 +179,123 @@ const FilesPage = ({
                 onLoginClick={() => setOverlayType("login")}
                 onSignUpClick={() => setOverlayType("createAccount")}
             />
-            <div className="flex flex-col flex-1 py-10 px-36" onDrop={handleDrop} onDragOver={handleDragOver}>
-                <div className="flex justify-between">
-                    <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
-                        <img src="src/assets/images/search.svg" alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
-                        <input 
-                            type="text" 
-                            value={searchInput}
-                            onChange={handleSearchChange}
-                            placeholder="Search files" 
-                            className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12" />
-                    </div>
-                    <div className="flex gap-5 text-[#5A5959] text-sm items-center">
-                        <div className="p-2 hover:bg-[#FFE7D4] rounded-full mr-3 cursor-pointer"
-                            onClick={handleImageClick}
-                        >
+            {filteredFiles.length === 0 ? (
+                <UploadComponent 
+                    user={user} 
+                    setUser={setUser}
+                    onFileUploaded={(file) => handleFileUpload(file)} 
+                />
+            ) : (
+                <div className="flex flex-col flex-1 py-10 px-36" onDrop={handleDrop} onDragOver={handleDragOver}>
+                    <div className="flex justify-between">
+                        <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
+                            <img src="src/assets/images/search.svg" alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
                             <input 
-                                type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
-                            <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
+                                type="text" 
+                                value={searchInput}
+                                onChange={handleSearchChange}
+                                placeholder="Search files" 
+                                className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12" />
                         </div>
-                        {/* <p>File</p> */}
-                        {/* <img src="src/assets/images/line.svg" alt="" />
-                        <p>Folder</p> */}
+                        <div className="flex gap-5 text-[#5A5959] text-sm items-center">
+                            <div className="p-2 hover:bg-[#FFE7D4] rounded-full mr-3 cursor-pointer"
+                                onClick={handleImageClick}
+                            >
+                                <input 
+                                    type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
+                                <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
+                            </div>
+                            {/* <p>File</p> */}
+                            {/* <img src="src/assets/images/line.svg" alt="" />
+                            <p>Folder</p> */}
+                        </div>
                     </div>
-                </div>
-                {/* <div className="flex flex-wrap gap-10 max-w-4/5 px-3 py-4">
-                    <button className="bg-[#F8968E] text-white px-3 py-1 rounded-2xl">#urgent</button>
-                </div> */}
-                {/* <div className="flex px-7 py-2 gap-6">
-                    <img src="src/assets/images/mark-dropdown.svg" alt="reload svg" className="w-[35px]" />
-                    <img src="src/assets/images/reload.svg" alt="reload svg" className="w-[18px]" />
-                </div> */}
-                <div className="file-cards flex flex-col gap-2 py-6 w-full">
-                    {/* Dynamically create file cards */}
-                    {filteredFiles.map((file) => (
-                        <div
-                            key={file.id}
-                            className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
-                            onClick={() => selectEditFile(file)}
-                        >
-                            <div className="bg-[#333333] w-1/12 text-white text-center ">thumbnail prev</div>
-                            <div className="flex flex-col w-11/12 relative">
-                                <p className="text-left text-md overflow-clip">{file.filename}</p>
-                                <div className="flex justify-between">
-                                    <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
-                                    <div className="flex gap-4 items-center relative group">
-                                        {/* <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div> */}
-                                        <div className="relative w-6 h-6 hover:bg-red-200 rounded-lg flex justify-center">
-                                            {/* <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4" */}
-                                            <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px]"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    // toggleDropdown(file.id);
-                                                    handleDeleteFile(file);
-                                                }}
-                                            />
-                                            {/* Dropdown Menu */}
-                                            {/* {fileMenu === file.id && (
-                                                <div className="dropdown-container absolute right-0 bg-white border border-gray-300 rounded shadow-md mt-2 w-40 z-20">
-                                                    <ul className="text-[#5A5959]">
-                                                        <li
-                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                                                            onClick={(e) => {
-                                                                // e.stopPropagation();
-                                                                handleDeleteFile(file);
-                                                                setFileMenu(false);
-                                                            }}
-                                                        >
-                                                            Delete File
-                                                        </li>
-                                                        <li
-                                                            className="px-4 py-2 cursor-pointer hover:bg-gray-200"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                // handleEditTag(file);
-                                                                setFileMenu(false); // Close dropdown after action
-                                                            }}
-                                                        >
-                                                            Edit Tag
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            )} */}
+                    {/* <div className="flex flex-wrap gap-10 max-w-4/5 px-3 py-4">
+                        <button className="bg-[#F8968E] text-white px-3 py-1 rounded-2xl">#urgent</button>
+                    </div> */}
+                    {/* <div className="flex px-7 py-2 gap-6">
+                        <img src="src/assets/images/mark-dropdown.svg" alt="reload svg" className="w-[35px]" />
+                        <img src="src/assets/images/reload.svg" alt="reload svg" className="w-[18px]" />
+                    </div> */}
+                    <div className="file-cards flex flex-col gap-2 py-6 w-full">
+                        {/* Dynamically create file cards */}
+                        {filteredFiles.map((file) => (
+                            <div
+                                key={file.id}
+                                className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
+                                onClick={() => selectEditFile(file)}
+                            >
+                                <div className="bg-[#333333] w-1/12 text-white text-center ">thumbnail prev</div>
+                                <div className="flex flex-col w-11/12 relative">
+                                    <p className="text-left text-md overflow-clip">{file.filename}</p>
+                                    <div className="flex justify-between">
+                                        <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
+                                        <div className="flex gap-4 items-center relative group">
+                                            {/* <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div> */}
+                                            <div className="relative w-6 h-6 hover:bg-red-200 rounded-lg flex justify-center">
+                                                {/* <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4" */}
+                                                <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px]"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        // toggleDropdown(file.id);
+                                                        handleDeleteFile(file);
+                                                    }}
+                                                />
+                                                {/* Dropdown Menu */}
+                                                {/* {fileMenu === file.id && (
+                                                    <div className="dropdown-container absolute right-0 bg-white border border-gray-300 rounded shadow-md mt-2 w-40 z-20">
+                                                        <ul className="text-[#5A5959]">
+                                                            <li
+                                                                className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                                                onClick={(e) => {
+                                                                    // e.stopPropagation();
+                                                                    handleDeleteFile(file);
+                                                                    setFileMenu(false);
+                                                                }}
+                                                            >
+                                                                Delete File
+                                                            </li>
+                                                            <li
+                                                                className="px-4 py-2 cursor-pointer hover:bg-gray-200"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    // handleEditTag(file);
+                                                                    setFileMenu(false); // Close dropdown after action
+                                                                }}
+                                                            >
+                                                                Edit Tag
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                )} */}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-            </div>
-            {overlayType === "login" && <Login
-                setUser={setUser}
-                onClose={handleOverlayClose} />}
-            {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
+            )}
+            {overlayType === "login" && <Login setUser={setUser} onClose={handleOverlayClose} />}
+            {overlayType === "createAccount" && (
+                <CreateAccount onClose={handleOverlayClose} />
+            )}
             {showInvalidUserPopup && (
                 <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
                     Please login to save files in the system! Thank you for understanding.
                 </div>
             )}
+            <Footer />
+                {overlayType === "login" &&
+                    <Login
+                        setUser={setUser}
+                        onClose={handleOverlayClose}
+                    />}
+                {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} 
+            />}
         </div >
+        
     );
 };
 

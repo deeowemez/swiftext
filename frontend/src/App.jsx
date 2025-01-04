@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 
 import HomePage from './pages/HomePage';
 import EditPage from './components/EditPage/EditPage';
-import UploadPage from './pages/UploadPage';
 import FilesPage from './pages/FilesPage';
 
 function App() {
@@ -18,11 +17,6 @@ function App() {
       <Routes>
         <Route path="/" element={
           <HomePage
-            user={user}
-            setUser={setUser}
-          />} />
-        <Route path="/upload" element={
-          <UploadPage
             user={user}
             setUser={setUser}
           />} />
