@@ -32,10 +32,11 @@ const createTables = async () => {
         
         CREATE TABLE IF NOT EXISTS highlights (
             id SERIAL PRIMARY KEY,
+            file_id INT NOT NULL,
             filepath VARCHAR(255) NOT NULL,
             highlights JSONB NOT NULL,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            CONSTRAINT fk_file FOREIGN KEY (id) REFERENCES files(id) ON DELETE CASCADE
+            CONSTRAINT fk_file FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE CASCADE
         );
     `;
 
