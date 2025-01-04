@@ -44,6 +44,7 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const [showColorIndicator, setShowColorIndicator] = useState<boolean>(false);
   const { '*': filePath } = useParams();
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [showDownloadSuccess, setDownloadSuccess] = useState<boolean | null>(null); // Update the state type
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
@@ -51,12 +52,23 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     console.log('user configbar: ', storedUser);
   }, []);
 
+  // Download File Prompts
+  useEffect(() => {
+    if (showDownloadSuccess !== null) {
+      const timer = setTimeout(() => {
+        setDownloadSuccess(null); 
+      }, 1000);
+  
+      return () => clearTimeout(timer); 
+    }
+  }, [showDownloadSuccess]);
+  
   useEffect(() => {
     // Auto-save highlights after 5 seconds of inactivity
     const autoSave = async () => {
       console.log('Auto-saving highlights...');
       try {
-        
+
         await axios.post(
           `${backendUrl}/api/highlights?filePath=${encodeURIComponent(filePath || "")}`,
           { highlights }
@@ -174,6 +186,17 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
     }
   }, [highlights, highlightColorProfile, showColorIndicator]);
 
+  useEffect(() => {
+  if (showDownloadSuccess !== null) {
+    // Message appears and disappears after 3 seconds
+    const timer = setTimeout(() => {
+      setDownloadSuccess(null); // Hide the message
+    }, 3000);
+
+    return () => clearTimeout(timer); // Clean up the timer if the component is unmounted
+  }
+}, [showDownloadSuccess]); // Run this effect whenever showDownloadSuccess changes
+
   const handleChange = (value: string) => {
     setEditorHtml(value); // This will capture the content of the editor
   };
@@ -202,13 +225,15 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const exportToPDF = async () => {
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
     console.log('user configbar: ', storedUser);
-
+  
     try {
       const docFile = await exportToWord(false);
       if (!(docFile instanceof Blob)) {
         console.error('Error: Failed to generate Word file or the result is not a Blob');
+        setDownloadSuccess(false);
         return;
       }
+  
       const formData = new FormData();
       console.log('export pdf user: ', storedUser.userID);
       console.log('docfile', docFile);
@@ -218,27 +243,27 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           'Content-Type': 'multipart/form-data',
         },
       });
-
+  
       const fileId = responseUpload.data.id;
       console.log('wordtopdf fileid: ', responseUpload.data);
-
+  
       const response = await axios.get(`${backendUrl}/api/files/convert?fileId=${fileId}`, {
         responseType: 'blob', // Important to handle binary data
       });
-
+  
       console.log('convertResponse headers:', response.headers);
-
+  
       if (response.status === 200) {
         // Create a Blob from the response data
         const blob = new Blob([response.data], { type: 'application/pdf' });
-
+  
         // Create a URL for the Blob
         const blobUrl = window.URL.createObjectURL(blob);
-
+  
         // Create a hidden anchor element to trigger the download
         const a = document.createElement('a');
         a.href = blobUrl;
-
+  
         // Extract the filename from the Content-Disposition header, if available
         const contentDisposition = response.headers['content-disposition'];
         console.log('content disposition: ', contentDisposition);
@@ -249,24 +274,27 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
             fileName = match[1];
           }
         }
-
+  
         a.download = fileName; // Set the filename for the download
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-
+  
         // Clean up the Blob URL
         window.URL.revokeObjectURL(blobUrl);
-
+  
         console.log('File downloaded successfully.');
-
+        setDownloadSuccess(true);  
       } else {
         console.error('Error during file download:', response.statusText);
+        setDownloadSuccess(false); 
       }
     } catch (error) {
+      setDownloadSuccess(false);  
       console.error('Error fetching the file:', error);
-    }
-  }
+    } 
+  };
+  
 
   const exportToWord = async (exportWordOnly: boolean) => {
     if (quillRef.current) {
@@ -287,7 +315,9 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
       const docAsBlob = await quillToWord.generateWord({ ops: cleanedOps }, quillToWordConfig) as Blob;
       if (exportWordOnly) {
         saveAs(docAsBlob, 'word-export.docx');
+        setDownloadSuccess(true);
       } else {
+        setDownloadSuccess(true);
         return docAsBlob;
       }
     }
@@ -352,6 +382,16 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
           />
         </div>
       </div>
+      {(showDownloadSuccess !== null) && (
+        <div
+          className={`fixed top-10 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded shadow-md ${
+            showDownloadSuccess ? 'bg-green-500' : 'bg-red-500'
+          } text-white`}
+        >
+          {showDownloadSuccess ? 'File downloaded successfully!' : 'Error downloading file. Please try again.'}
+        </div>
+      )}
+
     </div>
   )
 }
