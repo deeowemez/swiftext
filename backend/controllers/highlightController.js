@@ -31,20 +31,35 @@ const saveHighlights = async (req, res) => {
     }
 
     try {
-        const checkResult = await pool.query(
-            'SELECT * FROM highlights WHERE filepath = $1',
+        // Fetch the file ID from the `files` table using the `filePath`.
+        const fileQuery = await pool.query(
+            'SELECT id FROM files WHERE filepath = $1',
             [filePath]
         );
 
+        if (fileQuery.rows.length === 0) {
+            return res.status(404).json({ error: 'File not found for the given filepath.' });
+        }
+
+        const fileId = fileQuery.rows[0].id;
+
+        // Check if highlights already exist for this file.
+        const checkResult = await pool.query(
+            'SELECT * FROM highlights WHERE file_id = $1',
+            [fileId]
+        );
+
         if (checkResult.rows.length > 0) {
+            // Update existing highlights.
             await pool.query(
-                'UPDATE highlights SET highlights = $1 WHERE filepath = $2',
-                [JSON.stringify(highlights), filePath]
+                'UPDATE highlights SET highlights = $1 WHERE file_id = $2',
+                [JSON.stringify(highlights), fileId]
             );
         } else {
+            // Insert new highlights.
             await pool.query(
-                'INSERT INTO highlights (filepath, highlights) VALUES ($1, $2)',
-                [filePath, JSON.stringify(highlights)]
+                'INSERT INTO highlights (file_id, filepath, highlights) VALUES ($1, $2, $3)',
+                [fileId, filePath, JSON.stringify(highlights)]
             );
         }
 
@@ -57,5 +72,6 @@ const saveHighlights = async (req, res) => {
         res.status(500).json({ success: false, error: 'Failed to save highlights' });
     }
 };
+
 
 module.exports = { getHighlights, saveHighlights };
