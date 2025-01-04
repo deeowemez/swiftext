@@ -58,7 +58,7 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
       </div>
       {showTooltip && !isClicked && (
         <div
-          className={`absolute bg-black text-white text-xs px-2 py-1 rounded opacity-100 transition-opacity z-20 ${tooltipClasses[direction]}`}
+          className={`absolute bg-[#2c3e50] text-white text-xs px-2 py-1 rounded opacity-100 transition-opacity z-20 ${tooltipClasses[direction]}`}
         >
           {tooltipText}
         </div>
