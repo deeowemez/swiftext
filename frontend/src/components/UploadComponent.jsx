@@ -45,7 +45,7 @@ const UploadComponent = ({
     };
 
     return (
-        <div className="flex flex-col w-screen p-0 m-0 overflow-x-hidden relative min-h-screen">
+        <div className="flex flex-col flex-1 w-screen p-0 m-0 overflow-x-hidden relative">
             {isVideoVisible && (
                 <div className="fixed top-0 left-0 flex flex-col w-full h-full justify-center items-center bg-white z-50 opacity-90">
                     <video
@@ -71,7 +71,7 @@ const UploadComponent = ({
                     <div className="font-sserif text-[#A3A3A3] font-semibold">Upload PDF/Word File</div>
                     <input
                         type="file"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         className="hidden"

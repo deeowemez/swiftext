@@ -45,13 +45,13 @@ const FilesPage = ({
         }
     }, [user]);
 
-    // Add event listener to close dropdown when clicking outside
-    useEffect(() => {
-        document.addEventListener('click', handleClickOutside);
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, []);
+    // // Add event listener to close dropdown when clicking outside
+    // useEffect(() => {
+    //     document.addEventListener('click', handleClickOutside);
+    //     return () => {
+    //         document.removeEventListener('click', handleClickOutside);
+    //     };
+    // }, []);
 
     useEffect(() => {
         if (showInvalidUserPopup) {
@@ -90,11 +90,11 @@ const FilesPage = ({
         setFileMenu((prevFileMenu) => (prevFileMenu === fileId ? null : fileId));
     };
 
-    const handleClickOutside = (event) => {
-        if (!event.target.closest('.file-card')) {
-            setFileMenu(null); // Close the dropdown if clicked outside
-        }
-    };
+    // const handleClickOutside = (event) => {
+    //     if (!event.target.closest('.file-card')) {
+    //         setFileMenu(null); // Close the dropdown if clicked outside
+    //     }
+    // };
 
     const handleFileUpload = async (file) => {
         if (!user || !user.userID) {
@@ -277,23 +277,18 @@ const FilesPage = ({
                     </div>
                 </div>
             )}
-            {overlayType === "login" && <Login setUser={setUser} onClose={handleOverlayClose} />}
-            {overlayType === "createAccount" && (
-                <CreateAccount onClose={handleOverlayClose} />
-            )}
+            {overlayType === "login" &&
+                <Login
+                    setUser={setUser}
+                    onClose={handleOverlayClose}
+                />}
+            {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
             {showInvalidUserPopup && (
                 <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
                     Please login to save files in the system! Thank you for understanding.
                 </div>
             )}
             <Footer />
-                {overlayType === "login" &&
-                    <Login
-                        setUser={setUser}
-                        onClose={handleOverlayClose}
-                    />}
-                {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} 
-            />}
         </div >
         
     );

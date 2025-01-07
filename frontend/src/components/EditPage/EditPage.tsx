@@ -429,7 +429,7 @@ const EditPage: React.FC<{
                 <button
                   className="px-6 py-2 bg-red-500 text-white rounded-md shadow-md hover:bg-red-600"
                   onClick={() => {
-                    resetHighlights
+                    setHighlights([])
                     setShowResetHighlightsWarning(!showResetHighlightsWarning)
                   }}
                 >

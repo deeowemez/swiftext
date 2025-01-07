@@ -214,8 +214,8 @@ const ControlBar = ({
           <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
             icon={cottageIcon} iconSize="w-7" altText="home-icon" tooltipText="Home" direction="right" />
         </a>
-        <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
-          icon={searchIcon} iconSize="w-7" altText="search-icon" tooltipText="Search" direction="right" />
+        {/* <IcontipButton className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
+          icon={searchIcon} iconSize="w-7" altText="search-icon" tooltipText="Search" direction="right" /> */}
         <IcontipButton
           className="p-1.5 flex items-center justify-center rounded-xl hover:bg-[#FFE7D4] cursor-pointer"
           icon={palletIcon}
