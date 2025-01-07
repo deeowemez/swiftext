@@ -247,13 +247,13 @@ const ControlBar = ({
           <div
             ref={popupRef}
             className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 
-          w-[60%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-20 overflow-y-auto"
+          w-[70%] lg:w-[70%] xl:w-[70%] h-3/4 font-sserif bg-[#F4F4F4] border border-[#C1C1C1] shadow-lg rounded-md px-10 py-8 z-20 overflow-y-auto"
           >
             <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[90%_10%] w-full h-full">
               {/* Render all dynamically added fields */}
-              <div className="row-start-1 flex flex-wrap content-start items-start justify-start gap-3 overflow-x-auto">
+              <div className="row-start-1 flex flex-wrap content-start items-start justify-center xl:justify-start gap-3 overflow-x-auto border border-gray-300 rounded-lg p-5">
                 {localProfile.map((profile, index) => (
-                  <div key={profile.configID.S} className="w-full max-w-[410px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
+                  <div key={profile.configID.S} className="w-full max-w-[390px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
                     {/* Highlight Color */}
                     <div className="flex flex-col gap-2.5 items-center">
                       <div

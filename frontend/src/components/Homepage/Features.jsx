@@ -11,8 +11,8 @@ const Features = () => {
                 </div>
 
                 {/* Custom Color Coding Feature */}
-                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-end h-[700px]">
-                    <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl order-2 xl:order-1 ">
+                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-end xl:h-[750px]">
+                    <div className="flex flex-col p-7 w-5/6 xl:w-80 h-38 bg-[#FFFCFA] rounded-3xl order-2 xl:order-1 ">
                         <div className="flex mb-3">
                             <img src="src/assets/images/pallet.svg" alt="pallet image" className="h-6 mr-3" />
                             <p className="font-sserif text-xl text-black font-medium">Custom Color Coding</p>
@@ -26,12 +26,12 @@ const Features = () => {
                 </div>
 
                 {/* Real Time Preview Feature */}
-                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-start h-[700px]">
+                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-start xl:h-[750px]">
                     <div className="relative w-4/5 lg:w-full xl:w-2/3">
                         <img src="src/assets/images/blob/features/ft-blob-3.svg" alt="Features Blob Design" className="my-12 md:-20 lg:m-20 xl:m-24 w-full lg:w-5/6 xl:w-5/6 max-w-[800px] " />
                         <img src="src/assets/images/gif/real-time-gif.gif" alt="" className="absolute top-36 left-12 md:top-48 md:left-[90px] lg:top-64 lg:left-[210px] xl:top-64 xl:left-[196px] w-3/5 lg:w-1/2 xl:w-1/2 max-w-[500px] rounded-[180px]" />
                     </div>
-                    <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
+                    <div className="flex flex-col p-7 w-5/6 xl:w-80 h-38 bg-[#FFFCFA] rounded-3xl ">
                         <div className="flex mb-3">
                             <img src="src/assets/images/clock.svg" alt="clock image" className="h-6 mr-3" />
                             <p className="font-sserif text-xl text-black font-medium">Real-Time Preview</p>
@@ -56,8 +56,8 @@ const Features = () => {
                 </div> */}  
 
                 {/* Export Feature */}
-                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-end h-[700px]">
-                    <div className="flex flex-col p-7 w-80 h-38 bg-[#FFFCFA] rounded-3xl order-2 xl:order-1  ">
+                <div className="flex flex-col sm:flex-col md:flex-col lg:flex-col xl:flex-row items-center justify-end xl:h-[750px]">
+                    <div className="flex flex-col p-7 w-5/6 xl:w-80 h-38 bg-[#FFFCFA] rounded-3xl order-2 xl:order-1">
                         <div className="flex mb-3">
                             <img src="src/assets/images/download.svg" alt="tag image" className="h-6 mr-3" />
                             <p className="font-sserif text-xl text-black font-medium">Export Formatted File</p>
@@ -66,7 +66,7 @@ const Features = () => {
                     </div>
                     <div className="relative w-4/5 lg:w-full xl:w-2/3 order-1 xl:order-2">
                         <img src="src/assets/images/blob/features/ft-blob-4.svg" alt="Features Blob Design" className="my-12 md:-20 lg:m-20 xl:m-24 w-full lg:w-5/6 xl:w-5/6 max-w-[800px]" />
-                        <img src="src/assets/images/gif/download.gif" alt="" className="absolute top-[120px] left-[70px] md:top-[160px] md:left-[110px] lg:top-60 lg:left-[200px] xl:top-[300px] xl:left-[150px] w-3/5 lg:w-1/2 xl:w-8/12 max-w-[600px] rounded-[80px] xl:rounded-[90px] " />
+                        <img src="src/assets/images/gif/download.gif" alt="" className="absolute top-[150px] left-[40px] md:top-[200px] md:left-[50px] lg:top-[280px] lg:left-[160px] xl:top-[280px] xl:left-[150px] w-4/5 lg:w-2/3 xl:w-8/12 max-w-[600px] rounded-[80px] xl:rounded-[90px] " />
                     </div>
                 </div>
 

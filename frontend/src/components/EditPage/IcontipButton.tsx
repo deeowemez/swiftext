@@ -37,6 +37,7 @@ const IcontipButton: React.FC<IcontipButtonProps> = ({
 
   const handleClick = () => {
     setIsClicked(true); // Set clicked to true when the icon is clicked
+    setShowTooltip(false);
     if (onClick) onClick();
   };
 
