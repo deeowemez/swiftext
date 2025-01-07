@@ -11,7 +11,7 @@ const Headline = () => {
                     <p>Try Swiftext for free</p>
                     <img src="src/assets/images/arrow-right.svg" alt="Arrow pointing right" />
                 </a>
-            <img src="src/assets/images/cat-dancing.gif" alt="Dancing Chrome" className="w-[1300px] h-[800px] p-10 z-10" />
+            <img src="src/assets/images/tutorial.gif" alt="Tutorial GIF" className="m-10 mt-14 z-10 rounded-[0.5rem] border border-[#FF903D] shadow-lg" />
             <img src="src/assets/images/blob/headline/hl-blob-1.svg" alt="blob design 1" className="absolute top-0 left-0 z-0" />
             <img src="src/assets/images/blob/headline/hl-blob-2.svg" alt="blob design 2" className="absolute bottom-0 right-0 z-0" />
         </div>
