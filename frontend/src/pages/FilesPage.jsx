@@ -16,7 +16,7 @@ const FilesPage = ({
     const [selectedUploadFile, setSelectedUploadFile] = useState(null);
     const [uploadStatus, setUploadStatus] = useState('');
     const [fileMenu, setFileMenu] = useState(null);
-    const [files, setFiles] = useState([]); 
+    const [files, setFiles] = useState([]);
     const [overlayType, setOverlayType] = useState(null);
     const [showInvalidUserPopup, setShowInvalidUserPopup] = useState(false);
     const [searchInput, setSearchInput] = useState('');
@@ -180,28 +180,28 @@ const FilesPage = ({
                 onSignUpClick={() => setOverlayType("createAccount")}
             />
             {filteredFiles.length === 0 ? (
-                <UploadComponent 
-                    user={user} 
+                <UploadComponent
+                    user={user}
                     setUser={setUser}
-                    onFileUploaded={(file) => handleFileUpload(file)} 
+                    onFileUploaded={(file) => handleFileUpload(file)}
                 />
             ) : (
                 <div className="flex flex-col flex-1 py-10 px-36" onDrop={handleDrop} onDragOver={handleDragOver}>
                     <div className="flex justify-between">
                         <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
                             <img src="src/assets/images/search.svg" alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 value={searchInput}
                                 onChange={handleSearchChange}
-                                placeholder="Search files" 
+                                placeholder="Search files"
                                 className="absolute h-[35px] left-[40px] bg-transparent text-[#333333] outline-none w-11/12" />
                         </div>
                         <div className="flex gap-5 text-[#5A5959] text-sm items-center">
                             <div className="p-2 hover:bg-[#FFE7D4] rounded-full mr-3 cursor-pointer"
                                 onClick={handleImageClick}
                             >
-                                <input 
+                                <input
                                     type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
                                 <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
                             </div>
@@ -222,19 +222,21 @@ const FilesPage = ({
                         {filteredFiles.map((file) => (
                             <div
                                 key={file.id}
-                                className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer"
+                                className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer shadow-sm"
                                 onClick={() => selectEditFile(file)}
                             >
-                                <div className="bg-[#333333] w-1/12 text-white text-center ">thumbnail prev</div>
-                                <div className="flex flex-col w-11/12 relative">
+                                <div className="bg-[#e6e5e5] px-2.5 p-2 rounded-md mr-2">
+                                    <img src="src/assets/images/pdf-red.svg" alt="" className="w-7 shadow-md" />
+                                </div>
+                                <div className="flex flex-col w-full relative">
                                     <p className="text-left text-md overflow-clip">{file.filename}</p>
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between w-full">
                                         <p className="text-right text-xs italic">{new Date(file.last_modified).toLocaleTimeString()}</p>
-                                        <div className="flex gap-4 items-center relative group">
+                                        <div className="flex gap-4 items-center relative group ml-auto">
                                             {/* <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div> */}
                                             <div className="relative w-6 h-6 hover:bg-red-200 rounded-lg flex justify-center">
                                                 {/* <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4" */}
-                                                <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px]"
+                                                <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px] "
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         // toggleDropdown(file.id);
@@ -290,7 +292,7 @@ const FilesPage = ({
             )}
             <Footer />
         </div >
-        
+
     );
 };
 

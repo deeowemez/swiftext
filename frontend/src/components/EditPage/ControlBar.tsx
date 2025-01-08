@@ -251,7 +251,7 @@ const ControlBar = ({
           >
             <form onSubmit={handleSubmit} className="grid md:grid-rows-[88%_12%] lg:grid-rows-[90%_10%] w-full h-full">
               {/* Render all dynamically added fields */}
-              <div className="row-start-1 flex flex-wrap content-start items-start justify-center xl:justify-start gap-3 overflow-x-auto border border-gray-300 rounded-lg p-5">
+              <div className="row-start-1 flex flex-wrap content-start items-start justify-center xl:justify-start gap-3 overflow-x-auto border border-[#d4d4d4] rounded-lg p-5">
                 {localProfile.map((profile, index) => (
                   <div key={profile.configID.S} className="w-full max-w-[390px] h-[140px] border border-gray-300 rounded-md p-4 shadow-sm flex bg-[#EEEEEE] overflow-hidden">
                     {/* Highlight Color */}
