@@ -12,7 +12,7 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: 'http://swiftext-frontend.s3-website-ap-southeast-2.amazonaws.com' }));
 app.use(express.json());
 app.use(cors({
     exposedHeaders: ['Content-Disposition'], // Allow the Content-Disposition header
