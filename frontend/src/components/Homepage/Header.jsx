@@ -6,7 +6,7 @@ const Header = ({
     onLoginClick,
     onSignUpClick
 }) => {
-    
+
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         setUser(user);
@@ -33,7 +33,7 @@ const Header = ({
     return (
         <header className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
             <a href="/" className="flex">
-                <img src="src/assets/images/logo.svg" alt="Swiftext Logo" className="h-12 w-auto" />
+                <img src="/src/assets/images/logo.svg" alt="Swiftext Logo" className="h-12 w-auto" />
                 <div className="font-title text-3xl gradient-text font-bold py-2 px-1 cursor-pointer">Swiftext</div>
             </a>
             <nav>
@@ -43,15 +43,19 @@ const Header = ({
                     <li><a href="/files" className="text-[#5A5959]">Files</a></li>
                 </ul>
             </nav>
-            <div className="flex gap-10">
+            <div className="flex gap-16 items-center">
                 {user?.username ? (
                     <>
                         <div>
                             Hi, {user.username}!
                         </div>
-                        <button onClick={handleLogout} className="ml-4">
-                            Log Out
-                        </button>
+                        <div onClick={handleLogout} className="p-2 rounded-md cursor-pointer flex gap-2.5 items-center hover:text-red-500">
+                            Log out
+                            <span className="pl-1 pt-1">↪</span>
+                            {/* <div className="rounded-md cursor-pointer">
+                                <img src="/src/assets/images/power-switch.svg" alt="" className="w-3.5" />
+                            </div> */}
+                        </div>
                     </>
                 ) : (
                     <>
@@ -65,6 +69,7 @@ const Header = ({
                     </>
                 )}
             </div>
+            
 
         </header>
     )

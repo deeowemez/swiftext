@@ -2,8 +2,9 @@ import React from "react";
 
 const Footer = () => {
     return (
-        <div className="font-sserif grid grid-cols-1 md:grid-cols-4 gap-4 pt-8">
-            <a href="/" className="flex col-start-1 col-span-1 px-8 md:px-16 md:pl-36 items-center" >
+        <div className="py-8 border-gray-100 border-[1px]">
+            {/*<div className="font-sserif grid grid-cols-1 md:grid-cols-4 gap-4 pt-8">
+             <a href="/" className="flex col-start-1 col-span-1 px-8 md:px-16 md:pl-36 items-center" >
                 <img src="src/assets/images/logo.svg" alt="Swiftext Logo" className='h-12 w-12 cursor-pointer' />
                 <div className="font-title text-2xl md:text-3xl gradient-text font-bold py-2 px-1 cursor-pointer h-14">Swiftext</div>
             </a>
@@ -21,9 +22,14 @@ const Footer = () => {
                     <p className="font-semibold pb-1">Legal</p>
                     <p className="cursor-pointer">Terms of Service</p>
                 </div>
-            </div>
-            <div className="flex items-center col-start-1 col-span-4 justify-center md:justify-end bg-[#FF903D] px-8 md:px-16 py-4">
-                <p className="text-white text-xs text-center md:text-left px-8 md:px-16">@2024 Power Duo. All Rights Reserved</p>
+            </div> */}
+            <div className="flex items-center justify-center bg-white">
+                <p className="text-[#5A5959] text-xs text-center">©2024 Swiftext
+                    <span> - </span>
+                    <span className="underline cursor-pointer">Privacy</span>
+                    <span> - </span>
+                    <span className="underline cursor-pointer">Terms of Service</span>
+                </p>
             </div>
         </div>
     );

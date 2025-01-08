@@ -173,12 +173,14 @@ const FilesPage = ({
 
     return (
         <div className="flex flex-col w-screen min-h-screen font-sserif">
-            <Header
-                user={user}
-                setUser={setUser}
-                onLoginClick={() => setOverlayType("login")}
-                onSignUpClick={() => setOverlayType("createAccount")}
-            />
+            <div className="border-gray-100 border-[1px]">
+                <Header
+                    user={user}
+                    setUser={setUser}
+                    onLoginClick={() => setOverlayType("login")}
+                    onSignUpClick={() => setOverlayType("createAccount")}
+                />
+            </div>
             {filteredFiles.length === 0 ? (
                 <UploadComponent
                     user={user}
@@ -225,8 +227,8 @@ const FilesPage = ({
                                 className="file-card flex items-center justify-start group bg-[#F4F4F4] rounded-md h-12 w-full min-w-full max-w-full gap-3 px-5 py-9 cursor-pointer shadow-sm"
                                 onClick={() => selectEditFile(file)}
                             >
-                                <div className="bg-[#e6e5e5] px-2.5 p-2 rounded-md mr-2">
-                                    <img src="src/assets/images/pdf-red.svg" alt="" className="w-7 shadow-md" />
+                                <div className="px-3">
+                                    <img src="src/assets/images/pdf-red.svg" alt="" className="w-9" />
                                 </div>
                                 <div className="flex flex-col w-full relative">
                                     <p className="text-left text-md overflow-clip">{file.filename}</p>
