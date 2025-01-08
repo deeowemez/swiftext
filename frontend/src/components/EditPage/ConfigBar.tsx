@@ -43,8 +43,8 @@ const ConfigBar: React.FC<ConfigBarProps> = ({
   const [autoSaveTimer, setAutoSaveTimer] = useState<NodeJS.Timeout | null>(null);
   const [showColorIndicator, setShowColorIndicator] = useState<boolean>(false);
   const { '*': filePath } = useParams();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [showDownloadSuccess, setDownloadSuccess] = useState<boolean | null>(null); // Update the state type
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem('user') || '{}');

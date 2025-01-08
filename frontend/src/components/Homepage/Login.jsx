@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { default as jwtDecode } from 'jwt-decode';
 
+import googleLogo from "../../assets/images/google-logo.svg";
+
 const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
@@ -19,6 +21,7 @@ const Login = ({
     const [loginError, setLoginError] = useState("");
     const [showErrorPopup, setShowErrorPopup] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -51,7 +54,7 @@ const Login = ({
 
     const handleSubmit = async (values) => {
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', values);
+            const response = await axios.post(`${backendUrl}/api/auth/login`, values);
             const { token } = response.data;
 
             // Store the token (example using localStorage)
@@ -143,9 +146,9 @@ const Login = ({
                         or login with
                     </p>
                     <div className="flex justify-center p-1">
-                        <img src="src/assets/images/google-logo.svg" alt="" className="w-11 cursor-pointer"
+                        <img src={googleLogo} alt="" className="w-11 cursor-pointer"
                             onClick={() => {
-                                window.location.href = 'http://localhost:5000/auth/google'; // Update with your backend URL
+                                window.location.href = `${backendUrl}/auth/google`; 
                             }}
                         />
                     </div>

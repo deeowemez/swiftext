@@ -1,5 +1,8 @@
 import React from "react";
 
+import priceBlob from "../../assets/images/blob/pricing/price-blob.svg";
+import boxCheckIcon from "../../assets/images/round-box-check.svg";
+
 const Pricing = () => {
     return (
         // <div className="font-sserif grid grid-cols-1 md:grid-cols-2 relative overflow-x-hidden min-h-[950px] md:h-[950px]">
@@ -34,16 +37,16 @@ const Pricing = () => {
         // </div>
         <div className="font-sserif flex flex-col lg:flex-row justify-center items-center px-5 py-20 ">
             <div className="w-full md:w-4/5 lg:w-5/6 max-w-screen-xl flex justify-center">
-                <img src="src/assets/images/blob/pricing/price-blob.svg" alt="Price Blob" className="w:11/12 md:w-4/5 lg:w-4/5 p-16" />
+                <img src={priceBlob} alt="Price Blob" className="w:11/12 md:w-4/5 lg:w-4/5 p-16" />
             </div>
             <div className="flex flex-col gap-6 ">
                 <p className="text-3xl sm:text-4xl lg:text-4xl xl:text-6xl font-bold py-10">Get Started Today, Absolutely Free!</p>
                 <div className="flex">
-                    <img src="src/assets/images/round-box-check.svg" alt="checkbox image" />
+                    <img src={boxCheckIcon} alt="checkbox image" />
                     <p className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-[#333333]"> Up to 10 files</p>
                 </div>
                 <div className="flex ">
-                    <img src="src/assets/images/round-box-check.svg" alt="checkbox image" />
+                    <img src={boxCheckIcon} alt="checkbox image" />
                     <p className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl text-[#333333]"> Up to 10Mb files</p>
                 </div>
             </div>

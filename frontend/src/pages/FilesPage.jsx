@@ -7,6 +7,11 @@ import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
 import UploadComponent from "../components/UploadComponent";
 
+import trashCanIcon from "../assets/images/trash-can.svg";
+import searchIcon from "../assets/images/search.svg";
+import plusIcon from "../assets/images/plus.svg";
+import pdfIcon from "../assets/images/pdf-red.svg";
+
 const FilesPage = ({
     user,
     setUser,
@@ -21,6 +26,7 @@ const FilesPage = ({
     const [showInvalidUserPopup, setShowInvalidUserPopup] = useState(false);
     const [searchInput, setSearchInput] = useState('');
     const [filteredFiles, setFilteredFiles] = useState([]);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     // initial loading of files every time files page viewed
     useEffect(() => {
@@ -30,7 +36,7 @@ const FilesPage = ({
         if (storedUser && storedUser.userID) {
             const fetchFiles = async () => {
                 try {
-                    const response = await axios.get(`http://localhost:5000/api/files?userID=${storedUser.userID}`);
+                    const response = await axios.get(`${backendUrl}/api/files?userID=${storedUser.userID}`);
                     console.log('response data: ', response.data);
                     setFiles(response.data);
                     setFilteredFiles(response.data);
@@ -115,14 +121,14 @@ const FilesPage = ({
         console.log('userID: ', user.userID);
 
         try {
-            const response = await axios.post(`http://localhost:5000/api/files/upload?userID=${user.userID}`, formData, {
+            const response = await axios.post(`${backendUrl}/api/files/upload?userID=${user.userID}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
             // Fetch updated files list after successful upload
-            const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
+            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
             setFilteredFiles(updatedFiles.data);
@@ -134,10 +140,10 @@ const FilesPage = ({
     const handleDeleteFile = async (file) => {
         try {
             console.log('file info: ', file);
-            const response = await axios.delete(`http://localhost:5000/api/files/${file.id}`);
+            const response = await axios.delete(`${backendUrl}/api/files/${file.id}`);
             console.log('File deleted successfully:', response.data);
 
-            const updatedFiles = await axios.get(`http://localhost:5000/api/files?userID=${user.userID}`);
+            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.userID}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
             setFilteredFiles(updatedFiles.data);
@@ -191,7 +197,7 @@ const FilesPage = ({
                 <div className="flex flex-col flex-1 py-10 px-36" onDrop={handleDrop} onDragOver={handleDragOver}>
                     <div className="flex justify-between">
                         <div className="flex bg-[#F4F4F4] md:w-1/2 h-[35px] relative rounded-lg">
-                            <img src="src/assets/images/search.svg" alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
+                            <img src={searchIcon} alt="search icon" className="w-[12px] absolute top-[12px] left-[15px]" />
                             <input
                                 type="text"
                                 value={searchInput}
@@ -205,7 +211,7 @@ const FilesPage = ({
                             >
                                 <input
                                     type="file" onChange={handleFileChange} accept="application/pdf" ref={fileInputRef} style={{ display: 'none' }} />
-                                <img src="src/assets/images/plus.svg" alt="upload svg" className="w-[20px] " />
+                                <img src={plusIcon} alt="upload svg" className="w-[20px] " />
                             </div>
                             {/* <p>File</p> */}
                             {/* <img src="src/assets/images/line.svg" alt="" />
@@ -228,7 +234,7 @@ const FilesPage = ({
                                 onClick={() => selectEditFile(file)}
                             >
                                 <div className="px-3">
-                                    <img src="src/assets/images/pdf-red.svg" alt="" className="w-9" />
+                                    <img src={pdfIcon} alt="" className="w-9" />
                                 </div>
                                 <div className="flex flex-col w-full relative">
                                     <p className="text-left text-md overflow-clip">{file.filename}</p>
@@ -238,7 +244,7 @@ const FilesPage = ({
                                             {/* <div className="bg-[#F8968E] w-3 h-3 rounded-full"></div> */}
                                             <div className="relative w-6 h-6 hover:bg-red-200 rounded-lg flex justify-center">
                                                 {/* <img src="src/assets/images/more-alt.svg" alt="more svg" className="cursor-pointer w-4" */}
-                                                <img src="src/assets/images/trash-can.svg" alt="more svg" className="cursor-pointer w-4 mr-[1px] "
+                                                <img src={trashCanIcon} alt="more svg" className="cursor-pointer w-4 mr-[1px] "
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         // toggleDropdown(file.id);

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import CreateAccount from "./CreateAccount";
 
+import arrowButtonIcon from "../../assets/images/arrow-btn.svg";
+
 const Footline = ({ onSignUpClick }) => {
     const [overlayType, setOverlayType] = useState(null);
 
@@ -17,7 +19,7 @@ const Footline = ({ onSignUpClick }) => {
                     <button className="flex flex-row items-center py-4 px-5 rounded-xl bg-white"
                         onClick={onSignUpClick}>
                         <p className="text-[18px] text-[#FF903D]">Create Free Account</p>
-                        <img src="src/assets/images/arrow-btn.svg" alt="arrow-btn" className='h-10 w-10 cursor-pointer pl-4' />
+                        <img src={arrowButtonIcon} alt="arrow-btn" className='h-10 w-10 cursor-pointer pl-4' />
                     </button>
                 </ul>
             </div>

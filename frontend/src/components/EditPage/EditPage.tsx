@@ -68,6 +68,8 @@ const EditPage: React.FC<{
     const [currentUser, setCurrentUser] = useState<User | null>(null);
     const highlighterUtilsRef = useRef<PdfHighlighterUtils>();
 
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
     useEffect(() => {
       console.log('file details: ', pdfFile);
     }, [pdfFile]);
@@ -82,7 +84,7 @@ const EditPage: React.FC<{
         if (filePath) {
           try {
             // Fetch the file
-            const response = await axios.get(`http://localhost:5000/api/files/edit?filePath=${encodeURIComponent(filePath)}`, {
+            const response = await axios.get(`${backendUrl}/api/files/edit?filePath=${encodeURIComponent(filePath)}`, {
               responseType: 'blob', // Ensures we get the file as a Blob
             });
 
@@ -108,7 +110,7 @@ const EditPage: React.FC<{
             reader.readAsDataURL(file);
 
             // Fetch the highlights for the file using the filePath
-            const response_highlights = await axios.get(`http://localhost:5000/api/highlights?filePath=${encodeURIComponent(filePath)}`);
+            const response_highlights = await axios.get(`${backendUrl}/api/highlights?filePath=${encodeURIComponent(filePath)}`);
 
             if (response_highlights.data.success) {
               // Assuming highlights data is returned as an object or array
@@ -182,7 +184,7 @@ const EditPage: React.FC<{
 
     const fetchAndSetProfile = async (userID: string) => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/profile/${userID}`);
+        const response = await axios.get(`${backendUrl}/api/profile/${userID}`);
         const { data } = response;
         console.log('fetchprofile data: ', data.data)
 

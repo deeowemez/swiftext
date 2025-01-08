@@ -55,6 +55,8 @@ const ControlBar = ({
   const popupRef = useRef<HTMLDivElement | null>(null);
   const [localProfile, setLocalProfile] = useState<HighlightColorProfileProps[]>([]);
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const zoomIn = () => {
     if (zoom) {
       if (zoom < 4) {
@@ -162,7 +164,7 @@ const ControlBar = ({
         return; // Exit the function if the limit is exceeded
       }
       const currentColorMap = profileColorMap(highlightColorProfile);
-      const response = await axios.post(`http://localhost:5000/api/profile/save?userID=${currentUser?.userID}`, { items: localProfile });
+      const response = await axios.post(`${backendUrl}/api/profile/save?userID=${currentUser?.userID}`, { items: localProfile });
       setForceRenderProfile(!forceRenderProfile);
       if (response.data.success) {
 

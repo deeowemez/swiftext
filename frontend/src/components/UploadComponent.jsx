@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import '../styles/index.css';
 
+import uploadIcon from "../assets/images/upload-2.svg";
+
 const UploadComponent = ({
     user,
     setUser,
@@ -67,7 +69,7 @@ const UploadComponent = ({
                     className="flex flex-col justify-center items-center rounded-lg font-sserif text-gray-400 border-dashed border-2 border-gray-300 hover:border-gray-400 hover:text-gray-500 cursor-pointer w-3/4 h-2/3 m-12 p-56"
                     onClick={() => fileInputRef.current.click()}
                 >
-                    <img src="src/assets/images/upload-2.svg" alt="Upload symbol"  />
+                    <img src={uploadIcon} alt="Upload symbol"  />
                     Upload PDF File
                     <input
                         type="file"

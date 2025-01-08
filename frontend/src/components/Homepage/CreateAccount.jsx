@@ -3,6 +3,8 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 
+import googleLogo from "../../assets/images/google-logo.svg";
+
 const validationSchema = Yup.object({
     username: Yup.string().required('Username is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
@@ -14,6 +16,7 @@ const CreateAccount = ({ onClose }) => {
     const [show, setShow] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     const togglePasswordVisibility = () => {
         setIsPasswordVisible(!isPasswordVisible);
@@ -46,7 +49,7 @@ const CreateAccount = ({ onClose }) => {
             console.log("Form Submitted", values);
 
             // Send a POST request to the registration API
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
+            const response = await axios.post(`${backendUrl}/api/auth/register`, {
                 username: values.username,
                 email: values.email,
                 password: values.password
@@ -142,7 +145,7 @@ const CreateAccount = ({ onClose }) => {
                         or login with
                     </p>
                     <div className="flex justify-center p-1">
-                        <img src="src/assets/images/google-logo.svg" alt="" className="w-11 cursor-pointer" />
+                        <img src={googleLogo} alt="" className="w-11 cursor-pointer" />
                     </div>
                     <p className="text-xs text-center text-gray-600 mb-2">
                         Already have an account? <span className="text-[#FF903D] underline" ><a href="">Log in!</a></span>

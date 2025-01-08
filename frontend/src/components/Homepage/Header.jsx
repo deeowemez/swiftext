@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import logoIcon from "../../assets/images/logo.svg";
+
 const Header = ({
     user,
     setUser,
@@ -33,7 +35,7 @@ const Header = ({
     return (
         <header className="font-sserif text-sm text-[#5A5959] w-screen flex justify-between items-center py-1.5 px-36">
             <a href="/" className="flex">
-                <img src="/src/assets/images/logo.svg" alt="Swiftext Logo" className="h-12 w-auto" />
+                <img src={logoIcon} alt="Swiftext Logo" className="h-12 w-auto" />
                 <div className="font-title text-3xl gradient-text font-bold py-2 px-1 cursor-pointer">Swiftext</div>
             </a>
             <nav>
@@ -52,9 +54,6 @@ const Header = ({
                         <div onClick={handleLogout} className="p-2 rounded-md cursor-pointer flex gap-2.5 items-center hover:text-red-500">
                             Log out
                             <span className="pl-1 pt-1">↪</span>
-                            {/* <div className="rounded-md cursor-pointer">
-                                <img src="/src/assets/images/power-switch.svg" alt="" className="w-3.5" />
-                            </div> */}
                         </div>
                     </>
                 ) : (
