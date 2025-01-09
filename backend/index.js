@@ -12,11 +12,23 @@ const authRoutes = require('./routes/authRoutes');
 const app = express();
 
 // Middleware
-app.use(cors({ origin: 'http://swiftext-frontend.s3-website-ap-southeast-2.amazonaws.com' }));
-app.use(express.json());
+const allowedOrigins = [
+    'http://swiftext-frontend.s3-website-ap-southeast-2.amazonaws.com',
+    'http://localhost:5000',
+];
+
 app.use(cors({
-    exposedHeaders: ['Content-Disposition'], // Allow the Content-Disposition header
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    exposedHeaders: ['Content-Disposition'], // Allow specific headers
 }));
+
+app.use(express.json());
 // app.use(passport.initialize());
 // app.use(passport.session());
 
