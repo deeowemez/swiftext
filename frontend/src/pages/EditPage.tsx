@@ -1,10 +1,10 @@
 import React, { MouseEvent, useEffect, useRef, useState } from "react";
-import CommentForm from "./CommentForm";
-import ContextMenu, { ContextMenuProps, HighlightColorProfileProps } from "./ContextMenu";
-import ExpandableTip from "./ExpandableTip";
-import HighlightContainer from "./HighlightContainer";
-import Sidebar from "./Sidebar";
-import Toolbar from "./Toolbar";
+import CommentForm from "../components/EditPage/CommentForm";
+import ContextMenu, { ContextMenuProps, HighlightColorProfileProps } from "../components/EditPage/ContextMenu";
+import ExpandableTip from "../components/EditPage/ExpandableTip";
+import HighlightContainer from "../components/EditPage/HighlightContainer";
+import Sidebar from "../components/EditPage/Sidebar";
+import Toolbar from "../components/EditPage/Toolbar";
 import {
   GhostHighlight,
   Highlight,
@@ -14,16 +14,14 @@ import {
   Tip,
   ViewportHighlight,
 } from "react-pdf-highlighter-extended";
-import "../../style/App.css";
-import { testHighlights as _testHighlights } from "./test-highlights";
-import { CommentedHighlight } from "./types";
+import { CommentedHighlight } from "../components/EditPage/types";
 import Quill from "quill";
-import ControlBar from "./ControlBar";
-import ConfigBar from "./ConfigBar";
-import HighlightArrangementOverlay from "./HighlightArrangementOverlay";
+import ControlBar from "../components/EditPage/ControlBar";
+import ConfigBar from "../components/EditPage/ConfigBar";
+import HighlightArrangementOverlay from "../components/EditPage/HighlightArrangementOverlay";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import warningIcon from "../../assets/images/warning.svg"
+import warningIcon from "../assets/images/warning.svg"
 
 const getNextId = () => String(Math.random()).slice(2);
 

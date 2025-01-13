@@ -1,5 +1,5 @@
 import React from "react";
-import "../../style/ContextMenu.css";
+import "../../styles/ContextMenu.css";
 
 export interface HighlightColorProfileProps {
   userID: { S: string },

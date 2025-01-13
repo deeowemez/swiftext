@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import React, { useState, useEffect } from "react";
 
 import HomePage from './pages/HomePage';
-import EditPage from './components/EditPage/EditPage';
+import EditPage from './pages/EditPage';
 import FilesPage from './pages/FilesPage';
 
 function App() {

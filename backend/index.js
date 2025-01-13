@@ -14,7 +14,7 @@ const app = express();
 // Middleware
 const allowedOrigins = [
     'http://swiftext-frontend.s3-website-ap-southeast-2.amazonaws.com',
-    'http://localhost:5000',
+    'http://localhost:5173',
 ];
 
 app.use(cors({
@@ -41,6 +41,11 @@ app.use('/api/profile', profileRoutes);
 // Serve static files from the directories
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/wordToPdf', express.static(path.join(__dirname, 'wordToPdf')));
+
+// Health check route
+app.get('/health', (req, res) => {
+    res.status(200).send('Healthy');
+});
 
 // Add a root route for testing
 app.get('/', (req, res) => {
