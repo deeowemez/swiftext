@@ -1,12 +1,12 @@
 const { DynamoDBClient, CreateTableCommand, PutItemCommand, ScanCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
 
 const dynamoDB = new DynamoDBClient({
-  region: "us-west-2",
-  endpoint: "http://localhost:8000",  // DynamoDB Local endpoint
-  credentials: {
-    accessKeyId: "fakeMyKeyId",     // Fake key for local testing
-    secretAccessKey: "fakeSecretAccessKey" // Fake secret for local testing
-  }
+  region: "ap-southeast-2",
+  // endpoint: "http://localhost:8000",  // DynamoDB Local endpoint
+  // credentials: {
+  //   accessKeyId: "fakeMyKeyId",     // Fake key for local testing
+  //   secretAccessKey: "fakeSecretAccessKey" // Fake secret for local testing
+  // }
 });
 
 const createTable = async () => {
@@ -223,8 +223,8 @@ const main = async () => {
   // await createTable();
   // await insertItems();
   // await deleteItemsByHighlightColorProfile('default');
-  const response = await getHighlightProfile("71762101b373411a");
-  console.log(response);
+  // const response = await getHighlightProfile("71762101b373411a");
+  // console.log(response);
 };
 
 // main();

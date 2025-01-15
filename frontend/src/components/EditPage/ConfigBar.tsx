@@ -8,7 +8,7 @@ import { CommentedHighlight } from "./types";
 import { HighlightColorProfileProps } from "./ContextMenu";
 import { saveAs } from 'file-saver';
 import * as quillToWord from 'quill-to-word';
-import { User } from "./EditPage"
+import { User } from "../../pages/EditPage";
 import Quill from 'quill';
 import IcontipButton from "./IcontipButton";
 import wordIcon from "../../assets/images/word.svg";
