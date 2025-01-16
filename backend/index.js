@@ -13,7 +13,7 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-    'http://swiftext-frontend.s3-website-ap-southeast-2.amazonaws.com',
+    'http://swiftext-static.s3-website-ap-southeast-2.amazonaws.com',
     'http://localhost:5173',
 ];
 
@@ -51,7 +51,7 @@ app.get('/health', (req, res) => {
 
 // Handle preflight requests (OPTIONS)
 app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Origin', 'http://swiftext-static.s3-website-ap-southeast-2.amazonaws.com');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.status(200).end();
