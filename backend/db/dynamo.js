@@ -1,12 +1,14 @@
 const { DynamoDBClient, CreateTableCommand, PutItemCommand, ScanCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
+require('dotenv').config();
 
 const dynamoDB = new DynamoDBClient({
   region: "ap-southeast-2",
   // endpoint: "http://localhost:8000",  // DynamoDB Local endpoint
-  // credentials: {
-  //   accessKeyId: "fakeMyKeyId",     // Fake key for local testing
-  //   secretAccessKey: "fakeSecretAccessKey" // Fake secret for local testing
-  // }
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    sessionToken: process.env.AWS_SESSION_TOKEN,
+  }
 });
 
 const createTable = async () => {
@@ -17,7 +19,8 @@ const createTable = async () => {
       { AttributeName: "configID", AttributeType: "S" }
     ],
     KeySchema: [
-      { AttributeName: "userID", KeyType: "HASH" }, // Partition key
+      { AttributeName: "userID", 
+        KeyType: "HASH" }, // Partition key
       { AttributeName: "configID", KeyType: "RANGE" } // Sort key
     ],
     ProvisionedThroughput: {
