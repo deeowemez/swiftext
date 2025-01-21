@@ -13,7 +13,7 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-    'http://swiftext-static.s3-website-ap-southeast-2.amazonaws.com',
+    'http://swiftext-static.s3-website-ap-southeast-1.amazonaws.com',
     'http://localhost:5173',
 ];
 
