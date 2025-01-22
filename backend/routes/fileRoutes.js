@@ -6,7 +6,7 @@ const { uploadFile, getAllFiles, deleteFile, editFile, convertToPdf } = require(
 require('dotenv').config();
 
 const router = express.Router();
-const storageBasePath = process.env.STORAGE_PATH || 'local_storage';
+const storageBasePath = process.env.STORAGE_PATH;
 
 // Create directories if they don't exist
 const uploadsPath = path.join(storageBasePath, 'uploads');
