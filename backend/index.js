@@ -18,13 +18,14 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    // origin: (origin, callback) => {
+    //     if (!origin || allowedOrigins.includes(origin)) {
+    //         callback(null, true);
+    //     } else {
+    //         callback(new Error('Not allowed by CORS'));
+    //     }
+    // },
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Ensure OPTIONS is allowed
     allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
     exposedHeaders: ['Content-Disposition'], // Allow specific headers to be exposed
@@ -51,7 +52,10 @@ app.get('/health', (req, res) => {
 
 // Handle preflight requests (OPTIONS)
 app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'http://swiftext-static.s3-website-ap-southeast-1.amazonaws.com');
+    const origin = req.headers.origin;
+    if (allowedOrigins.includes(origin)) {
+        res.header('Access-Control-Allow-Origin', origin);
+    }
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.status(200).end();
