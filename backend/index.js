@@ -69,5 +69,5 @@ app.get('/', (req, res) => {
 // Start the server
 const PORT = 5000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Backend running on http://0.0.0.0:${PORT}`);
+    console.log(`Backend running port:${PORT}`);
 });

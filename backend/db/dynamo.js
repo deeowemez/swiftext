@@ -2,13 +2,13 @@ const { DynamoDBClient, CreateTableCommand, PutItemCommand, ScanCommand, DeleteI
 require('dotenv').config();
 
 const dynamoDB = new DynamoDBClient({
-  region: process.env.REGION,
-  endpoint: process.env.ENDPOINT, 
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    sessionToken: process.env.AWS_SESSION_TOKEN,
-  }
+  region: process.env.AWS_REGION,
+  endpoint: process.env.AWS_ENDPOINT, 
+  // credentials: {
+  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  //   sessionToken: process.env.AWS_SESSION_TOKEN,
+  // }
 });
 
 const createTable = async () => {
