@@ -2,8 +2,8 @@ const { DynamoDBClient, CreateTableCommand, PutItemCommand, ScanCommand, DeleteI
 require('dotenv').config();
 
 const dynamoDB = new DynamoDBClient({
-  region: "ap-southeast-2",
-  // endpoint: "http://localhost:8000",  // DynamoDB Local endpoint
+  region: process.env.REGION,
+  endpoint: process.env.ENDPOINT, 
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
