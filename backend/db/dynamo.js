@@ -223,7 +223,7 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
 };
 
 const main = async () => {
-  // await createTable();
+  await createTable();
   // await insertItems();
   // await deleteItemsByHighlightColorProfile('default');
   // const response = await getHighlightProfile("71762101b373411a");
