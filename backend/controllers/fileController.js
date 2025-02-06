@@ -59,10 +59,10 @@ const deleteFile = async (req, res) => {
         const filePath = result.rows[0].filepath;
         await pool.query('DELETE FROM files WHERE id = $1', [fileId]);
 
-        const parentPath = path.dirname(__dirname);
-        const fullFilePath = path.join(parentPath, filePath);
+        // const parentPath = path.dirname(__dirname);
+        // const fullFilePath = path.join(parentPath, filePath);
         // console.log('fullFilePath: ', fullFilePath);
-        fs.unlink(fullFilePath, (err) => {
+        fs.unlink(filePath, (err) => {
             if (err) {
                 return res.status(500).send(`Error deleting file: ${err.message}`);
             }
@@ -78,11 +78,12 @@ const editFile = async (req, res) => {
     const filePath = req.query.filePath;
 
     // Ensure the file path is valid and exists on the server
-    const parentPath = path.dirname(__dirname);
-    const fullFilePath = path.join(parentPath, filePath);
+    // const parentPath = path.dirname(__dirname);
+    // const fullFilePath = path.join(parentPath, filePath);
 
     // Send the file or an error response
-    res.sendFile(fullFilePath, (err) => {
+    console.log('filepath: ', filePath);
+    res.sendFile(filePath, (err) => {
         if (err) {
             console.error('Error sending file:', err);
             res.status(404).send('File not found');
@@ -109,10 +110,12 @@ const convertToPdf = async (req, res) => {
         const filename = result.rows[0].filename;
 
         const fileNumber = path.join(path.basename(filePathExt, '.docx')); //1733913722819 
-        const parentPath = path.dirname(__dirname); //wordToPdf
-        const absoluteInputPath = path.join(parentPath, filePathExt);
+        // const parentPath = path.dirname(__dirname); //wordToPdf
+        // const absoluteInputPath = path.join(parentPath, filePathExt);
+        const absoluteInputPath = filePathExt;
         const pdfName = `${fileNumber}_${filename}.pdf`;
-        const outputPath = path.join(parentPath, 'wordToPdf', pdfName);
+        // const outputPath = path.join(parentPath, 'wordToPdf', pdfName);
+        const outputPath = path.join('wordToPdf', pdfName);
 
         // Ensure the file exists
         if (!fs.existsSync(absoluteInputPath)) {
