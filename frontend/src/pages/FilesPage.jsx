@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from 'axios';
+import path from "path";
 import Header from "../components/Homepage/Header";
 import Footer from "../components/Homepage/Footer";
 import { useNavigate } from 'react-router-dom';
@@ -171,7 +172,10 @@ const FilesPage = ({
 
     const selectEditFile = async (file) => {
         try {
-            navigate(`/edit${file.filename}`);
+            // const filePath = (file.filepath);
+            const fileNumber = file.filepath.split('/').pop();
+            console.log('fileNumber: ', fileNumber);
+            navigate(`/edit/${fileNumber}`);
         } catch (error) {
             console.error('Error fetching the file:', error);
         }
