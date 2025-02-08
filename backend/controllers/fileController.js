@@ -82,7 +82,7 @@ const editFile = async (req, res) => {
     const parentPath = path.dirname(__dirname);
     const storagePath = process.env.STORAGE_PATH; // prod
     // const fullFilePath = path.join(parentPath, storagePath, "uploads", filePath); // dev
-    const fullFilePath = path.join(storagePath, storagePath, "uploads", filePath); // prod
+    const fullFilePath = path.join(storagePath, "uploads", filePath); // prod
     console.log("parentpath: ", parentPath);
     console.log("storagePath: ", storagePath);
     console.log("fullFilePath: ", fullFilePath);
