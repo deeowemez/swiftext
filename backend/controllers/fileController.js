@@ -121,13 +121,14 @@ const convertToPdf = async (req, res) => {
         const pdfName = `${fileNumber}_${filename}.pdf`;
         const outputPath = path.join(parentPath, 'wordToPdf', pdfName);
         // const outputPath = path.join('wordToPdf', pdfName);
+        console.log('input filepath: ', absoluteInputPath);
+        console.log('output filepath: ', outputPath);
 
         // Ensure the file exists
         if (!fs.existsSync(absoluteInputPath)) {
             return res.status(404).send('Input file not found');
         }
 
-        console.log('input filepath: ', absoluteInputPath);
         const command = `libreoffice --headless --convert-to pdf "${absoluteInputPath}" --outdir "${path.dirname(outputPath)}" && mv "${path.join(path.dirname(outputPath), `${fileNumber}.pdf`)}" "${outputPath}"`;
 
         // console.log('command: ', command);
