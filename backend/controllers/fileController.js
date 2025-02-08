@@ -80,8 +80,9 @@ const editFile = async (req, res) => {
 
     // Ensure the file path is valid and exists on the server
     const parentPath = path.dirname(__dirname);
-    const storagePath = process.env.STORAGE_PATH;
-    const fullFilePath = path.join(parentPath, storagePath, "uploads", filePath);
+    const storagePath = process.env.STORAGE_PATH; // prod
+    // const fullFilePath = path.join(parentPath, storagePath, "uploads", filePath); // dev
+    const fullFilePath = path.join(storagePath, storagePath, "uploads", filePath); // prod
     console.log("parentpath: ", parentPath);
     console.log("storagePath: ", storagePath);
     console.log("fullFilePath: ", fullFilePath);
@@ -113,13 +114,15 @@ const convertToPdf = async (req, res) => {
 
         const filePathExt = result.rows[0].filepath;
         const filename = result.rows[0].filename;
+        const storagePath = process.env.STORAGE_PATH; // prod
 
         const fileNumber = path.join(path.basename(filePathExt, '.docx')); //1733913722819 
-        const parentPath = path.dirname(__dirname); //wordToPdf
-        const absoluteInputPath = path.join(parentPath, filePathExt);
-        // const absoluteInputPath = filePathExt;
+        // const parentPath = path.dirname(__dirname); // dev
+        // const absoluteInputPath = path.join(parentPath, filePathExt); // dev
+        const absoluteInputPath = filePathExt; // prod
         const pdfName = `${fileNumber}_${filename}.pdf`;
-        const outputPath = path.join(parentPath, 'wordToPdf', pdfName);
+        // const outputPath = path.join(parentPath, 'wordToPdf', pdfName); // dev
+        const outputPath = path.join(storagePath, 'wordToPdf', pdfName); // prod
         // const outputPath = path.join('wordToPdf', pdfName);
         console.log('input filepath: ', absoluteInputPath);
         console.log('output filepath: ', outputPath);
