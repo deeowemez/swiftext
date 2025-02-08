@@ -171,7 +171,7 @@ const FilesPage = ({
 
     const selectEditFile = async (file) => {
         try {
-            navigate(`/edit/${file.filepath}`);
+            navigate(`/edit${file.filename}`);
         } catch (error) {
             console.error('Error fetching the file:', error);
         }

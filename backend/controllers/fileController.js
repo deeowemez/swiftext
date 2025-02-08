@@ -62,6 +62,7 @@ const deleteFile = async (req, res) => {
         // const parentPath = path.dirname(__dirname);
         // const fullFilePath = path.join(parentPath, filePath);
         // console.log('fullFilePath: ', fullFilePath);
+        console.log('delete file filepath: ', filePath);
         fs.unlink(filePath, (err) => {
             if (err) {
                 return res.status(500).send(`Error deleting file: ${err.message}`);
@@ -82,6 +83,7 @@ const editFile = async (req, res) => {
     // const fullFilePath = path.join(parentPath, filePath);
 
     // Send the file or an error response
+    console.log('edit file filepath: ', filePath);
     console.log('filepath: ', filePath);
     res.sendFile(filePath, (err) => {
         if (err) {
@@ -122,6 +124,7 @@ const convertToPdf = async (req, res) => {
             return res.status(404).send('Input file not found');
         }
 
+        console.log('input filepath: ', absoluteInputPath);
         const command = `libreoffice --headless --convert-to pdf "${absoluteInputPath}" --outdir "${path.dirname(outputPath)}" && mv "${path.join(path.dirname(outputPath), `${fileNumber}.pdf`)}" "${outputPath}"`;
 
         // console.log('command: ', command);
@@ -140,6 +143,9 @@ const convertToPdf = async (req, res) => {
             // Set the Content-Disposition header for download
             res.setHeader('Content-Disposition', `attachment; filename="${pdfName}"`);
             res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
             // Send the file
             res.sendFile(outputPath, async (err) => {
