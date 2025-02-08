@@ -14,4 +14,7 @@ SwiftText is a versatile productivity tool designed for efficient text managemen
 - Frontend: React.js + Tailwind CSS for a responsive, modern UI
 - Backend: Node.js + Express.js for server logic
 - Database: PostgreSQL for structured data, DynamoDB for scalable NoSQL needs
+
+## Deployment (In Progress)
 - Containerization: Docker used for environment consistency
+- CI/CD Pipeline: Streamlined automated builds and deployments with GitHub Actions
