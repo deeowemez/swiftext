@@ -1,21 +1,43 @@
-version: '3.9'
 services:
-  backend:
-    image: swiftext-backend-prod
+  swiftext-app:
+    build: .
     ports:
       - "5000:5000"
-    # networks:
-    #   - mynetwork
+    networks:
+      - appnetwork
     env_file:
       - .env
+    volumes:
+      - storage-data:/files
 
-  # dynamo-local:
-  #   image: amazon/dynamodb-local
-  #   ports:
-  #     - "8000:8000"
-  #   networks:
-  #     - mynetwork
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - appnetwork
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
-# networks:
-#   mynetwork:
-#     driver: bridge
+  dynamodb-local:
+    image: amazon/dynamodb-local
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - appnetwork
+    volumes:
+      - ./dynamo-data:/data
+
+networks:
+  appnetwork:
+    driver: bridge
+
+volumes:
+  postgres-data: {}
+  dynamo-data: {}
+  storage-data: {}

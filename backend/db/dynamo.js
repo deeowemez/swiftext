@@ -3,12 +3,9 @@ require('dotenv').config();
 
 const dynamoDB = new DynamoDBClient({
   region: process.env.AWS_REGION,
-  // endpoint: process.env.AWS_DYNAMO_ENDPOINT,
-  // credentials: {
-  //   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  //   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  //   sessionToken: process.env.AWS_SESSION_TOKEN,
-  // }
+  endpoint: process.env.AWS_DYNAMO_ENDPOINT,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
 const createTable = async () => {
@@ -19,8 +16,10 @@ const createTable = async () => {
       { AttributeName: "configID", AttributeType: "S" }
     ],
     KeySchema: [
-      { AttributeName: "userID", 
-        KeyType: "HASH" }, // Partition key
+      {
+        AttributeName: "userID",
+        KeyType: "HASH"
+      }, // Partition key
       { AttributeName: "configID", KeyType: "RANGE" } // Sort key
     ],
     ProvisionedThroughput: {
@@ -230,6 +229,6 @@ const main = async () => {
   // console.log(response);
 };
 
-// main();
+main();
 
 module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles, defaultProfile };

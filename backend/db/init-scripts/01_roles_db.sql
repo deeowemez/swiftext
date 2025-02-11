@@ -1,0 +1,7 @@
+CREATE ROLE swiftext WITH LOGIN PASSWORD 'swiftext' SUPERUSER;
+
+CREATE DATABASE swiftext OWNER swiftext;
+CREATE DATABASE file_uploads OWNER swiftext;
+
+GRANT ALL PRIVILEGES ON DATABASE swiftext TO swiftext;
+GRANT ALL PRIVILEGES ON DATABASE file_uploads TO swiftext;
