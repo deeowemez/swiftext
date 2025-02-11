@@ -8,7 +8,7 @@ services:
     env_file:
       - .env
     volumes:
-      - storage-data:/files
+      - storage-data:/app/files
 
   postgres:
     image: postgres:latest
@@ -30,14 +30,15 @@ services:
       - .env
     networks:
       - appnetwork
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal
     volumes:
-      - ./dynamo-data:/data
+      - dynamo-data:/home/dynamodblocal
 
 networks:
   appnetwork:
     driver: bridge
 
 volumes:
-  postgres-data: {}
   dynamo-data: {}
+  postgres-data: {}
   storage-data: {}
