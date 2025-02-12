@@ -4,6 +4,9 @@ SwiftText is a versatile productivity tool designed for efficient text managemen
 
 ![SwiftText Demo GIF](frontend/src/assets/images/tutorial.gif)
 
+## 🔗 Live Demo
+The first build of SwiftTex can be checked through the live demo here: [SwiftText Live Demo Link](http://swiftext-static.s3-website-ap-southeast-1.amazonaws.com)
+
 ## Features
 - Custom Highlighting: Select and color-code text to match predefined formats (e.g., Heading 1, Heading 2).
 - Real-Time Preview: See live updates as you highlight, format, and edit.
@@ -11,10 +14,15 @@ SwiftText is a versatile productivity tool designed for efficient text managemen
 - File Management: Organize files, add tags, search, and filter through uploaded documents.
 
 ## Technologies used
-- Frontend: React.js + Tailwind CSS for a responsive, modern UI
+- Frontend: React.js + Tailwind CSS for a responsive, modern UI 
 - Backend: Node.js + Express.js for server logic
 - Database: PostgreSQL for structured data, DynamoDB for scalable NoSQL needs
 
-## Deployment (In Progress)
-- Containerization: Docker used for environment consistency
-- CI/CD Pipeline: Streamlined automated builds and deployments with GitHub Actions
+## Hosting
+- Frontend: Amazon S3
+- Backend: Render Web Server (Docker)
+- Database: Render PostgreSQL, Amazon DynamoDB (noSQL DB)
+
+## In Progress
+- Serverless Deployment: Implementing serverless architecture on the AWS platform using AWS ECR and Docker
+- CI/CD Pipeline: Setting up a streamlined, automated build and deployment process with GitHub Actions
