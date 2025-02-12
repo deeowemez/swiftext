@@ -6,7 +6,7 @@ const dynamoDB = new DynamoDBClient({
   // endpoint: process.env.AWS_DYNAMO_ENDPOINT,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  sessionToken: process.env.AWS_SESSION_TOKEN,
+  // sessionToken: process.env.AWS_SESSION_TOKEN,
 });
 
 const createTable = async () => {
