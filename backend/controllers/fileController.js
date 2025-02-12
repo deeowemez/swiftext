@@ -121,7 +121,7 @@ const convertToPdf = async (req, res) => {
         const absoluteInputPath = path.join(parentPath, filePathExt); // dev
         // const absoluteInputPath = filePathExt; // prod
         const pdfName = `${fileNumber}_${filename}.pdf`;
-        const outputPath = path.join(parentPath, 'wordToPdf', pdfName); // dev
+        const outputPath = path.join(parentPath, storagePath, 'wordToPdf', pdfName); // dev
         // const outputPath = path.join(storagePath, 'wordToPdf', pdfName); // prod
         // const outputPath = path.join('wordToPdf', pdfName);
         console.log('input filepath: ', absoluteInputPath);
