@@ -5,6 +5,13 @@ const bcrypt = require('bcryptjs');
 const { createUser, findUserByEmail } = require('../models/userModel');
 const { updateHighlightColorProfiles, defaultProfile } = require('../db/dynamo');
 const crypto = require('crypto');
+const admin = require("firebase-admin");
+const serviceAccount = require("../firebase-service-account.json");
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
+
 
 const generateUserID = () => {
     return crypto.randomBytes(8).toString('hex');
@@ -99,7 +106,7 @@ const login = async (req, res) => {
         // Generate JWT
         const token = jwt.sign(
             { userID: user.userid, username: user.username, email: user.email },
-            process.env.JWT_SECRET, // This should be an environment variable
+            process.env.JWT_SECRET,
             { expiresIn: '1h' } // Token expiration time
         );
 
@@ -125,8 +132,29 @@ const authenticate = (req, res, next) => {
     }
 };
 
+const verifyToken = async (req, res) => {
+    const { token } = req.body;
+
+    if (!token) {
+        return res.status(400).json({ message: "Token is required" });
+    }
+
+    try {
+        // Verify token using Firebase Admin SDK
+        const decodedToken = await admin.auth().verifyIdToken(token);
+
+        res.json({
+            message: "Token verified successfully",
+            user: decodedToken,
+        });
+    } catch (error) {
+        res.status(401).json({ message: "Invalid or expired token", error: error.message });
+    }
+}
+
 module.exports = {
     register,
     login,
     authenticate,
+    verifyToken,
 };

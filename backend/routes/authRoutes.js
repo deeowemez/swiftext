@@ -1,13 +1,15 @@
 const express = require('express');
-const { register, login, authenticate } = require('../controllers/authController');
+const { register, login, authenticate, verifyToken } = require('../controllers/authController');
 const router = express.Router();
 const passport = require('passport');
 
 router.post('/register', register);
 router.post('/login', login);
-router.get('/profile', authenticate, (req, res) => {
-    res.status(200).send(`Welcome ${req.user.username}`);
-});
+// router.get('/profile', authenticate, (req, res) => {
+//     res.status(200).send(`Welcome ${req.user.username}`);
+// });
+router.post('/verifyToken', verifyToken);
+
 // Google authentication route
 // router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 

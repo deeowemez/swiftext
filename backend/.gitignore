@@ -8,3 +8,4 @@ wordToPdf/
 
 dynamo-data
 postgres-data
+firebase-service-account.json

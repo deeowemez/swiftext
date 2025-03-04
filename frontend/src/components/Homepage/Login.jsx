@@ -3,6 +3,8 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { default as jwtDecode } from 'jwt-decode';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
 
 import googleLogo from "../../assets/images/google-logo.svg";
 
@@ -54,28 +56,26 @@ const Login = ({
 
     const handleSubmit = async (values) => {
         try {
-            const response = await axios.post(`${backendUrl}/api/auth/login`, values);
-            const { token } = response.data;
+            // Authenticate user with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+            const user = userCredential.user;
 
-            // Store the token (example using localStorage)
-            localStorage.setItem('authToken', token);
+            // get Firebase JWT token
+            const token = await user.getIdToken();
+            console.log("Firebase Token:", token);
 
-            const decodedToken = jwtDecode(token);
+            // Send token to backend for verification
+            const response = await axios.post(`${backendUrl}/api/auth/verifyToken`, { token });
 
-            // After successful login
-            localStorage.setItem('user', JSON.stringify(decodedToken));
-
-            console.log("Decoded User:", decodedToken);
-
-            // Set the userID in the state or context
-            setUser(decodedToken);
+            console.log("Token verified:", response.data);
+            localStorage.setItem("authToken", token);
 
             setShowSuccessPopup(true); // Show success popup
             setTimeout(() => {
                 setShowSuccessPopup(false);
                 onClose();
             }, 1000);
-
+    
         } catch (error) {
             console.error("Login error:", error);
             setLoginError("Invalid email or password"); // Set the error message
@@ -148,7 +148,7 @@ const Login = ({
                     <div className="flex justify-center p-1">
                         <img src={googleLogo} alt="" className="w-11 cursor-pointer"
                             onClick={() => {
-                                window.location.href = `${backendUrl}/auth/google`; 
+                                window.location.href = `${backendUrl}/auth/google`;
                             }}
                         />
                     </div>

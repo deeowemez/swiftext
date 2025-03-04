@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../../../firebase";
 
 import logoIcon from "../../assets/images/logo.svg";
 
@@ -14,22 +16,12 @@ const Header = ({
         setUser(user);
     }, []);
 
-    const handleLogout = () => {
+    const handleLogout = async() => {
+        await signOut(auth);
         // Remove the token from localStorage
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-
-        // Optionally, reset the user state to an empty object or null
-        setUser({});
-
-        // // You can also call an API to log out if needed (for example, clearing server session)
-        // axios.post('http://localhost:5000/api/auth/logout')
-        //     .then(response => {
-        //         console.log('Logged out successfully');
-        //     })
-        //     .catch(error => {
-        //         console.error('Error logging out', error);
-        //     });
+        navigate("/");
     };
 
     return (

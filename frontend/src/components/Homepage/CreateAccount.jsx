@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
 import * as Yup from 'yup';
 import axios from 'axios';
 
@@ -48,12 +50,8 @@ const CreateAccount = ({ onClose }) => {
         try {
             console.log("Form Submitted", values);
 
-            // Send a POST request to the registration API
-            const response = await axios.post(`${backendUrl}/api/auth/register`, {
-                username: values.username,
-                email: values.email,
-                password: values.password
-            });
+            const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+            const user = userCredential.user; // Firebase user object
 
             // Show success popup
             setShowSuccessPopup(true);
