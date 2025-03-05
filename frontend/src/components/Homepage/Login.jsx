@@ -65,17 +65,22 @@ const Login = ({
             console.log("Firebase Token:", token);
 
             // Send token to backend for verification
-            const response = await axios.post(`${backendUrl}/api/auth/verifyToken`, { token });
+            // const response = await axios.post(`${backendUrl}/api/auth/verifyToken`, { token });
+            const response = await axios.post(`${backendUrl}/api/auth/login`, { token, values });
 
-            console.log("Token verified:", response.data);
-            localStorage.setItem("authToken", token);
+            // console.log("Token verified:", response.data);
+            if (response) {
+                console.log('test response: ', response.data.response);
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+                setUser(response.data.user);
+            }
 
             setShowSuccessPopup(true); // Show success popup
             setTimeout(() => {
                 setShowSuccessPopup(false);
                 onClose();
             }, 1000);
-    
+
         } catch (error) {
             console.error("Login error:", error);
             setLoginError("Invalid email or password"); // Set the error message

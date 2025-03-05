@@ -31,13 +31,15 @@ const FilesPage = ({
 
     // initial loading of files every time files page viewed
     useEffect(() => {
-        const storedUser = JSON.parse(localStorage.getItem('user'));
+        const storedUser = localStorage.getItem("user");
         console.log('user filespage: ', storedUser);
 
-        if (storedUser && storedUser.userID) {
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
             const fetchFiles = async () => {
                 try {
-                    const response = await axios.get(`${backendUrl}/api/files?userID=${storedUser.userID}`);
+                    console.log('filespage userid: ', storedUser.uid);
+                    const response = await axios.get(`${backendUrl}/api/files?userID=${storedUser.uid}`);
                     console.log('response data: ', response.data);
                     setFiles(response.data);
                     setFilteredFiles(response.data);
@@ -50,7 +52,7 @@ const FilesPage = ({
             setFiles([]);
             setFilteredFiles([]);
         }
-    }, [user]);
+    }, []);
 
     // // Add event listener to close dropdown when clicking outside
     // useEffect(() => {
@@ -104,7 +106,7 @@ const FilesPage = ({
     // };
 
     const handleFileUpload = async (file) => {
-        if (!user || !user.userID) {
+        if (!user || !user.uid) {
             setUploadStatus('You must be logged in to upload files.');
             // window.alert('You must be logged in to upload files.');
             setShowInvalidUserPopup(!showInvalidUserPopup);
@@ -119,17 +121,17 @@ const FilesPage = ({
 
         const formData = new FormData();
         formData.append('file', file);
-        console.log('userID: ', user.userID);
+        console.log('userID: ', user.uid);
 
         try {
-            const response = await axios.post(`${backendUrl}/api/files/upload?userID=${user.userID}`, formData, {
+            const response = await axios.post(`${backendUrl}/api/files/upload?userID=${user.uid}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
             // Fetch updated files list after successful upload
-            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.userID}`);
+            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.uid}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
             setFilteredFiles(updatedFiles.data);
@@ -144,7 +146,7 @@ const FilesPage = ({
             const response = await axios.delete(`${backendUrl}/api/files/${file.id}`);
             console.log('File deleted successfully:', response.data);
 
-            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.userID}`);
+            const updatedFiles = await axios.get(`${backendUrl}/api/files?userID=${user.uid}`);
             console.log('updatedFiles.data: ', updatedFiles.data)
             setFiles(updatedFiles.data);  // Update files state to trigger re-render
             setFilteredFiles(updatedFiles.data);
@@ -296,7 +298,10 @@ const FilesPage = ({
                     setUser={setUser}
                     onClose={handleOverlayClose}
                 />}
-            {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
+            {overlayType === "createAccount" &&
+                <CreateAccount 
+                    onClose={handleOverlayClose}
+                />}
             {showInvalidUserPopup && (
                 <div className="fixed top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-md">
                     Please login to save files in the system! Thank you for understanding.

@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const dynamoDB = new DynamoDBClient({
   region: process.env.AWS_REGION,
-  // endpoint: process.env.AWS_DYNAMO_ENDPOINT,
+  endpoint: process.env.AWS_DYNAMO_ENDPOINT,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   // sessionToken: process.env.AWS_SESSION_TOKEN,
@@ -40,13 +40,14 @@ const createTable = async () => {
 
 const updateHighlightColorProfiles = async (newItems, userID) => {
   // Get the existing items in the table for the given highlightColorProfile
+  console.log('userid updatehighlight: ', userID);
   const existingItems = await getHighlightProfile(userID);
+  console.log('existing map: ', existingItems);
 
   // Convert the existing items into a map for easier comparison
   const existingItemsMap = new Map(
     existingItems.map(item => [item.configID.S, item])
   );
-  // console.log('existing map: ', existingItemsMap);
 
   // Compare and remove items that no longer exist in the new list
   for (const existingItem of existingItems) {
@@ -184,7 +185,7 @@ const getHighlightProfile = async (userID) => {
     const response = await dynamoDB.send(command);
 
     // Output the retrieved items
-    // console.log("Items in table:", response.Items);
+    console.log("Items in table:", response.Items);
     return response.Items;
   } catch (error) {
     console.error("Error listing items:", error);
@@ -230,6 +231,6 @@ const main = async () => {
   // console.log(response);
 };
 
-main();
+// main();
 
 module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles, defaultProfile };

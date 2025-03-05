@@ -52,6 +52,18 @@ const CreateAccount = ({ onClose }) => {
 
             const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
             const user = userCredential.user; // Firebase user object
+            console.log('useruid: ', user.uid);
+
+            // Insert default profile for new user
+            // const response = await axios.post(`${backendUrl}/api/auth/register`, {user: uid, values.email, values.password})
+            const response = await axios.post(`${backendUrl}/api/auth/register`, {
+                userID: user.uid,
+                username: values.username,
+                email: values.email,
+                password: values.password
+            });
+            // const response = await axios.post(`${backendUrl}/api/auth/insertProfile/${user.uid}`);
+            console.log('create user: ', response);
 
             // Show success popup
             setShowSuccessPopup(true);

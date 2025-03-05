@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { signOut } from "firebase/auth";
 import { auth } from "../../../firebase";
 
@@ -11,17 +12,21 @@ const Header = ({
     onSignUpClick
 }) => {
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
-        setUser(user);
-    }, []);
+        // setUser(user);
+        console.log('user in header: ', user);
+    }, [user]);
 
     const handleLogout = async() => {
         await signOut(auth);
         // Remove the token from localStorage
-        localStorage.removeItem("authToken");
+        // localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        navigate("/");
+        setUser([]);
+        // navigate("/");
     };
 
     return (
@@ -38,10 +43,10 @@ const Header = ({
                 </ul>
             </nav>
             <div className="flex gap-16 items-center">
-                {user?.username ? (
+                {user?.email? (
                     <>
                         <div>
-                            Hi, {user.username}!
+                            Hi, {user.email}!
                         </div>
                         <div onClick={handleLogout} className="p-2 rounded-md cursor-pointer flex gap-2.5 items-center hover:text-red-500">
                             Log out

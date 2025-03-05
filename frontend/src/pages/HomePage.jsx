@@ -13,7 +13,8 @@ import CreateAccount from "../components/Homepage/CreateAccount";
 
 const HomePage = ({
     user,
-    setUser }) => {
+    setUser 
+}) => {
     const [overlayType, setOverlayType] = useState(null);
 
     const handleOverlayClose = () => {
