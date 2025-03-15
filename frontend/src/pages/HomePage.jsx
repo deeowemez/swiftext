@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import '../styles/index.css'
+import "../styles/index.css";
 
 import Header from "../components/Homepage/Header";
 import Headline from "../components/Homepage/Headline";
@@ -10,47 +10,41 @@ import Footer from "../components/Homepage/Footer";
 import Login from "../components/Homepage/Login";
 import CreateAccount from "../components/Homepage/CreateAccount";
 
+const HomePage = ({ user, setUser }) => {
+  const [overlayType, setOverlayType] = useState(null);
 
-const HomePage = ({
-    user,
-    setUser 
-}) => {
-    const [overlayType, setOverlayType] = useState(null);
+  const handleOverlayClose = () => {
+    setOverlayType(null);
+  };
 
-    const handleOverlayClose = () => {
-        setOverlayType(null);
-    };
+  useEffect(() => {
+    if (user) {
+      console.log("User changed:", user);
+    }
+  }, [user]);
 
-    useEffect(() => {
-        if (user) {
-            console.log("User changed:", user);
-        }
-    }, [user]);
+  return (
+    <div className="w-screen p-0 m-0 overflow-x-hidden">
+      <Header
+        user={user}
+        setUser={setUser}
+        onLoginClick={() => setOverlayType("login")}
+        onSignUpClick={() => setOverlayType("createAccount")}
+      />
+      <Headline />
+      <Features />
+      <Pricing />
+      <Footline onSignUpClick={() => setOverlayType("createAccount")} />
+      <Footer />
 
-    return (
-        <div className="w-screen p-0 m-0 overflow-x-hidden">
-            <Header
-                user={user}
-                setUser={setUser}
-                onLoginClick={() => setOverlayType("login")}
-                onSignUpClick={() => setOverlayType("createAccount")}
-            />
-            <Headline />
-            <Features />
-            <Pricing />
-            <Footline
-                onSignUpClick={() => setOverlayType("createAccount")}
-            />
-            <Footer />
-
-            {overlayType === "login" &&
-                <Login
-                    setUser={setUser}
-                    onClose={handleOverlayClose}
-                />}
-            {overlayType === "createAccount" && <CreateAccount onClose={handleOverlayClose} />}
-        </div>
-    )
-}
+      {overlayType === "login" && (
+        <Login setUser={setUser} onClose={handleOverlayClose} />
+      )}
+      {overlayType === "createAccount" && (
+        <CreateAccount onClose={handleOverlayClose} />
+      )}
+    </div>
+  );
+};
 
 export default HomePage;

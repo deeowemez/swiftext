@@ -28,7 +28,7 @@ const HighlightContainer = ({
   // highlight,
   editHighlight,
   onContextMenu,
-  highlightColor
+  highlightColor,
 }: HighlightContainerProps) => {
   const {
     highlight,
@@ -40,41 +40,42 @@ const HighlightContainer = ({
 
   const { toggleEditInProgress } = usePdfHighlighterContext();
 
-  const component = highlight.type === "text" ? (
-    <TextHighlight
-      isScrolledTo={isScrolledTo}
-      highlight={highlight}
-      onContextMenu={(event) =>
-        onContextMenu && onContextMenu(event, highlight)
-      }
-      style={{ backgroundColor: highlight.color }}
-    />
-  ) : (
-    <AreaHighlight
-      isScrolledTo={isScrolledTo}
-      highlight={highlight}
-      onChange={(boundingRect) => {
-        const edit = {
-          position: {
-            boundingRect: viewportToScaled(boundingRect),
-            rects: [],
-          },
-          content: {
-            image: screenshot(boundingRect),
-          },
-        };
+  const component =
+    highlight.type === "text" ? (
+      <TextHighlight
+        isScrolledTo={isScrolledTo}
+        highlight={highlight}
+        onContextMenu={(event) =>
+          onContextMenu && onContextMenu(event, highlight)
+        }
+        style={{ backgroundColor: highlight.color }}
+      />
+    ) : (
+      <AreaHighlight
+        isScrolledTo={isScrolledTo}
+        highlight={highlight}
+        onChange={(boundingRect) => {
+          const edit = {
+            position: {
+              boundingRect: viewportToScaled(boundingRect),
+              rects: [],
+            },
+            content: {
+              image: screenshot(boundingRect),
+            },
+          };
 
-        editHighlight(highlight.id, edit);
-        toggleEditInProgress(false);
-      }}
-      bounds={highlightBindings.textLayer}
-      onContextMenu={(event) =>
-        onContextMenu && onContextMenu(event, highlight)
-      }
-      onEditStart={() => toggleEditInProgress(true)}
-      style={{ backgroundColor: highlight.color }}
-    />
-  );
+          editHighlight(highlight.id, edit);
+          toggleEditInProgress(false);
+        }}
+        bounds={highlightBindings.textLayer}
+        onContextMenu={(event) =>
+          onContextMenu && onContextMenu(event, highlight)
+        }
+        onEditStart={() => toggleEditInProgress(true)}
+        style={{ backgroundColor: highlight.color }}
+      />
+    );
 
   const highlightTip: Tip = {
     position: highlight.position,

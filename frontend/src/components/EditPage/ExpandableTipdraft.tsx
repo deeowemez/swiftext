@@ -27,7 +27,7 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
 
   return (
     <div className="Tip">
-      {(
+      {
         <button
           className="Tip__compact"
           onClick={() => {
@@ -36,7 +36,7 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
             console.log("Current Selection:", selectionRef.current); // Log the selection
             selectionRef.current!.makeGhostHighlight();
           }}
-          
+
           // onMouseUp={
           //   addHighlight(
           //     {
@@ -51,10 +51,8 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
         >
           Add highlight
         </button>
-      )}
-        
-
-    </div >
+      }
+    </div>
   );
 };
 

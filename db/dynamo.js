@@ -1,8 +1,11 @@
-const { DynamoDBClient, CreateTableCommand } = require("@aws-sdk/client-dynamodb");
-require('dotenv').config();
+const {
+  DynamoDBClient,
+  CreateTableCommand,
+} = require("@aws-sdk/client-dynamodb");
+require("dotenv").config();
 
 const dynamoDB = new DynamoDBClient({
-  region: process.env.AWS_REGION
+  region: process.env.AWS_REGION,
 });
 
 const createTable = async () => {
@@ -10,19 +13,19 @@ const createTable = async () => {
     TableName: "HighlightColorProfiles",
     AttributeDefinitions: [
       { AttributeName: "userID", AttributeType: "S" },
-      { AttributeName: "configID", AttributeType: "S" }
+      { AttributeName: "configID", AttributeType: "S" },
     ],
     KeySchema: [
       {
         AttributeName: "userID",
-        KeyType: "HASH"
+        KeyType: "HASH",
       }, // Partition key
-      { AttributeName: "configID", KeyType: "RANGE" } // Sort key
+      { AttributeName: "configID", KeyType: "RANGE" }, // Sort key
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    }
+      WriteCapacityUnits: 5,
+    },
   };
 
   try {
@@ -35,7 +38,7 @@ const createTable = async () => {
 };
 
 const main = async () => {
-  console.log('Creating dynamo table: HighlightColorProfiles');
+  console.log("Creating dynamo table: HighlightColorProfiles");
   await createTable();
 };
 

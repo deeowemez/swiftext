@@ -1,5 +1,11 @@
-const { DynamoDBClient, CreateTableCommand, PutItemCommand, ScanCommand, DeleteItemCommand } = require("@aws-sdk/client-dynamodb");
-require('dotenv').config();
+const {
+  DynamoDBClient,
+  CreateTableCommand,
+  PutItemCommand,
+  ScanCommand,
+  DeleteItemCommand,
+} = require("@aws-sdk/client-dynamodb");
+require("dotenv").config();
 
 const dynamoDB = new DynamoDBClient({
   region: process.env.AWS_REGION,
@@ -14,19 +20,19 @@ const createTable = async () => {
     TableName: "HighlightColorProfiles",
     AttributeDefinitions: [
       { AttributeName: "userID", AttributeType: "S" },
-      { AttributeName: "configID", AttributeType: "S" }
+      { AttributeName: "configID", AttributeType: "S" },
     ],
     KeySchema: [
       {
         AttributeName: "userID",
-        KeyType: "HASH"
+        KeyType: "HASH",
       }, // Partition key
-      { AttributeName: "configID", KeyType: "RANGE" } // Sort key
+      { AttributeName: "configID", KeyType: "RANGE" }, // Sort key
     ],
     ProvisionedThroughput: {
       ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    }
+      WriteCapacityUnits: 5,
+    },
   };
 
   try {
@@ -40,18 +46,20 @@ const createTable = async () => {
 
 const updateHighlightColorProfiles = async (newItems, userID) => {
   // Get the existing items in the table for the given highlightColorProfile
-  console.log('userid updatehighlight: ', userID);
+  console.log("userid updatehighlight: ", userID);
   const existingItems = await getHighlightProfile(userID);
-  console.log('existing map: ', existingItems);
+  console.log("existing map: ", existingItems);
 
   // Convert the existing items into a map for easier comparison
   const existingItemsMap = new Map(
-    existingItems.map(item => [item.configID.S, item])
+    existingItems.map((item) => [item.configID.S, item]),
   );
 
   // Compare and remove items that no longer exist in the new list
   for (const existingItem of existingItems) {
-    const itemInNewList = newItems.find(item => item.configID.S === existingItem.configID.S);
+    const itemInNewList = newItems.find(
+      (item) => item.configID.S === existingItem.configID.S,
+    );
     if (!itemInNewList) {
       // Item is not in the new list, so delete it
       // console.log('item not in new list: ', existingItem);
@@ -158,7 +166,7 @@ const insertItems = async (items) => {
           indent: { N: item.indent.N.toString() },
           align: { S: item.align.S },
           size: { S: item.size.S },
-        }
+        },
       });
       // console.log(command)
       await dynamoDB.send(command);
@@ -176,7 +184,7 @@ const getHighlightProfile = async (userID) => {
     FilterExpression: "userID = :userID",
     ExpressionAttributeValues: {
       ":userID": { S: userID },
-    }
+    },
   };
 
   try {
@@ -220,7 +228,9 @@ const deleteItemsByHighlightColorProfile = async (highlightColorProfile) => {
     await deleteItem(userID, configID); // Delete each item by its primary key
   }
 
-  console.log(`Deleted all items with highlightColorProfile: ${highlightColorProfile}`);
+  console.log(
+    `Deleted all items with highlightColorProfile: ${highlightColorProfile}`,
+  );
 };
 
 const main = async () => {
@@ -233,4 +243,9 @@ const main = async () => {
 
 // main();
 
-module.exports = { getHighlightProfile, insertItems, updateHighlightColorProfiles, defaultProfile };
+module.exports = {
+  getHighlightProfile,
+  insertItems,
+  updateHighlightColorProfiles,
+  defaultProfile,
+};

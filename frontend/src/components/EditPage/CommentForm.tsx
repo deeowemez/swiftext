@@ -25,10 +25,13 @@ const CommentForm = ({ onSubmit, placeHolder }: CommentFormProps) => {
           }}
         />
         <div className="flex justify-end items-center pt-1">
-          <input type="submit" value="✔" className="text-xs px-2 py-1 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-full cursor-pointer" />
+          <input
+            type="submit"
+            value="✔"
+            className="text-xs px-2 py-1 font-sserif bg-[#FFBF8F] text-[#FFFFFF] rounded-full cursor-pointer"
+          />
         </div>
       </div>
-      
     </form>
   );
 };

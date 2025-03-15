@@ -1,19 +1,19 @@
-const { Pool } = require('pg');
-require('dotenv').config();
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-    ssl: {
-        rejectUnauthorized: false,
-    },
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 const createTables = async () => {
-    const queries = `
+  const queries = `
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             userID VARCHAR(255) UNIQUE NOT NULL,
@@ -43,19 +43,19 @@ const createTables = async () => {
         );
     `;
 
-    try {
-        await pool.query(queries);
-        console.log('Tables created successfully.');
-    } catch (err) {
-        console.error('Error creating tables:', err);
-    } finally {
-        await pool.end();
-    }
+  try {
+    await pool.query(queries);
+    console.log("Tables created successfully.");
+  } catch (err) {
+    console.error("Error creating tables:", err);
+  } finally {
+    await pool.end();
+  }
 };
 
 const main = async () => {
-    console.log('Creating psql tables: users, files, highlights');
-    createTables();
-}
+  console.log("Creating psql tables: users, files, highlights");
+  createTables();
+};
 
 main();

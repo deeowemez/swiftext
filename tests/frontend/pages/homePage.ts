@@ -1,34 +1,39 @@
-import { Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { Page } from "playwright";
+import { test, expect } from "@playwright/test";
 
 class HomePage {
-    page: Page;
+  page: Page;
 
-    constructor(page: Page) {
-        this.page = page;
-    }
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-    async goto() {
-        await this.page.goto('http://localhost:5173/');
-    }
+  async goto() {
+    await this.page.goto("http://localhost:5173/");
+  }
 
-    async checkURL() {
-        const currentURL = this.page.url();
-        expect(currentURL).toBe('http://localhost:5173/');
-    }
+  async checkURL() {
+    const currentURL = this.page.url();
+    expect(currentURL).toBe("http://localhost:5173/");
+  }
 
-    async clickTrySwiftextButton() {
-        await this.page.getByRole('link', { name: 'Try Swiftext for free Arrow' }).click();
-    }
+  async clickTrySwiftextButton() {
+    await this.page
+      .getByRole("link", { name: "Try Swiftext for free Arrow" })
+      .click();
+  }
 
-    async clickCreateFreeAccountButton() {
-        await this.page.getByRole('button', { name: 'Create Free Account arrow-btn' }).click();
-    }
+  async clickCreateFreeAccountButton() {
+    await this.page
+      .getByRole("button", { name: "Create Free Account arrow-btn" })
+      .click();
+  }
 
-    async checkTutorialGifVisibility() {
-        await expect(this.page.getByRole('img', { name: 'Dancing Chrome' })).toBeVisible();
-    }
-
+  async checkTutorialGifVisibility() {
+    await expect(
+      this.page.getByRole("img", { name: "Dancing Chrome" }),
+    ).toBeVisible();
+  }
 }
 
 export default HomePage;

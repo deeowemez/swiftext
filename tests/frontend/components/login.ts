@@ -1,37 +1,36 @@
-import { Page } from 'playwright';
-import { test, expect } from '@playwright/test';
+import { Page } from "playwright";
+import { test, expect } from "@playwright/test";
 
 class Login {
-    page: Page;
+  page: Page;
 
-    constructor(page: Page) {
-        this.page = page;
-    }
+  constructor(page: Page) {
+    this.page = page;
+  }
 
-    async checkLoginModalVisibility(){
-        await expect(this.page.getByText('EmailPasswordShowLoginor')).toBeVisible();
-    }
-    
-    async inputSampleEmail(){
-        await this.page.getByLabel('Email').click();
-        await this.page.getByLabel('Email').fill('monochrome@gmail.com');
-    }
+  async checkLoginModalVisibility() {
+    await expect(this.page.getByText("EmailPasswordShowLoginor")).toBeVisible();
+  }
 
-    async inputSamplePassword(){
-        await this.page.getByLabel('Password').click();
-        await this.page.getByLabel('Password').fill('monochrome');
-        await this.page.getByRole('button', { name: 'Show' }).click();
-    }
+  async inputSampleEmail() {
+    await this.page.getByLabel("Email").click();
+    await this.page.getByLabel("Email").fill("monochrome@gmail.com");
+  }
 
-    async clickLoginButton(){
-        await this.page.getByRole('button', { name: 'Login' }).click();
-    }
+  async inputSamplePassword() {
+    await this.page.getByLabel("Password").click();
+    await this.page.getByLabel("Password").fill("monochrome");
+    await this.page.getByRole("button", { name: "Show" }).click();
+  }
 
-    async checkLoginSuccessfulOverlayVisibility(){
-        await this.page.waitForTimeout(100);
-        await expect(this.page.locator('.fixed').first()).toBeVisible();
-    }
+  async clickLoginButton() {
+    await this.page.getByRole("button", { name: "Login" }).click();
+  }
 
+  async checkLoginSuccessfulOverlayVisibility() {
+    await this.page.waitForTimeout(100);
+    await expect(this.page.locator(".fixed").first()).toBeVisible();
+  }
 }
 
 export default Login;

@@ -3,7 +3,6 @@ import type { Highlight } from "react-pdf-highlighter-extended";
 import "../../style/Sidebar.css";
 import { CommentedHighlight } from "./types";
 
-
 interface SidebarProps {
   highlights: Array<CommentedHighlight>;
   resetHighlights: () => void;
@@ -13,15 +12,11 @@ const updateHash = (highlight: Highlight) => {
   document.location.hash = `highlight-${highlight.id}`;
 };
 
-const Sidebar = ({
-  highlights,
-  resetHighlights,
-}: SidebarProps) => {
+const Sidebar = ({ highlights, resetHighlights }: SidebarProps) => {
   return (
     <div className="sidebar" style={{ width: "25vw", maxWidth: "500px" }}>
       {/* Description section */}
       <div className="description" style={{ padding: "1rem" }}>
-
         <p>
           <small>
             To create an area highlight hold, press Alt key then click and drag.

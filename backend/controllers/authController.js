@@ -1,17 +1,19 @@
 // const passport = require('passport');
 // const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const { createUser, findUserByEmail } = require('../models/userModel');
-const { updateHighlightColorProfiles, defaultProfile } = require('../db/dynamo');
-const crypto = require('crypto');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { createUser, findUserByEmail } = require("../models/userModel");
+const {
+  updateHighlightColorProfiles,
+  defaultProfile,
+} = require("../db/dynamo");
+const crypto = require("crypto");
 const admin = require("firebase-admin");
 const serviceAccount = require("../firebase-service-account.json");
 
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(serviceAccount),
 });
-
 
 // const generateUserID = () => {
 //     return crypto.randomBytes(8).toString('hex');
@@ -19,84 +21,94 @@ admin.initializeApp({
 
 // Register a new user
 const register = async (req, res) => {
-    const { userID, username, email, password } = req.body;
-    // console.log('req.body: ', req.body);
+  const { userID, username, email, password } = req.body;
+  // console.log('req.body: ', req.body);
 
-    try {
-        const existingUser = await findUserByEmail(email);
-        if (existingUser) {
-            return res.status(400).send('User already exists');
-        }
-
-        // const generatedUserID = generateUserID();
-
-        const newUser = await createUser(userID, username, email, password);
-
-        await insertDefaultProfile(userID);
-
-        res.status(201).json({ userID: newUser.userID, username: newUser.username, email: newUser.email, password: newUser.password });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error registering user');
+  try {
+    const existingUser = await findUserByEmail(email);
+    if (existingUser) {
+      return res.status(400).send("User already exists");
     }
+
+    // const generatedUserID = generateUserID();
+
+    const newUser = await createUser(userID, username, email, password);
+
+    await insertDefaultProfile(userID);
+
+    res
+      .status(201)
+      .json({
+        userID: newUser.userID,
+        username: newUser.username,
+        email: newUser.email,
+        password: newUser.password,
+      });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error registering user");
+  }
 };
 
 const insertDefaultProfile = async (userID) => {
-    console.log('useruid insertprofile: ', userID);
-    try {
-        await updateHighlightColorProfiles(defaultProfile(userID), userID);
-        console.log("Default profiles inserted successfully");
-    } catch (error) {
-        console.error("Error inserting default profiles:", error);
-    }
+  console.log("useruid insertprofile: ", userID);
+  try {
+    await updateHighlightColorProfiles(defaultProfile(userID), userID);
+    console.log("Default profiles inserted successfully");
+  } catch (error) {
+    console.error("Error inserting default profiles:", error);
+  }
 };
 
-
 const verifyToken = async (token) => {
-    // const { token } = req.body;
+  // const { token } = req.body;
 
-    if (!token) {
-        throw new Error("Token is required");
-    }
+  if (!token) {
+    throw new Error("Token is required");
+  }
 
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        return { success: true, user: decodedToken };
-    } catch (error) {
-        return { success: false, message: "Invalid or expired token", error: error.message };
-    }
-}
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    return { success: true, user: decodedToken };
+  } catch (error) {
+    return {
+      success: false,
+      message: "Invalid or expired token",
+      error: error.message,
+    };
+  }
+};
 
 // // Log in the user and generate a JWT
 const login = async (req, res) => {
-    const { token, values } = req.body;
+  const { token, values } = req.body;
 
-    try {
-        const user = await findUserByEmail(values.email);
-        if (!user) {
-            return res.status(400).send('Invalid credentials');
-        }
-
-        // const isMatch = await bcrypt.compare(password, user.password);
-        // if (!isMatch) {
-        //     return res.status(400).send('Invalid credentials');
-        // }
-
-        // // Generate JWT
-        // const token = jwt.sign(
-        //     { userID: user.userid, username: user.username, email: user.email },
-        //     process.env.JWT_SECRET,
-        //     { expiresIn: '1h' } // Token expiration time
-        // );
-
-        const response = await verifyToken(token);
-        // console.log('response login api', response);
-
-        res.status(200).json(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error logging in');
+  try {
+    const user = await findUserByEmail(values.email);
+    if (!user) {
+      return res.status(400).send("Invalid credentials");
     }
+
+    // const isMatch = await bcrypt.compare(password, user.password);
+    // if (!isMatch) {
+    //     return res.status(400).send('Invalid credentials');
+    // }
+
+    // // Generate JWT
+    // const token = jwt.sign(
+    //     { userID: user.userid, username: user.username, email: user.email },
+    //     process.env.JWT_SECRET,
+    //     { expiresIn: '1h' } // Token expiration time
+    // );
+
+    const response = await verifyToken(token);
+    // console.log('response login api', response);
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error logging in");
+  }
 };
 
 // passport.use(
@@ -137,7 +149,6 @@ const login = async (req, res) => {
 //     done(null, user);
 // });
 
-
 // // // Middleware to protect routes that require authentication
 // const authenticate = (req, res, next) => {
 //     const token = req.header('Authorization');
@@ -153,11 +164,10 @@ const login = async (req, res) => {
 //     }
 // };
 
-
 module.exports = {
-    register,
-    verifyToken,
-    insertDefaultProfile,
-    login,
-    // authenticate,
+  register,
+  verifyToken,
+  insertDefaultProfile,
+  login,
+  // authenticate,
 };

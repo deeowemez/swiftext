@@ -1,12 +1,17 @@
-const express = require('express');
-const { verifyToken, insertDefaultProfile, register, login } = require('../controllers/authController');
+const express = require("express");
+const {
+  verifyToken,
+  insertDefaultProfile,
+  register,
+  login,
+} = require("../controllers/authController");
 const router = express.Router();
-const passport = require('passport');
+const passport = require("passport");
 
-router.post('/register', register);
-router.post('/verifyToken', verifyToken);
-router.post('/insertProfile/:useruid', insertDefaultProfile);
-router.post('/login', login);
+router.post("/register", register);
+router.post("/verifyToken", verifyToken);
+router.post("/insertProfile/:useruid", insertDefaultProfile);
+router.post("/login", login);
 // router.get('/profile', authenticate, (req, res) => {
 //     res.status(200).send(`Welcome ${req.user.username}`);
 // });
