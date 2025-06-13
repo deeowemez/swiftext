@@ -4,9 +4,6 @@ SwiftText is a versatile productivity tool designed for efficient text managemen
 
 ![SwiftText Demo GIF](frontend/src/assets/images/tutorial.gif)
 
-## 🔗 Live Demo
-
-The first build of SwiftTex can be checked through the live demo here: [SwiftText Live Demo Link](http://swiftext-static.s3-website-ap-southeast-1.amazonaws.com)
 
 ## Features
 
