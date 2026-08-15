@@ -12,7 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.682.0",
     "@hello-pangea/dnd": "^17.0.0",
-    "axios": "^1.7.7",
+    "axios": "^1.8.2",
     "dotenv": "^16.4.7",
     "file-saver": "^2.0.5",
     "firebase": "^11.4.0",
